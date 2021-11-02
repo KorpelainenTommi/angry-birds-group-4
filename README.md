@@ -1,13 +1,12 @@
-# Project Name (replace here!)
+# Mildly Annoyed Nth Year Students!
+The game is an Aalto themed spin-off on the original Angry Birds game, where instead of birds, the player hurls Aalto students from different guilds. The goal of the game is to destroy the fuksis (first-year-students) hiding in the fort, but without destroying any beer bottles that might be in the level.
 
-This is the template for the projects. Please copy the project description here. 
-You can use Markdown language to render it as formatted **HTML** file.
 
 # Group
-- Member 1
-- Member 2
-- Member 3
-- Member 4
+- Tommi Korpelainen
+- Aleksi Rintanen
+- Ilari Tulkki
+- Joonas Palmulaakso
 
 # Repository organization
 Your project implementation should follow the skelaton organization in this repository.
