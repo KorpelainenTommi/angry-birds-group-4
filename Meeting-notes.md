@@ -21,7 +21,7 @@ Joonas Palmulaakso
 ## Summary of works
 1. Tommi Korpelainen
    
-  Creating a telegram group for the team and developing the preliminary idea for the application.
+   Creating a telegram group for the team and developing the preliminary idea for the application.
 
 2. Aleksi Rintanen
 
@@ -40,7 +40,7 @@ Joonas Palmulaakso
 1. Tommi Korpelainen is going to continue to finish the basic structure of the application (classes relations etc.)
 2. Aleksi Rintanen is going to make meeting notes and write scheduling and work division for the project plan document.
 3. Ilari Tulkki is going to design the UI for the application and write about features in project plan document.
-4. Joonas Palmulaakso 3 is going to write the project plan document.
+4. Joonas Palmulaakso is going to write the project plan document.
 
 ## Project status 
 The project plan under construction.
