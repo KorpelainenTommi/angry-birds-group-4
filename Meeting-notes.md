@@ -7,46 +7,47 @@ In each meeting, you are required to discuss:
 3. Plan for the next week for everyone
 4. Deviations and changes to the project plan, if any
 
-
-# Meeting dd.mm.2021 HH::MM
-
-**Participants**: 
-1. Member 1
-2. Member 2
-3. Member 3
-4. Member 4 
-
-## Summary of works
-1. Member 1 
-   
-   Implementing the class XX. Tested the class XX. 
-   Results are in `tests/<class-xx-tests>`. Resolved the identified problems.
-
-2. Member 2
-
-   Same as above
-
-3. ...
-
-## Challenges
-
-1. The integration of UI with the monsters requires an abstract interface.
-2. ...
-
-## Actions
-1. Member 1 is going to look into defining an abstract interface for monsters 
-   to enable easy UI integration.
-2. Member 2 is going to work with Member 1 to use abstract interface in derived 
-   monster classes.
-3. Member 2 is going to test the interface.
-4. Member 3 is going to use ...
-
 > Please reflect these action decisions in your git commit messages so that 
 > your group members and advisor can follow the progress.
 
+# Meeting 02.11.2021 17::30
+
+**Participants**: 
+Tommi Korpelainen
+Aleksi Rintanen
+Ilari Tulkki
+Joonas Palmulaakso
+
+## Summary of works
+1. Tommi Korpelainen
+   
+  Creating a telegram group for the team and developing the preliminary idea for the application.
+
+2. Aleksi Rintanen
+
+   Arraging the first zoom meeting
+
+3. Ilari Tulkki
+ 
+   Developing the preliminary idea for the application.
+   
+
+## Challenges
+
+1. To complete to project plan.
+
+## Actions
+1. Tommi Korpelainen is going to continue to finish the basic structure of the application (classes relations etc.)
+2. Aleksi Rintanen is going to make meeting notes and write scheduling and work division for the project plan document.
+3. Ilari Tulkki is going to design the UI for the application and write about features in project plan document.
+4. Joonas Palmulaakso 3 is going to write the project plan document.
+
 ## Project status 
-Short summary of current project status. 
+The project plan under construction.
 
 ### TODOs
-1. Member 1: Write an action.
-2. ...
+1. Tommi Korpelainen: dedicate to classes, relations and class hierarchy
+2. Aleksi Rintanen: Make meetingnotes and project plan
+3. Ilari Tulkki: Design UI and features to the project plan
+4. Joonas Palmulaakso: Project plan document
+
