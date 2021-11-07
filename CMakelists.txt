@@ -5,6 +5,10 @@ project (AngryTeekkari)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif()
 
 # Add hpp files
 include_directories("src")
@@ -25,8 +29,13 @@ add_subdirectory("libs/SFML-2.5.1")
 add_subdirectory("libs/box2d")
 
 
-# link sfml
-target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics sfml-audio)
+# link sfml libraries depending on build variant
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_link_libraries(${EXECUTABLE_NAME} sfml-system-d sfml-window-d sfml-graphics-d sfml-audio-d)
+else()
+    target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics sfml-audio)
+endif()
+
 
 # link box2d
 target_link_libraries(${EXECUTABLE_NAME} box2d)
