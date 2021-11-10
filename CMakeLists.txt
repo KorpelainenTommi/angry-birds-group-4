@@ -10,21 +10,27 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-# Add hpp files
-include_directories("src")
-include_directories("include")
-include_directories("libs/SFML-2.5.1/include")
-include_directories("libs/box2d/include")
 
 # Main target
 set(EXECUTABLE_NAME AngryTeekkari)
 
+# Add hpp files
+include_directories("include")
+include_directories("libs/SFML-2.5.1/include")
+include_directories("libs/box2d/include")
+
 # Add source files
-file(GLOB SOURCES src/*.cpp)
-
-
-# generate the executable and required libraries
+file(GLOB SOURCES 
+    "src/*.cpp" 
+    "src/framework/*.cpp" 
+    "src/gameplay/*.cpp"
+    "src/screens/*.cpp"
+    "src/ui/*.cpp")
 add_executable(${EXECUTABLE_NAME} ${SOURCES})
+
+
+
+# generate required libraries
 add_subdirectory("libs/SFML-2.5.1")
 add_subdirectory("libs/box2d")
 
@@ -52,3 +58,10 @@ add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
         "${PROJECT_BINARY_DIR}/libs/box2d/bin/\$\(Configuration\)"
         "${CMAKE_CURRENT_BINARY_DIR}/\$\(Configuration\)")
         
+
+
+# specify to copy data folder to executable directory
+add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/data"
+        "${CMAKE_CURRENT_BINARY_DIR}/\$\(Configuration\)/data")
