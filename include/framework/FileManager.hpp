@@ -13,7 +13,7 @@ public:
     //NOTE! Do it in a .cpp file please and not here
 
     bool LoadTexture(sf::Texture& texture, const std::string& path) const { return false; }
-    bool LoadSound(sf::SoundBuffer& soundBuffer, const std::string& path) const { return false; }
+    bool LoadAudio(sf::SoundBuffer& soundBuffer, const std::string& path) const { return false; }
     bool LoadFont(sf::Font& font, const std::string& path) const { return font.loadFromFile(path); }
 
     bool LoadLevel(Level& level, const std::string& path) const { return false; }

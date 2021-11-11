@@ -5,7 +5,7 @@
 enum SpriteID { wood_block1x1, metal_block1x1, glass_block1x1 };
 
 /// Enumeration of audio usable with AudioSystem
-enum AudioID { ui_click };
+enum SoundID { ui_click };
 
 /// Enumeration of fonts usable with RenderSystem
 enum FontID { source_serif };

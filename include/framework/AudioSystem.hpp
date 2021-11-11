@@ -7,7 +7,7 @@
 
 class AudioSystem {
 public:
-    void PlaySound(AudioID id, float volume = 1.0F) {}
+    void PlaySound(SoundID id, float volume = 1.0F) {}
 
 private:
 

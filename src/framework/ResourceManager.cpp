@@ -52,5 +52,5 @@ ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(
 
 
 const sf::Font& ResourceManager::GetFont(FontID id) const { return fonts_[id]; }
-const sf::SoundBuffer& ResourceManager::GetSound(AudioID id) const { return audio_[id]; }
+const sf::SoundBuffer& ResourceManager::GetSound(SoundID id) const { return audio_[id]; }
 const sf::Sprite& ResourceManager::GetSprite(SpriteID id) const { return sprites_[id]; }

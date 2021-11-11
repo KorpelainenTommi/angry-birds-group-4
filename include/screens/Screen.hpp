@@ -12,6 +12,8 @@ class Screen : public UpdateListener {
 public:
     Screen(Application& app) : app_(app) {}
 
+    virtual ~Screen() = default;
+
     virtual void Update() {
         //Update all elements
         for(const auto& e : menu_) e->Update();

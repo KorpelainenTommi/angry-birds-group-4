@@ -8,6 +8,7 @@
 /// Base class for elements
 class Element : public UpdateListener {
 public:
+    virtual ~Element() = default;
     virtual void Render(const RenderSystem&) = 0;
     void SetPosition(ui::pfloat x, ui::pfloat y) { x_ = x; y_ = y; }
     void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }

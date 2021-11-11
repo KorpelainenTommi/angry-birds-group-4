@@ -27,7 +27,7 @@ public:
         menu_.push_back(std::move(version));
     }
 
-    virtual void OnMouseDown(const sf::Event::MouseButtonEvent& e) {
+    virtual bool OnMouseDown(const sf::Event::MouseButtonEvent& e) {
         if(e.button == sf::Mouse::Button::Right) {
             mDown = true;
             mouseX = e.x / app_.GetWindowWidth();
@@ -35,22 +35,25 @@ public:
             mouseX.Record();
             mouseY.Record();
         }
+        return false;
     }
 
-    virtual void OnMouseUp(const sf::Event::MouseButtonEvent& e) {
+    virtual bool OnMouseUp(const sf::Event::MouseButtonEvent& e) {
         if(e.button == sf::Mouse::Button::Right) {
             mDown = false;
         }
+        return false;
     }
 
-    virtual void OnMouseScroll(const sf::Event::MouseWheelScrollEvent& e) {
+    virtual bool OnMouseScroll(const sf::Event::MouseWheelScrollEvent& e) {
         c.zoom -= e.delta * 0.1F;
         if(c.zoom <= 0.1F) c.zoom = 0.1F;
+        return false;
     }
 
 
 
-    virtual void OnMouseMove(const sf::Event::MouseMoveEvent& e) {
+    virtual bool OnMouseMove(const sf::Event::MouseMoveEvent& e) {
         if(mDown) {
             mouseX = e.x / app_.GetWindowWidth();
             mouseY = e.y / app_.GetWindowHeight();
@@ -59,6 +62,7 @@ public:
             mouseX.Record();
             mouseY.Record();
         }
+        return false;
     }
 
     virtual void Update() {

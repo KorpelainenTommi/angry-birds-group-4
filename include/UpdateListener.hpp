@@ -11,16 +11,16 @@ public:
     virtual void Update() {}
     virtual void Render(const RenderSystem&) {}
 
-    virtual void OnKeyDown(const sf::Event::KeyEvent&) {}
-    virtual void OnKeyUp(const sf::Event::KeyEvent&) {}
+    virtual bool OnKeyDown(const sf::Event::KeyEvent&) { return false; }
+    virtual bool OnKeyUp(const sf::Event::KeyEvent&) { return false; }
 
-    virtual void OnMouseDown(const sf::Event::MouseButtonEvent&) {}
-    virtual void OnMouseUp(const sf::Event::MouseButtonEvent&) {}
-    virtual void OnMouseMove(const sf::Event::MouseMoveEvent&) {}
+    virtual bool OnMouseDown(const sf::Event::MouseButtonEvent&) { return false; }
+    virtual bool OnMouseUp(const sf::Event::MouseButtonEvent&) { return false; }
+    virtual bool OnMouseMove(const sf::Event::MouseMoveEvent&) { return false; }
 
-    virtual void OnMouseScroll(const sf::Event::MouseWheelScrollEvent&) {}
+    virtual bool OnMouseScroll(const sf::Event::MouseWheelScrollEvent&) { return false; }
 
-    virtual void OnTextEntered(const sf::Event::TextEvent&) {}
+    virtual bool OnTextEntered(const sf::Event::TextEvent&) { return false; }
 
 protected:
     UpdateListener() {}

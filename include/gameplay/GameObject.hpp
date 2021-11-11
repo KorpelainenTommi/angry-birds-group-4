@@ -30,6 +30,7 @@ class GameObject : public UpdateListener {
 public:
 
     //TODO: These aren't implemented
+    virtual ~GameObject() = default;
 
     //Call record on all tfloats
     virtual void Record();
