@@ -1,19 +1,21 @@
 #ifndef ELEMENT_HPP
 #define ELEMENT_HPP
 
+#include <ui/UIConstants.hpp>
 #include <UpdateListener.hpp>
+
 
 /// Base class for elements
 class Element : public UpdateListener {
 public:
     virtual void Render(const RenderSystem&) = 0;
-    void SetPosition(float xw, float yh) { xw_ = xw; yh_ = yh; }
-    void SetSize(float ww, float hh) { ww_ = ww; hh_ = hh; }
+    void SetPosition(ui::pfloat x, ui::pfloat y) { x_ = x; y_ = y; }
+    void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
 protected:
-    float xw_;
-    float yh_;
-    float ww_;
-    float hh_;
+    ui::pfloat x_;
+    ui::pfloat y_;
+    ui::pfloat w_;
+    ui::pfloat h_;
 };
 
 

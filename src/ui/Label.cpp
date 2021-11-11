@@ -2,6 +2,6 @@
 #include <framework/RenderSystem.hpp>
 
 void Label::Render(const RenderSystem& r) {
-    r.RenderRect({255, 255, 255, 255}, xw_, yh_, ww_, hh_);
-    r.RenderText(text_, xw_, yh_, ww_, hh_, color_, font_);
+    r.RenderRect({255, 255, 255, 255}, x_, y_, w_, h_);
+    r.RenderText(text_, x_, y_, w_, h_, color_, font_);
 }

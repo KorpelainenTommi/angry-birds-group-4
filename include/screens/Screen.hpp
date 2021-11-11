@@ -7,9 +7,10 @@
 #include <UpdateListener.hpp>
 
 
-//Base class for screens
+/// Base class for screens
 class Screen : public UpdateListener {
 public:
+    Screen(Application& app) : app_(app) {}
 
     virtual void Update() {
         //Update all elements
@@ -21,8 +22,11 @@ public:
         for(const auto& e : menu_) e->Render(r);
     }
 
+    Application& GetApplication() const { return app_; }
+
 
 protected:
+    Application& app_;
     std::vector<std::unique_ptr<Element>> menu_;
 };
 

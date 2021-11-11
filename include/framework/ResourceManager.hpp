@@ -11,7 +11,6 @@
 class ResourceManager {
 public:
     ResourceManager(const FileManager&);
-
     const sf::Font& GetFont(FontID) const;
     const sf::Sprite& GetSprite(SpriteID id) const;
     const sf::SoundBuffer& GetSound(AudioID id) const;

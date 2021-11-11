@@ -16,7 +16,7 @@ public:
     /// Game, event and renderloop
     bool Loop();
 
-    /// Transition to a screen and make it active. The old screen is destroyed
+    /// Transition to screen, and make it active. The old screen is destroyed.
     void TransitionTo(std::unique_ptr<Screen>);
 
     /// Resize the window
@@ -25,8 +25,29 @@ public:
     /// Go fullscreen
     void Fullscreen();
 
+    /// Close the application
+    void Exit();
+
+
+    /// These are here in case someone absolutely needs them
+    float GetAspectRatio() const;
+    float GetWindowWidth() const;
+    float GetWindowHeight() const;
+
+    /// Get explicit access to systems
+    const FileManager& GetFileManager() const;
+    const AudioSystem& GetAudioSystem() const;
+    const RenderSystem& GetRenderSystem() const;
+    const ResourceManager& GetResourceManager() const;
+
+
 
 private:
+
+    //Time stuff
+    sf::Clock clock;
+    float accumulatedTime;
+
 
     sf::RenderWindow window_;
     std::unique_ptr<Screen> activeScreen_;

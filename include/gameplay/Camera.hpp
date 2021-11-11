@@ -1,6 +1,8 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
+#include <gameplay/Physics.hpp>
+
 /* A Camera has a position in world space, and a zoom.
  * zoom < 1 means zooming in, zoom > 1 means zooming out.
  * zoom = 1 is fullscreen.
@@ -10,15 +12,22 @@
  */
 
 struct Camera {
-    float xm = 0;
-    float ym = 0;
-    float rot = 0;
-    float zoom = 1;
+    ph::tfloat x = 0;
+    ph::tfloat y = 0;
+    ph::tfloat rot = 0;
+    ph::tfloat zoom = 1;
+    void Record() {
+        x.Record();
+        y.Record();
+        rot.Record();
+        zoom.Record();
+    }
     void SetFullscreen() {
-        xm = 0;
-        ym = 0;
+        x = 0;
+        y = 0;
         rot = 0;
         zoom = 1;
+        Record();
     }
 };
 

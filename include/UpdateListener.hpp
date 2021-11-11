@@ -18,6 +18,8 @@ public:
     virtual void OnMouseUp(const sf::Event::MouseButtonEvent&) {}
     virtual void OnMouseMove(const sf::Event::MouseMoveEvent&) {}
 
+    virtual void OnMouseScroll(const sf::Event::MouseWheelScrollEvent&) {}
+
     virtual void OnTextEntered(const sf::Event::TextEvent&) {}
 
 protected:

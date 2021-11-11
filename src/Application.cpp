@@ -1,8 +1,12 @@
+#include <math.h>
 #include <Application.hpp>
 #include <ui/UIConstants.hpp>
 #include <screens/DemoScreen.hpp>
 
 
+void Application::Exit() {
+    window_.close();
+}
 
 void Application::TransitionTo(std::unique_ptr<Screen> screen) {
     activeScreen_ = std::move(screen);
@@ -43,10 +47,17 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
     //switch to resizable for debugging different window sizes
     Resize(800, 800);
     
-    TransitionTo(std::make_unique<DemoScreen>());
+    TransitionTo(std::make_unique<DemoScreen>(*this));
 }
 
+float Application::GetAspectRatio() const { return renderSystem_.WW / renderSystem_.HH; }
+float Application::GetWindowWidth() const { return renderSystem_.WW; }
+float Application::GetWindowHeight() const { return renderSystem_.HH; }
 
+const FileManager& Application::GetFileManager() const { return fileManager_;}
+const AudioSystem& Application::GetAudioSystem() const { return audioSystem_; }
+const RenderSystem& Application::GetRenderSystem() const { return renderSystem_; }
+const ResourceManager& Application::GetResourceManager() const { return resourceManager_; }
 
 
 bool Application::Loop() {
@@ -58,21 +69,27 @@ bool Application::Loop() {
 
         if(event.type == sf::Event::KeyPressed) activeScreen_->OnKeyDown(event.key);
         if(event.type == sf::Event::KeyReleased) activeScreen_->OnKeyUp(event.key);
+        if(event.type == sf::Event::MouseButtonPressed) activeScreen_->OnMouseDown(event.mouseButton);
+        if(event.type == sf::Event::MouseButtonReleased) activeScreen_->OnMouseUp(event.mouseButton);        
         if(event.type == sf::Event::MouseMoved) activeScreen_->OnMouseMove(event.mouseMove);
+        if(event.type == sf::Event::MouseWheelScrolled) activeScreen_->OnMouseScroll(event.mouseWheelScroll);
         if(event.type == sf::Event::TextEntered) activeScreen_->OnTextEntered(event.text);
 
     }
 
+    float frametime = clock.restart().asSeconds();
+    if(frametime > 0.2F) frametime = 0.2F;
+    accumulatedTime += frametime;
 
-    //TODO: Update should be a fixed timestep event that is called eg. 60 times a second.
-    //Update should be independent of framerate, which it currently isn't
-
-
-    activeScreen_->Update();
+    while(accumulatedTime >= ph::Timestep) {
+        activeScreen_->Update();
+        accumulatedTime -= ph::Timestep;
+    }
     
     
     //Gray color
     window_.clear({128, 128, 128, 255});
+    renderSystem_.ALPHA = accumulatedTime / ph::Timestep;
     activeScreen_->Render(renderSystem_);
     window_.display();
 

@@ -6,39 +6,107 @@
 #include <ui.hpp>
 #include <screens/Screen.hpp>
 
+
+//An example screen demonstrating some ui and rendering stuff
+
+
 class DemoScreen : public Screen {
 public:
-    DemoScreen() {
+    DemoScreen(Application& app) : Screen(app) {
 
         //Example of adding some elements
 
         auto title = std::make_unique<Label>(ui::AppName);
         auto version = std::make_unique<Label>(ui::AppVersion);
-        title->SetPosition(0.0F, 0.2F);
-        title->SetSize(1.0F, 0.05F);
-        version->SetPosition(0.0F, 0.95F);
-        version->SetSize(0.2F, 0.05F);
+        title->SetPosition(0 VW, 20 VH);
+        title->SetSize(100 VW, 5 VH);
+        version->SetPosition(0 VW, 95 VH);
+        version->SetSize(20 VW, 5 VH);
+
         menu_.push_back(std::move(title));
         menu_.push_back(std::move(version));
     }
 
+    virtual void OnMouseDown(const sf::Event::MouseButtonEvent& e) {
+        if(e.button == sf::Mouse::Button::Right) {
+            mDown = true;
+            mouseX = e.x / app_.GetWindowWidth();
+            mouseY = e.y / app_.GetWindowHeight();
+            mouseX.Record();
+            mouseY.Record();
+        }
+    }
+
+    virtual void OnMouseUp(const sf::Event::MouseButtonEvent& e) {
+        if(e.button == sf::Mouse::Button::Right) {
+            mDown = false;
+        }
+    }
+
+    virtual void OnMouseScroll(const sf::Event::MouseWheelScrollEvent& e) {
+        c.zoom -= e.delta * 0.1F;
+        if(c.zoom <= 0.1F) c.zoom = 0.1F;
+    }
+
+
+
+    virtual void OnMouseMove(const sf::Event::MouseMoveEvent& e) {
+        if(mDown) {
+            mouseX = e.x / app_.GetWindowWidth();
+            mouseY = e.y / app_.GetWindowHeight();
+            c.x -= ph::FullscreenPlayArea * c.zoom * (mouseX.f1 - mouseX.f0);
+            c.y += ph::FullscreenPlayArea * c.zoom * (mouseY.f1 - mouseY.f0);
+            mouseX.Record();
+            mouseY.Record();
+        }
+    }
+
+    virtual void Update() {
+        //Record tfloat values at the start of physics update
+        x.Record();
+        c.Record();
+        rot.Record();
+
+        //x position at time t will be something between -20 meters and 20 meters
+        x = sin(clock.getElapsedTime().asSeconds()) * 20.0F;
+
+        //c.zoom = 0.5F; //Camera zoom
+        //c.x = x; //Center camera on moving object, comment this out for static camera
+
+        //rotation at time t
+        rot = clock.getElapsedTime().asSeconds() * 20;
+    }
+
     virtual void Render(const RenderSystem& r) {
 
-        //Some sample stuff for game rendering
+        //Additional rendering for some gamelike stuff.
+        //In an actual implementation, this should instead be done through a collection of gameobjects
+        //that all have their own render method etc.
 
-        
-        float x = sin(clock.getElapsedTime().asSeconds()) * 20.0F;
-        //c.zoom = 0.5F; //Camera zoom
-        //c.xm = x; //Center camera on moving object, comment this out for static camera
-        //r.RenderSprite(SpriteID::glass_block1x1, 0, 0, 80, 0, c); //Background
-        r.RenderSprite(SpriteID::metal_block1x1, x, 0, 5, clock.getElapsedTime().asSeconds() * 20, c);
+        r.RenderSprite(SpriteID::glass_block1x1, 0, 0, 80, 0, c); //Background
+
+        r.RenderSprite(SpriteID::metal_block1x1, x, 0, 5, rot, c);
+
+        r.RenderRect({0, 255, 0}, x, 5, 2.0F, 3.0F, rot, c);
+
+        r.RenderOval({0, 0, 255}, x, -5, 2.0F, 3.0F, rot, c);
+
+        r.RenderText("EXAMPLE", x, 15, 5, rot, c, {255, 0, 0}, FontID::source_serif);
 
         Screen::Render(r);
     }
+
 private:
+    bool mDown = false;
 
+    //these tfloats are simply used here for storing previous values
+    //they have nothing to do with the interpolation system
+    ph::tfloat mouseX;
+    ph::tfloat mouseY;
 
-
+    //These are updated in Update, and get Record called at the start of it.
+    ph::tfloat x;
+    ph::tfloat rot;
     Camera c;
     sf::Clock clock;
 

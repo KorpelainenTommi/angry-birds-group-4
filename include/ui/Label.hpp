@@ -7,7 +7,7 @@
 #include <framework/Resources.hpp>
 
 
-/// Text
+/// An element that displays text
 class Label : public Element {
 public:
     
