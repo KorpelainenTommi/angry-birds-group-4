@@ -5,6 +5,7 @@
 #include <vector>
 #include <ui/Element.hpp>
 #include <UpdateListener.hpp>
+#include <Application.hpp>
 
 
 /// Base class for screens
@@ -26,6 +27,29 @@ public:
 
     Application& GetApplication() const { return app_; }
 
+    virtual bool OnMouseDown(const sf::Event::MouseButtonEvent& e){
+        std::size_t len = menu_.size();
+        for(std::size_t i = 0; i < len; i++){
+            if(menu_[i].get()->OnMouseDown(e)) return true;
+        }
+        return false;
+    }
+
+    virtual bool OnMouseUp(const sf::Event::MouseButtonEvent& e){
+        std::size_t len = menu_.size();
+        for(std::size_t i = 0; i < len; i++){
+            if(menu_[i].get()->OnMouseUp(e)) return true;
+        }
+        return false;
+    }
+
+    virtual bool OnMouseMove(const sf::Event::MouseMoveEvent& e){
+        std::size_t len = menu_.size();
+        for(std::size_t i = 0; i < len; i++){
+            if(menu_[i].get()->OnMouseMove(e)) return true;
+        }
+        return false;
+    }
 
 protected:
     Application& app_;

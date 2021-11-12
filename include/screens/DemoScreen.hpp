@@ -12,8 +12,8 @@
 
 class DemoScreen : public Screen {
 public:
-    DemoScreen(Application& app) : Screen(app) {
-
+    DemoScreen(Application& app) : Screen(app) {}
+/*
         //Example of adding some elements
 
         auto title = std::make_unique<Label>(ui::AppName);
@@ -113,7 +113,7 @@ private:
     ph::tfloat rot;
     Camera c;
     sf::Clock clock;
-
+*/
 };
 
 

@@ -17,7 +17,13 @@ namespace ui {
     constexpr unsigned int AppMinHeight = 200;
 
     const sf::Color DefaultTextColor = {0, 0, 0};
+    const sf::Color backgroundColor = {255, 255, 255};
+    const sf::Color backgroundColor2 = {221, 221, 221};
+    const sf::Color textColor = {0, 0, 0};
+    const sf::Color buttonBackgroundColor = {204, 204, 204};
+    const sf::Color buttonTextColor = {0, 0, 0};
 
+    const FontID defaultFont = FontID::source_serif;
 
 
 
