@@ -51,3 +51,48 @@ The project plan under construction.
 3. Ilari Tulkki: Design UI and features to the project plan
 4. Joonas Palmulaakso: Project plan document
 
+# Meeting 11.11.2021 17::30
+
+**Participants**: 
+Tommi Korpelainen
+Aleksi Rintanen
+Ilari Tulkki
+Joonas Palmulaakso
+
+## Summary of works
+1. Tommi Korpelainen
+   
+   Writing the project plan document, writing the basic structure of the application and creating an UML class diagram.
+
+2. Aleksi Rintanen
+
+   Writing the project plan document.
+
+3. Ilari Tulkki
+ 
+   Writing the project plan document and discussing about some implementation details with Tommi.
+   
+4. Joonas Palmulaakso
+
+   Writing the project plan document.
+
+
+## Challenges
+
+
+
+## Actions
+1. Tommi Korpelainen is going to continue to finish frameworks like file manager and audio system.
+2. Aleksi Rintanen is going to start writing the Game class.
+3. Ilari Tulkki is going to start writing the Screen and Element classes.
+4. Joonas Palmulaakso is going to start writing the GameObject class.
+
+## Project status 
+Project file structure and class hierarchy are defined. Basic top level functionality implemented (e.g. GUI window and game loop, listening to key events, screen transitions, elements and rendering, interfaces for key abstract classes).
+
+### TODOs
+1. Tommi Korpelainen: finishing frameworks.
+2. Aleksi Rintanen: writing the Game class.
+3. Ilari Tulkki: writing the Screen and Element clasess.
+4. Joonas Palmulaakso: writing the GameObject class.
+
