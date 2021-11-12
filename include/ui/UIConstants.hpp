@@ -1,6 +1,7 @@
 #ifndef UI_CONSTANTS_HPP
 #define UI_CONSTANTS_HPP
 
+#include <framework/Resources.hpp>
 #include <SFML/Graphics/Color.hpp>
 
 // A file defining the color scheme and style of the program
@@ -16,6 +17,8 @@ namespace ui {
     constexpr unsigned int AppMinWidth = 266; //Currently unused
     constexpr unsigned int AppMinHeight = 200;
 
+    enum TextAlign { left, center, right };
+    const FontID DefaultFont = FontID::source_serif;
     const sf::Color DefaultTextColor = {0, 0, 0};
     const sf::Color backgroundColor = {255, 255, 255};
     const sf::Color backgroundColor2 = {221, 221, 221};
@@ -26,6 +29,9 @@ namespace ui {
     const FontID defaultFont = FontID::source_serif;
 
 
+    //Don't touch this unless u are Application
+    //plz
+    static float aspectRatio;
 
 
     struct pfloat {

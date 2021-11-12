@@ -20,20 +20,27 @@ void Application::Fullscreen() {
 
     renderSystem_.WW = window_.getView().getSize().x;
     renderSystem_.HH = window_.getView().getSize().y;
+    aspectRatio = renderSystem_.WW / renderSystem_.HH;
+    ui::aspectRatio = aspectRatio;
+    windowWidth = (float)window_.getViewport(window_.getView()).width;
+    windowHeight = (float)window_.getViewport(window_.getView()).height;
+
 
 }
 
 void Application::Resize(unsigned int width, unsigned int height) {
     
-    //Recreating the window with an appropriate videomode instead of setSize prevents stretched text etc.
-    //w.setSize({sz.width, sz.height});
+    float w = (float)width;
+    float h = (float)height;
 
-    //Update rendersystem values for screen size, since rendersystem cannot know when these values change
-    //Otherwise, getView copies a view every frame for every draw call
+    if(abs(w/h - aspectRatio) > 0.01F) {
+        if(w != windowWidth) h = w / aspectRatio;
+        else w = h * aspectRatio;
+    }
 
-    window_.create(sf::VideoMode(width, height), ui::AppName);
-    renderSystem_.WW = window_.getView().getSize().x;
-    renderSystem_.HH = window_.getView().getSize().y;
+    windowWidth = w;
+    windowHeight = h;
+    window_.setSize({(unsigned int)w, (unsigned int)h});
 
 }
 
@@ -45,14 +52,25 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
     window_.setFramerateLimit(150); //This will probably get turned to a constant
 
     //switch to resizable for debugging different window sizes
+    window_.create(sf::VideoMode::getDesktopMode(), ui::AppName);
+    renderSystem_.WW = window_.getView().getSize().x;
+    renderSystem_.HH = window_.getView().getSize().y;
+    renderSystem_.WW = window_.getView().getSize().x;
+    renderSystem_.HH = window_.getView().getSize().y;
+    aspectRatio = renderSystem_.WW / renderSystem_.HH;
+    ui::aspectRatio = aspectRatio;
+    windowWidth = (float)window_.getViewport(window_.getView()).width;
+    windowHeight = (float)window_.getViewport(window_.getView()).height;
+
+    //Make 800 px wide
     Resize(800, 800);
     
     TransitionTo(std::make_unique<DemoScreen>(*this));
 }
 
-float Application::GetAspectRatio() const { return renderSystem_.WW / renderSystem_.HH; }
-float Application::GetWindowWidth() const { return renderSystem_.WW; }
-float Application::GetWindowHeight() const { return renderSystem_.HH; }
+float Application::GetAspectRatio() const { return aspectRatio; }
+float Application::GetWindowWidth() const { return windowWidth; }
+float Application::GetWindowHeight() const { return windowHeight; }
 
 const FileManager& Application::GetFileManager() const { return fileManager_;}
 const AudioSystem& Application::GetAudioSystem() const { return audioSystem_; }
@@ -69,9 +87,23 @@ bool Application::Loop() {
 
         if(event.type == sf::Event::KeyPressed) activeScreen_->OnKeyDown(event.key);
         if(event.type == sf::Event::KeyReleased) activeScreen_->OnKeyUp(event.key);
-        if(event.type == sf::Event::MouseButtonPressed) activeScreen_->OnMouseDown(event.mouseButton);
-        if(event.type == sf::Event::MouseButtonReleased) activeScreen_->OnMouseUp(event.mouseButton);        
-        if(event.type == sf::Event::MouseMoved) activeScreen_->OnMouseMove(event.mouseMove);
+
+        if(event.type == sf::Event::MouseButtonPressed) {
+            float x = event.mouseButton.x / GetWindowWidth();
+            float y = event.mouseButton.y / GetWindowHeight();
+            activeScreen_->OnMouseDown(event.mouseButton.button, x, y);
+        }
+        if(event.type == sf::Event::MouseButtonReleased) {
+            float x = event.mouseButton.x / GetWindowWidth();
+            float y = event.mouseButton.y / GetWindowHeight();
+            activeScreen_->OnMouseUp(event.mouseButton.button, x, y);
+        }
+        if(event.type == sf::Event::MouseMoved) {
+            float x = event.mouseMove.x / GetWindowWidth();
+            float y = event.mouseMove.y / GetWindowHeight();
+            activeScreen_->OnMouseMove(x, y);
+        }
+
         if(event.type == sf::Event::MouseWheelScrolled) activeScreen_->OnMouseScroll(event.mouseWheelScroll);
         if(event.type == sf::Event::TextEntered) activeScreen_->OnTextEntered(event.text);
 

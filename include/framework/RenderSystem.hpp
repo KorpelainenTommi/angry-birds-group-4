@@ -32,10 +32,15 @@ public:
     void RenderRect(sf::Color color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const;
 
     /// Render text in screen independent coordinates. Font size is defined by height and width is dependent on string length
-    void RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, sf::Color color, FontID id) const;
+    void RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot,
+    const Camera& camera, sf::Color color = ui::DefaultTextColor, FontID id = ui::DefaultFont) const;
 
-    /// Render text in relative coordinates
-    void RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, sf::Color color, FontID id) const;    
+    /// Render text in relative coordinates. Fontsize is defined by height h
+    void RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h,
+    sf::Color color = ui::DefaultTextColor, FontID id = ui::DefaultFont, ui::TextAlign textAlign = ui::TextAlign::center) const;
+
+    /// Measures the width of string of text at a given height. Returns the units in vw or vh depending on the argument p
+    ui::pfloat MeasureText(const std::string& text, ui::pfloat h, ui::pfloat::P p = ui::pfloat::P::vw, FontID id = ui::DefaultFont) const;
 
     /// Render a single color oval in relative coordinates
     void RenderOval(sf::Color color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const;

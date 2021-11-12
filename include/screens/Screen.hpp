@@ -7,6 +7,7 @@
 #include <UpdateListener.hpp>
 #include <Application.hpp>
 
+class Application;
 
 /// Base class for screens
 class Screen : public UpdateListener {
