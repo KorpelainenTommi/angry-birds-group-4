@@ -6,6 +6,7 @@
 #include <ui/Element.hpp>
 #include <UpdateListener.hpp>
 
+class Application;
 
 /// Base class for screens
 class Screen : public UpdateListener {

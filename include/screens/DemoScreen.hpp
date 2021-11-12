@@ -16,15 +16,15 @@ public:
 
         //Example of adding some elements
 
-        auto title = std::make_unique<Label>(ui::AppName);
-        auto version = std::make_unique<Label>(ui::AppVersion);
-        title->SetPosition(0 VW, 20 VH);
-        title->SetSize(100 VW, 5 VH);
-        version->SetPosition(0 VW, 95 VH);
-        version->SetSize(20 VW, 5 VH);
+        //auto title = std::make_unique<Label>(ui::AppName);
+        //auto version = std::make_unique<Label>(ui::AppVersion);
+        //title->SetPosition(0 VW, 20 VH);
+        //title->SetSize(100 VW, 5 VH);
+        //version->SetPosition(0 VW, 95 VH);
+        //version->SetSize(20 VW, 5 VH);
 
-        menu_.push_back(std::move(title));
-        menu_.push_back(std::move(version));
+        //menu_.push_back(std::move(title));
+        //menu_.push_back(std::move(version));
     }
 
     virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y) {

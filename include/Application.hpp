@@ -6,6 +6,7 @@
 #include <screens/Screen.hpp>
 #include <SFML/Graphics.hpp>
 
+class Screen;
 
 class Application {
 public:
@@ -47,6 +48,11 @@ private:
     //Time stuff
     sf::Clock clock;
     float accumulatedTime;
+
+    // window viewport
+    float aspectRatio;
+    float windowWidth;
+    float windowHeight;
 
 
     sf::RenderWindow window_;

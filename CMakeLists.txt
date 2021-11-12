@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 project (AngryTeekkari)
 
-# Target C++ 11 standard (these are optional)
-set(CMAKE_CXX_STANDARD 11)
+# Target C++ 14 standard (these are optional)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set a default build type if none was specified

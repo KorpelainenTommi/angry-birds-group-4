@@ -21,8 +21,9 @@ namespace ui {
     const FontID DefaultFont = FontID::source_serif;
     const sf::Color DefaultTextColor = {0, 0, 0};
 
-
-
+    //Don't touch this unless u are Application
+    //plz
+    static float aspectRatio;
 
 
     struct pfloat {
