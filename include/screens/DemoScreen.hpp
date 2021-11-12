@@ -27,19 +27,19 @@ public:
         menu_.push_back(std::move(version));
     }
 
-    virtual bool OnMouseDown(const sf::Event::MouseButtonEvent& e) {
-        if(e.button == sf::Mouse::Button::Right) {
+    virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
+        if(e == sf::Mouse::Button::Right) {
             mDown = true;
-            mouseX = e.x / app_.GetWindowWidth();
-            mouseY = e.y / app_.GetWindowHeight();
+            mouseX = x;
+            mouseY = y;
             mouseX.Record();
             mouseY.Record();
         }
         return false;
     }
 
-    virtual bool OnMouseUp(const sf::Event::MouseButtonEvent& e) {
-        if(e.button == sf::Mouse::Button::Right) {
+    virtual bool OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
+        if(e == sf::Mouse::Button::Right) {
             mDown = false;
         }
         return false;
@@ -53,10 +53,10 @@ public:
 
 
 
-    virtual bool OnMouseMove(const sf::Event::MouseMoveEvent& e) {
+    virtual bool OnMouseMove(float x, float y) {
         if(mDown) {
-            mouseX = e.x / app_.GetWindowWidth();
-            mouseY = e.y / app_.GetWindowHeight();
+            mouseX = x;
+            mouseY = y;
             c.x -= ph::FullscreenPlayArea * c.zoom * (mouseX.f1 - mouseX.f0);
             c.y += ph::FullscreenPlayArea * c.zoom * (mouseY.f1 - mouseY.f0);
             mouseX.Record();

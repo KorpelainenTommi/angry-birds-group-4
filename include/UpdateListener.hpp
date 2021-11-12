@@ -14,9 +14,9 @@ public:
     virtual bool OnKeyDown(const sf::Event::KeyEvent&) { return false; }
     virtual bool OnKeyUp(const sf::Event::KeyEvent&) { return false; }
 
-    virtual bool OnMouseDown(const sf::Event::MouseButtonEvent&) { return false; }
-    virtual bool OnMouseUp(const sf::Event::MouseButtonEvent&) { return false; }
-    virtual bool OnMouseMove(const sf::Event::MouseMoveEvent&) { return false; }
+    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) { return false; }
+    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) { return false; }
+    virtual bool OnMouseMove(float xw, float yh) { return false; }
 
     virtual bool OnMouseScroll(const sf::Event::MouseWheelScrollEvent&) { return false; }
 

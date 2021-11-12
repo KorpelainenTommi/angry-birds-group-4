@@ -94,16 +94,25 @@ void RenderSystem::RenderOval(sf::Color color, ph::tfloat x, ph::tfloat y, ph::t
 
 // relative text
 
-void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, sf::Color color, FontID id) const {
+void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, sf::Color color, FontID id, ui::TextAlign textAlign) const {
     float xx = 0.01F * x * (x.p ? WW : HH);
     float yy = 0.01F * y * (y.p ? WW : HH);
     float ww = 0.01F * w * (w.p ? WW : HH);
     float hh = 0.01F * h * (h.p ? WW : HH);
     sf::Text t(text, resourceManager_.GetFont(id), (unsigned int)hh);
-    t.setOrigin((ww - t.getLocalBounds().width) * -0.5F, hh * 0.25F);
+    if(textAlign == ui::TextAlign::center) t.setOrigin((ww - t.getLocalBounds().width) * -0.5F, hh * 0.25F);
+    else if(textAlign == ui::TextAlign::right) t.setOrigin(t.getLocalBounds().width - ww, hh * 0.25F);
+    else t.setOrigin(0, hh * 0.25F);
     t.setPosition(xx, yy);
     t.setFillColor(color);
     window_.draw(t);
+}
+
+ui::pfloat RenderSystem::MeasureText(const std::string& text, ui::pfloat h, ui::pfloat::P p, FontID id) const {
+    float hh = 0.01F * h * (h.p ? WW : HH);
+    sf::Text t(text, resourceManager_.GetFont(id), (unsigned int)hh);
+    if(p == ui::pfloat::vw) return (100.0F * t.getLocalBounds().width / WW) VW;
+    else return (100.0F * t.getLocalBounds().width / HH) VH;
 }
 
 //game text

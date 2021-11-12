@@ -69,9 +69,23 @@ bool Application::Loop() {
 
         if(event.type == sf::Event::KeyPressed) activeScreen_->OnKeyDown(event.key);
         if(event.type == sf::Event::KeyReleased) activeScreen_->OnKeyUp(event.key);
-        if(event.type == sf::Event::MouseButtonPressed) activeScreen_->OnMouseDown(event.mouseButton);
-        if(event.type == sf::Event::MouseButtonReleased) activeScreen_->OnMouseUp(event.mouseButton);        
-        if(event.type == sf::Event::MouseMoved) activeScreen_->OnMouseMove(event.mouseMove);
+
+        if(event.type == sf::Event::MouseButtonPressed) {
+            float x = event.mouseButton.x / GetWindowWidth();
+            float y = event.mouseButton.y / GetWindowHeight();
+            activeScreen_->OnMouseDown(event.mouseButton.button, x, y);
+        }
+        if(event.type == sf::Event::MouseButtonReleased) {
+            float x = event.mouseButton.x / GetWindowWidth();
+            float y = event.mouseButton.y / GetWindowHeight();
+            activeScreen_->OnMouseUp(event.mouseButton.button, x, y);
+        }
+        if(event.type == sf::Event::MouseMoved) {
+            float x = event.mouseMove.x / GetWindowWidth();
+            float y = event.mouseMove.y / GetWindowHeight();
+            activeScreen_->OnMouseMove(x, y);
+        }
+
         if(event.type == sf::Event::MouseWheelScrolled) activeScreen_->OnMouseScroll(event.mouseWheelScroll);
         if(event.type == sf::Event::TextEntered) activeScreen_->OnTextEntered(event.text);
 
