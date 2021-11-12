@@ -2,6 +2,7 @@
 #include <Application.hpp>
 #include <ui/UIConstants.hpp>
 #include <screens/DemoScreen.hpp>
+#include <iostream>
 
 
 void Application::Exit() {
@@ -18,12 +19,12 @@ void Application::Fullscreen() {
     if(available.size() > 0) window_.create(available[0], ui::AppName, sf::Style::Fullscreen);
     else window_.create(sf::VideoMode::getDesktopMode(), ui::AppName, sf::Style::Fullscreen);
 
-    renderSystem_.WW = window_.getView().getSize().x;
-    renderSystem_.HH = window_.getView().getSize().y;
+    windowWidth = window_.getView().getSize().x;
+    windowHeight = window_.getView().getSize().y;
+    renderSystem_.WW = (float)window_.getViewport(window_.getView()).width;
+    renderSystem_.HH = (float)window_.getViewport(window_.getView()).height;
     aspectRatio = renderSystem_.WW / renderSystem_.HH;
     ui::aspectRatio = aspectRatio;
-    windowWidth = (float)window_.getViewport(window_.getView()).width;
-    windowHeight = (float)window_.getViewport(window_.getView()).height;
 
 
 }
@@ -33,37 +34,37 @@ void Application::Resize(unsigned int width, unsigned int height) {
     float w = (float)width;
     float h = (float)height;
 
-    if(abs(w/h - aspectRatio) > 0.01F) {
-        if(w != windowWidth) h = w / aspectRatio;
-        else w = h * aspectRatio;
-    }
-
-    windowWidth = w;
-    windowHeight = h;
-    window_.setSize({(unsigned int)w, (unsigned int)h});
+    //windowWidth = w;
+    //windowHeight = h;
+    window_.setSize({width, height});
+    target_.create((unsigned int)w, (unsigned int)h);
+    renderSystem_.WW = w;
+    renderSystem_.HH = h;
 
 }
 
-Application::Application() : resourceManager_(fileManager_), renderSystem_(window_, resourceManager_) {
+Application::Application() : resourceManager_(fileManager_), renderSystem_(target_, resourceManager_) {
 
     //Create fullscreen window
     Fullscreen();
     window_.setVerticalSyncEnabled(false);
-    window_.setFramerateLimit(150); //This will probably get turned to a constant
+    window_.setFramerateLimit(80); //This will probably get turned to a constant
 
     //switch to resizable for debugging different window sizes
     window_.create(sf::VideoMode::getDesktopMode(), ui::AppName);
-    renderSystem_.WW = window_.getView().getSize().x;
-    renderSystem_.HH = window_.getView().getSize().y;
-    renderSystem_.WW = window_.getView().getSize().x;
-    renderSystem_.HH = window_.getView().getSize().y;
+    windowWidth = window_.getView().getSize().x;
+    windowHeight = window_.getView().getSize().y;
     aspectRatio = renderSystem_.WW / renderSystem_.HH;
     ui::aspectRatio = aspectRatio;
-    windowWidth = (float)window_.getViewport(window_.getView()).width;
-    windowHeight = (float)window_.getViewport(window_.getView()).height;
+    renderSystem_.WW = (float)window_.getViewport(window_.getView()).width;
+    renderSystem_.HH = (float)window_.getViewport(window_.getView()).height;
+
+    std::cout << "Creating texture" << std::endl;
+    target_.create((unsigned int)renderSystem_.WW, (unsigned int)renderSystem_.HH);
+    std::cout << "Texture created" << std::endl;
 
     //Make 800 px wide
-    Resize(800, 800);
+    //Resize(800, 800);
     
     TransitionTo(std::make_unique<DemoScreen>(*this));
 }
@@ -121,8 +122,13 @@ bool Application::Loop() {
     
     //Gray color
     window_.clear({128, 128, 128, 255});
+    target_.clear({128, 0, 128, 255});
     renderSystem_.ALPHA = accumulatedTime / ph::Timestep;
     activeScreen_->Render(renderSystem_);
+    target_.display();
+    sf::Sprite sp = sf::Sprite(target_.getTexture());
+    sp.setScale(windowWidth / renderSystem_.WW, windowHeight / renderSystem_.HH);
+    window_.draw(sp);
     window_.display();
 
 

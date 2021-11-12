@@ -56,6 +56,7 @@ private:
 
 
     sf::RenderWindow window_;
+    sf::RenderTexture target_;
     std::unique_ptr<Screen> activeScreen_;
 
     FileManager fileManager_;

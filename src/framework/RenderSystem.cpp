@@ -14,14 +14,14 @@ void RenderSystem::RenderRect(sf::Color color, ui::pfloat x, ui::pfloat y, ui::p
     rect.setPosition(xx, yy);
     rect.setScale(ww, hh);
     rect.setFillColor(color);
-    window_.draw(rect);
+    canvas_.draw(rect);
 }
 
 //game rectangle
 
 void RenderSystem::RenderRect(sf::Color color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     
-    sf::View view = window_.getDefaultView();
+    sf::View view = canvas_.getDefaultView();
     sf::RectangleShape rect({1, 1});
     rect.setOrigin(0.5F, 0.5F);
 
@@ -42,9 +42,9 @@ void RenderSystem::RenderRect(sf::Color color, ph::tfloat x, ph::tfloat y, ph::t
     view.rotate(camera.rot.Lerp(ALPHA));
     view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
     
-    window_.setView(view);
-    window_.draw(rect);
-    window_.setView(window_.getDefaultView());
+    canvas_.setView(view);
+    canvas_.draw(rect);
+    canvas_.setView(canvas_.getDefaultView());
 }
 
 //relative oval
@@ -58,14 +58,14 @@ void RenderSystem::RenderOval(sf::Color color, ui::pfloat x, ui::pfloat y, ui::p
     circ.setPosition(xx, yy);
     circ.setScale(ww, hh);
     circ.setFillColor(color);
-    window_.draw(circ);
+    canvas_.draw(circ);
 }
 
 //game oval
 
 void RenderSystem::RenderOval(sf::Color color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     
-    sf::View view = window_.getDefaultView();
+    sf::View view = canvas_.getDefaultView();
     sf::CircleShape circ(0.5F);
     circ.setOrigin(0.5F, 0.5F);
 
@@ -86,9 +86,10 @@ void RenderSystem::RenderOval(sf::Color color, ph::tfloat x, ph::tfloat y, ph::t
     view.rotate(camera.rot.Lerp(ALPHA));
     view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
     
-    window_.setView(view);
-    window_.draw(circ);
-    window_.setView(window_.getDefaultView());
+
+    canvas_.setView(view);
+    canvas_.draw(circ);
+    canvas_.setView(canvas_.getDefaultView());
 }
 
 
@@ -105,7 +106,7 @@ void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat 
     else t.setOrigin(0, hh * 0.25F);
     t.setPosition(xx, yy);
     t.setFillColor(color);
-    window_.draw(t);
+    canvas_.draw(t);
 }
 
 ui::pfloat RenderSystem::MeasureText(const std::string& text, ui::pfloat h, ui::pfloat::P p, FontID id) const {
@@ -119,7 +120,7 @@ ui::pfloat RenderSystem::MeasureText(const std::string& text, ui::pfloat h, ui::
 
 void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, sf::Color color, FontID id) const {
 
-    sf::View view = window_.getDefaultView();
+    sf::View view = canvas_.getDefaultView();
     float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
     float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
     float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
@@ -138,9 +139,9 @@ void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat 
     view.rotate(camera.rot.Lerp(ALPHA));
     view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
     
-    window_.setView(view);
-    window_.draw(t);
-    window_.setView(window_.getDefaultView());
+    canvas_.setView(view);
+    canvas_.draw(t);
+    canvas_.setView(canvas_.getDefaultView());
 
 }
 
@@ -154,14 +155,14 @@ void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfl
     float hh = 0.01F * h * (h.p ? WW : HH);
     sp.setPosition(xx, yy);
     sp.scale(ww / sp.getLocalBounds().width, hh / sp.getLocalBounds().height);
-    window_.draw(sp);
+    canvas_.draw(sp);
 }
 
 // game sprite
 
 void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
 
-    sf::View view = window_.getDefaultView();
+    sf::View view = canvas_.getDefaultView();
     sf::Sprite sp = resourceManager_.GetSprite(id);
     float spw = sp.getLocalBounds().width;
     float sph = sp.getLocalBounds().height;
@@ -183,8 +184,8 @@ void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfl
     view.rotate(camera.rot.Lerp(ALPHA));
     view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
     
-    window_.setView(view);
-    window_.draw(sp);
-    window_.setView(window_.getDefaultView());
+    canvas_.setView(view);
+    canvas_.draw(sp);
+    canvas_.setView(canvas_.getDefaultView());
 
 }
