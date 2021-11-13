@@ -34,6 +34,7 @@ public:
     float GetAspectRatio() const;
     float GetWindowWidth() const;
     float GetWindowHeight() const;
+    bool IsFullScreen() const;
 
     /// Get explicit access to systems
     const FileManager& GetFileManager() const;
@@ -49,20 +50,16 @@ private:
     sf::Clock clock;
     float accumulatedTime;
 
-    // window viewport
-    float aspectRatio;
-    float windowWidth;
-    float windowHeight;
-
-
+    bool isFullScreen_;
     sf::RenderWindow window_;
-    sf::RenderTexture target_;
     std::unique_ptr<Screen> activeScreen_;
 
     FileManager fileManager_;
     AudioSystem audioSystem_;
     RenderSystem renderSystem_;
     ResourceManager resourceManager_;
+
+    void UpdateView();
 
 };
 

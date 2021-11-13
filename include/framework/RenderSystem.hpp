@@ -11,7 +11,7 @@
 class RenderSystem {
 public:
         
-    RenderSystem(sf::RenderTarget& canvas, const ResourceManager& resourceManager) : resourceManager_(resourceManager), canvas_(canvas) {}
+    RenderSystem(sf::RenderWindow& window, const ResourceManager& resourceManager) : resourceManager_(resourceManager), window_(window) {}
 
     //For the definition of screen independent coordinates, see gameplay/Physics.hpp
 
@@ -61,7 +61,7 @@ private:
     float WW;
     float HH;
 
-    sf::RenderTarget& canvas_;
+    sf::RenderWindow& window_;
     const ResourceManager& resourceManager_;
 };
 

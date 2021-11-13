@@ -16,6 +16,8 @@ namespace ui {
     constexpr char* AppVersion = "alpha 1.1";
     constexpr unsigned int AppMinWidth = 266; //Currently unused
     constexpr unsigned int AppMinHeight = 200;
+    constexpr unsigned int TargetFramerate = 180;
+    constexpr float TargetFrametime = 1.0F / TargetFramerate;
 
     enum TextAlign { left, center, right };
     const FontID DefaultFont = FontID::source_serif;
@@ -23,6 +25,8 @@ namespace ui {
 
     //Don't touch this unless u are Application
     //plz
+    static float windowWidth;
+    static float windowHeight;
     static float aspectRatio;
 
 
