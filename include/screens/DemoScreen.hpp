@@ -93,7 +93,7 @@ public:
 
         r.RenderSprite(SpriteID::metal_block1x1, x, 0, 5, rot, c);
 
-        r.RenderRect({0, 255, 0}, x, 5, 2.0F, 3.0F, rot, c);
+        r.RenderSprite(SpriteID::teekkari_head1, x, 5, 4.0F, rot, c);
 
         r.RenderOval({0, 0, 255}, x, -5, 2.0F, 3.0F, rot, c);
 
