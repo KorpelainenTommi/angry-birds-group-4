@@ -2,7 +2,6 @@
 #include <Application.hpp>
 #include <ui/UIConstants.hpp>
 #include <screens/DemoScreen.hpp>
-#include <iostream>
 
 
 void Application::Exit() {
@@ -44,7 +43,7 @@ void Application::Resize(unsigned int width, unsigned int height) {
 
 }
 
-Application::Application() : resourceManager_(fileManager_), renderSystem_(window_, resourceManager_) {
+Application::Application() : resourceManager_(fileManager_), renderSystem_(window_, resourceManager_), audioSystem_(resourceManager_) {
 
     //Create fullscreen window
     Fullscreen();
@@ -60,8 +59,8 @@ float Application::GetWindowWidth() const { return ui::windowWidth; }
 float Application::GetWindowHeight() const { return ui::windowHeight; }
 bool Application::IsFullScreen() const { return isFullScreen_; }
 
+AudioSystem& Application::GetAudioSystem() { return audioSystem_; }
 const FileManager& Application::GetFileManager() const { return fileManager_;}
-const AudioSystem& Application::GetAudioSystem() const { return audioSystem_; }
 const RenderSystem& Application::GetRenderSystem() const { return renderSystem_; }
 const ResourceManager& Application::GetResourceManager() const { return resourceManager_; }
 

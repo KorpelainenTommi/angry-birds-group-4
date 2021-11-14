@@ -11,7 +11,7 @@
 class RenderSystem {
 public:
         
-    RenderSystem(sf::RenderWindow& window, const ResourceManager& resourceManager) : resourceManager_(resourceManager), window_(window) {}
+    RenderSystem(sf::RenderWindow& window, ResourceManager& resourceManager) : resourceManager_(resourceManager), window_(window) {}
 
     //For the definition of screen independent coordinates, see gameplay/Physics.hpp
 
@@ -62,7 +62,7 @@ private:
     float HH;
 
     sf::RenderWindow& window_;
-    const ResourceManager& resourceManager_;
+    ResourceManager& resourceManager_;
 };
 
 #endif

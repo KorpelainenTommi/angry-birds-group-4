@@ -5,6 +5,7 @@
 #include <memory>
 #include <ui.hpp>
 #include <screens/Screen.hpp>
+#include <framework/Resources.hpp>
 
 
 //An example screen demonstrating some ui and rendering stuff
@@ -29,6 +30,7 @@ public:
 
     virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
         if(e == sf::Mouse::Button::Right) {
+            app_.GetAudioSystem().PlaySound(SoundID::ui_click);
             mDown = true;
             mouseX = x;
             mouseY = y;

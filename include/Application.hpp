@@ -37,8 +37,8 @@ public:
     bool IsFullScreen() const;
 
     /// Get explicit access to systems
+    AudioSystem& GetAudioSystem();
     const FileManager& GetFileManager() const;
-    const AudioSystem& GetAudioSystem() const;
     const RenderSystem& GetRenderSystem() const;
     const ResourceManager& GetResourceManager() const;
 
