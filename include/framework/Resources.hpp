@@ -2,7 +2,19 @@
 #define RESOURCES_HPP
 
 /// Enumeration of sprites usable with RenderSystem
-enum SpriteID { wood_block1x1, metal_block1x1, glass_block1x1 };
+enum SpriteID { 
+    wood_block1x1,
+    metal_block1x1,
+    glass_block1x1,
+
+    arm_lgray,
+    torso_lgray,
+    leg_lgray,
+
+    teekkari_head1
+
+
+};
 
 /// Enumeration of audio usable with AudioSystem
 enum SoundID { ui_click };

@@ -21,7 +21,8 @@ void RenderSystem::RenderRect(sf::Color color, ui::pfloat x, ui::pfloat y, ui::p
 
 void RenderSystem::RenderRect(sf::Color color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     
-    sf::View view = window_.getDefaultView();
+    sf::View wView = window_.getView();
+    sf::View view = wView;
     sf::RectangleShape rect({1, 1});
     rect.setOrigin(0.5F, 0.5F);
 
@@ -44,7 +45,7 @@ void RenderSystem::RenderRect(sf::Color color, ph::tfloat x, ph::tfloat y, ph::t
     
     window_.setView(view);
     window_.draw(rect);
-    window_.setView(window_.getDefaultView());
+    window_.setView(wView);
 }
 
 //relative oval
@@ -65,7 +66,8 @@ void RenderSystem::RenderOval(sf::Color color, ui::pfloat x, ui::pfloat y, ui::p
 
 void RenderSystem::RenderOval(sf::Color color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     
-    sf::View view = window_.getDefaultView();
+    sf::View wView = window_.getView();
+    sf::View view = wView;
     sf::CircleShape circ(0.5F);
     circ.setOrigin(0.5F, 0.5F);
 
@@ -86,9 +88,10 @@ void RenderSystem::RenderOval(sf::Color color, ph::tfloat x, ph::tfloat y, ph::t
     view.rotate(camera.rot.Lerp(ALPHA));
     view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
     
+
     window_.setView(view);
     window_.draw(circ);
-    window_.setView(window_.getDefaultView());
+    window_.setView(wView);
 }
 
 
@@ -119,7 +122,8 @@ ui::pfloat RenderSystem::MeasureText(const std::string& text, ui::pfloat h, ui::
 
 void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, sf::Color color, FontID id) const {
 
-    sf::View view = window_.getDefaultView();
+    sf::View wView = window_.getView();
+    sf::View view = wView;
     float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
     float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
     float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
@@ -140,7 +144,7 @@ void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat 
     
     window_.setView(view);
     window_.draw(t);
-    window_.setView(window_.getDefaultView());
+    window_.setView(wView);
 
 }
 
@@ -161,7 +165,8 @@ void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfl
 
 void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
 
-    sf::View view = window_.getDefaultView();
+    sf::View wView = window_.getView();
+    sf::View view = wView;
     sf::Sprite sp = resourceManager_.GetSprite(id);
     float spw = sp.getLocalBounds().width;
     float sph = sp.getLocalBounds().height;
@@ -185,6 +190,6 @@ void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfl
     
     window_.setView(view);
     window_.draw(sp);
-    window_.setView(window_.getDefaultView());
+    window_.setView(wView);
 
 }

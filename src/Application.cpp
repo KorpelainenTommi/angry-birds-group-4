@@ -12,68 +12,55 @@ void Application::TransitionTo(std::unique_ptr<Screen> screen) {
     activeScreen_ = std::move(screen);
 }
 
+void Application::UpdateView() {
+
+    renderSystem_.WW = window_.getView().getSize().x;
+    renderSystem_.HH = window_.getView().getSize().y;
+    ui::windowWidth = renderSystem_.WW;
+    ui::windowHeight = renderSystem_.HH;
+    ui::aspectRatio = renderSystem_.WW / renderSystem_.HH;
+
+}
+
 void Application::Fullscreen() {
     
     const auto& available = sf::VideoMode::getFullscreenModes();
     if(available.size() > 0) window_.create(available[0], ui::AppName, sf::Style::Fullscreen);
     else window_.create(sf::VideoMode::getDesktopMode(), ui::AppName, sf::Style::Fullscreen);
-
-    renderSystem_.WW = window_.getView().getSize().x;
-    renderSystem_.HH = window_.getView().getSize().y;
-    aspectRatio = renderSystem_.WW / renderSystem_.HH;
-    ui::aspectRatio = aspectRatio;
-    windowWidth = (float)window_.getViewport(window_.getView()).width;
-    windowHeight = (float)window_.getViewport(window_.getView()).height;
-
+    window_.setView(window_.getDefaultView());
+    UpdateView();
+    isFullScreen_ = true;
 
 }
 
 void Application::Resize(unsigned int width, unsigned int height) {
-    
-    float w = (float)width;
-    float h = (float)height;
 
-    if(abs(w/h - aspectRatio) > 0.01F) {
-        if(w != windowWidth) h = w / aspectRatio;
-        else w = h * aspectRatio;
-    }
-
-    windowWidth = w;
-    windowHeight = h;
-    window_.setSize({(unsigned int)w, (unsigned int)h});
+    if(isFullScreen_) window_.create(sf::VideoMode::getDesktopMode(), ui::AppName, sf::Style::Default);
+    window_.setSize({width, height});
+    window_.setView(sf::View({0.0F, 0.0F, (float)width, (float)height}));
+    UpdateView();
+    isFullScreen_ = false;
 
 }
 
-Application::Application() : resourceManager_(fileManager_), renderSystem_(window_, resourceManager_) {
+Application::Application() : resourceManager_(fileManager_), renderSystem_(window_, resourceManager_), audioSystem_(resourceManager_) {
 
     //Create fullscreen window
     Fullscreen();
-    window_.setVerticalSyncEnabled(false);
-    window_.setFramerateLimit(150); //This will probably get turned to a constant
 
-    //switch to resizable for debugging different window sizes
-    window_.create(sf::VideoMode::getDesktopMode(), ui::AppName);
-    renderSystem_.WW = window_.getView().getSize().x;
-    renderSystem_.HH = window_.getView().getSize().y;
-    renderSystem_.WW = window_.getView().getSize().x;
-    renderSystem_.HH = window_.getView().getSize().y;
-    aspectRatio = renderSystem_.WW / renderSystem_.HH;
-    ui::aspectRatio = aspectRatio;
-    windowWidth = (float)window_.getViewport(window_.getView()).width;
-    windowHeight = (float)window_.getViewport(window_.getView()).height;
-
-    //Make 800 px wide
+    //Switch to resizable for now
     Resize(800, 800);
     
     TransitionTo(std::make_unique<DemoScreen>(*this));
 }
 
-float Application::GetAspectRatio() const { return aspectRatio; }
-float Application::GetWindowWidth() const { return windowWidth; }
-float Application::GetWindowHeight() const { return windowHeight; }
+float Application::GetAspectRatio() const { return ui::aspectRatio; }
+float Application::GetWindowWidth() const { return ui::windowWidth; }
+float Application::GetWindowHeight() const { return ui::windowHeight; }
+bool Application::IsFullScreen() const { return isFullScreen_; }
 
+AudioSystem& Application::GetAudioSystem() { return audioSystem_; }
 const FileManager& Application::GetFileManager() const { return fileManager_;}
-const AudioSystem& Application::GetAudioSystem() const { return audioSystem_; }
 const RenderSystem& Application::GetRenderSystem() const { return renderSystem_; }
 const ResourceManager& Application::GetResourceManager() const { return resourceManager_; }
 
@@ -125,6 +112,13 @@ bool Application::Loop() {
     activeScreen_->Render(renderSystem_);
     window_.display();
 
+    //This replaces window.setFrameratelimit as it was causing a freeze with certain desktops
+    //No idea why it failed, negative sleep? This hopefully works
+    float t;
+    while((t = clock.getElapsedTime().asSeconds()) < ui::TargetFrametime) {
+        t = ui::TargetFrametime - t; if(t < 0) t = 0;
+        sf::sleep(sf::seconds(t * 0.5F));
+    }
 
     return window_.isOpen();
 

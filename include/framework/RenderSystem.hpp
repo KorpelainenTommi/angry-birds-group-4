@@ -5,15 +5,13 @@
 #include <gameplay/Camera.hpp>
 #include <ui/UIConstants.hpp>
 #include <gameplay/Physics.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics.hpp>
 #include <framework/ResourceManager.hpp>
 
 class RenderSystem {
 public:
         
-    RenderSystem(sf::RenderWindow& window, const ResourceManager& resourceManager) : 
-    window_(window), resourceManager_(resourceManager) {}
+    RenderSystem(sf::RenderWindow& window, ResourceManager& resourceManager) : resourceManager_(resourceManager), window_(window) {}
 
     //For the definition of screen independent coordinates, see gameplay/Physics.hpp
 
@@ -64,7 +62,7 @@ private:
     float HH;
 
     sf::RenderWindow& window_;
-    const ResourceManager& resourceManager_;
+    ResourceManager& resourceManager_;
 };
 
 #endif

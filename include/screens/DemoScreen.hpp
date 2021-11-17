@@ -5,6 +5,7 @@
 #include <memory>
 #include <ui.hpp>
 #include <screens/Screen.hpp>
+#include <framework/Resources.hpp>
 
 
 //An example screen demonstrating some ui and rendering stuff
@@ -29,6 +30,7 @@ public:
 
     virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
         if(e == sf::Mouse::Button::Right) {
+            app_.GetAudioSystem().PlaySound(SoundID::ui_click);
             mDown = true;
             mouseX = x;
             mouseY = y;
@@ -91,7 +93,7 @@ public:
 
         r.RenderSprite(SpriteID::metal_block1x1, x, 0, 5, rot, c);
 
-        r.RenderRect({0, 255, 0}, x, 5, 2.0F, 3.0F, rot, c);
+        r.RenderSprite(SpriteID::teekkari_head1, x, 5, 4.0F, rot, c);
 
         r.RenderOval({0, 0, 255}, x, -5, 2.0F, 3.0F, rot, c);
 
