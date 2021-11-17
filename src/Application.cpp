@@ -91,7 +91,12 @@ bool Application::Loop() {
             activeScreen_->OnMouseMove(x, y);
         }
 
-        if(event.type == sf::Event::MouseWheelScrolled) activeScreen_->OnMouseScroll(event.mouseWheelScroll);
+        if(event.type == sf::Event::MouseWheelScrolled) {
+            float x = event.mouseWheelScroll.x / GetWindowWidth();
+            float y = event.mouseWheelScroll.y / GetWindowHeight();
+            activeScreen_->OnMouseScroll(event.mouseWheelScroll.delta, x, y);
+        }
+
         if(event.type == sf::Event::TextEntered) activeScreen_->OnTextEntered(event.text);
 
     }
