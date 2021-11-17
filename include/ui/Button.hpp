@@ -3,7 +3,7 @@
 
 #include <ui/TextElement.hpp>
 
-class Button: public Element{
+class Button: public TextElement{
 public:
     Button(
         const ui::pfloat& top,
@@ -11,10 +11,13 @@ public:
         const ui::pfloat& height,
         const ui::pfloat& width,
         const std::function<void()> mouseDownHandler
-    ): Element(top, left, height, width){
+    ): TextElement(top, left, height, width){
         mouseDownHandler_ = mouseDownHandler_;
+        backgroundColor_ = ui::buttonBackgroundColor;
+        textColor_ = ui::buttonTextColor;
     };
 
+    virtual void Render(const RenderSystem&);
 };
 
 #endif

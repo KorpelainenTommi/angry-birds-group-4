@@ -31,6 +31,9 @@ namespace ui {
 
     const FontID defaultFont = FontID::source_serif;
 
+    const float defaultAbsoluteFontSize = 16.0F;
+    const pfloat defaultFontSize = (100 * defaultAbsoluteFontSize / 1080) VH;
+
 
     //Don't touch this unless u are Application
     //plz

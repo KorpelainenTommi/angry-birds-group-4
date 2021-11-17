@@ -24,15 +24,7 @@ public:
 
     void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
 
-    bool isInside(float xw, float yh){
-        float xvw = xw * 100;
-        float yvh = yh * 100;
-        float left = x_.p ? x_.f : x_.f * ui::aspectRatio;
-        float top = y_.p ? y_.f / ui::aspectRatio : y_.f;
-        float right = (w_.p ? w_.f : w_.f * ui::aspectRatio) + left;
-        float bottom = (h_.p ? h_.f / ui::aspectRatio : h_.f) + top;
-        return xvw > left && xvw < right && yvh > top && yvh < bottom;
-    };
+    bool isInside(float xw, float yh) const;
 
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
 
@@ -68,6 +60,11 @@ public:
     void Focus();
 
 protected:
+    float toVHFloat(const ui::pfloat&) const;
+    float toVWFloat(const ui::pfloat&) const;
+    ui::pfloat toVH(const ui::pfloat&) const;
+    ui::pfloat toVW(const ui::pfloat&) const;
+
     ui::pfloat x_;
     ui::pfloat y_;
     ui::pfloat w_;

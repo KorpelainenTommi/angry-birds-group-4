@@ -5,16 +5,37 @@
 
 class TextElement: public Element{
 public:
+    TextElement(
+        const ui::pfloat& top,
+        const ui::pfloat& left,
+        const ui::pfloat& height,
+        const ui::pfloat& width
+    ): Element(top, left, height, width){}
+    
     void SetText(const std::string& s){text_ = s;}
 
     void SetBackgroundColor(sf::Color& c){backgroundColor_ = c;}
 
     void SetTextColor(sf::Color& c){textColor_ = c;}
 
-private:
+    void SetFont(FontID f){font_ = f;}
+
+    void SetRelativeFontSize(ui::pfloat& s);
+
+    void SetAbsoluteFontSize(float s);
+
+    ui::pfloat GetFontSize();
+
+protected:
     std::string text_ = "";
     sf::Color backgroundColor_ = ui::backgroundColor;
     sf::Color textColor_ = ui::textColor;
+    FontID font_ = ui::defaultFont;
+
+private:
+    ui::pfloat relativeFontSize_ = ui::defaultFontSize;
+    bool useRelativeFontSize_ = false;
+    float absoluteFontSize_ = ui::defaultAbsoluteFontSize;
 };
 
 #endif
