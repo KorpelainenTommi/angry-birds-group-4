@@ -28,26 +28,34 @@ public:
 
     Application& GetApplication() const { return app_; }
 
-    virtual bool OnMouseDown(const sf::Event::MouseButtonEvent& e){
+    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
         std::size_t len = menu_.size();
         for(std::size_t i = 0; i < len; i++){
-            if(menu_[i].get()->OnMouseDown(e)) return true;
+            if(menu_[i].get()->OnMouseDown(button, xw, yh)) return true;
         }
         return false;
     }
 
-    virtual bool OnMouseUp(const sf::Event::MouseButtonEvent& e){
+    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh){
         std::size_t len = menu_.size();
         for(std::size_t i = 0; i < len; i++){
-            if(menu_[i].get()->OnMouseUp(e)) return true;
+            if(menu_[i].get()->OnMouseUp(button, xw, yh)) return true;
         }
         return false;
     }
 
-    virtual bool OnMouseMove(const sf::Event::MouseMoveEvent& e){
+    virtual bool OnMouseMove(float xw, float yh){
         std::size_t len = menu_.size();
         for(std::size_t i = 0; i < len; i++){
-            if(menu_[i].get()->OnMouseMove(e)) return true;
+            if(menu_[i].get()->OnMouseMove(xw, yh)) return true;
+        }
+        return false;
+    }
+
+    virtual bool OnMouseScroll(float delta, float xw, float yh){
+        std::size_t len = menu_.size();
+        for(std::size_t i = 0; i < len; i++){
+            if(menu_[i].get()->OnMouseScroll(delta, xw, yh)) return true;
         }
         return false;
     }

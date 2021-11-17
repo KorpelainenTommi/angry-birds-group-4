@@ -10,9 +10,8 @@ public:
         const ui::pfloat& left,
         const ui::pfloat& height,
         const ui::pfloat& width,
-        const std::function<void()> mouseDownHandler,
-        Screen& screen
-    ): Element(top, left, height, width, screen){
+        const std::function<void()> mouseDownHandler
+    ): Element(top, left, height, width){
         mouseDownHandler_ = mouseDownHandler_;
     };
 

@@ -4,7 +4,6 @@
 #include <functional>
 #include <ui/UIConstants.hpp>
 #include <UpdateListener.hpp>
-#include <screens/Screen.hpp>
 
 
 /// Base class for elements
@@ -14,9 +13,8 @@ public:
         const ui::pfloat& top, 
         const ui::pfloat& left, 
         const ui::pfloat& height, 
-        const ui::pfloat& width,
-        Screen& screen
-    ): x_(left), y_(top), w_(width), h_(height), screen_(screen){};
+        const ui::pfloat& width
+    ): x_(left), y_(top), w_(width), h_(height){};
 
     virtual ~Element() = default;
 
@@ -26,24 +24,23 @@ public:
 
     void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
 
-    Screen& GetScreen() const {return screen_;}
-
-    template <typename T>
-    bool isInside(const T& mouseEvent){
-        float windowHeight = screen_.GetApplication().GetWindowHeight();
-        float windowWidth = screen_.GetApplication().GetWindowWidth();
-        float left = x_.f * 0.01F * (x_.p ? windowWidth : windowHeight);
-        float top = y_.f * 0.01F * (y_.p ? windowWidth : windowHeight);
-        float right = w_.f * 0.01F * (w_.p ? windowWidth : windowHeight) + left;
-        float bottom = h_.f * 0.01F * (h_.p ? windowWidth : windowHeight) + top;
-        return mouseEvent.x > left && mouseEvent.x < right && mouseEvent.y > top && mouseEvent.y < bottom;
+    bool isInside(float xw, float yh){
+        float xvw = xw * 100;
+        float yvh = yh * 100;
+        float left = x_.p ? x_.f : x_.f * ui::aspectRatio;
+        float top = y_.p ? y_.f / ui::aspectRatio : y_.f;
+        float right = (w_.p ? w_.f : w_.f * ui::aspectRatio) + left;
+        float bottom = (h_.p ? h_.f / ui::aspectRatio : h_.f) + top;
+        return xvw > left && xvw < right && yvh > top && yvh < bottom;
     };
 
-    virtual bool OnMouseDown(const sf::Event::MouseButtonEvent&);
+    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
 
-    virtual bool OnMouseUp(const sf::Event::MouseButtonEvent&);
+    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
 
-    virtual bool OnMouseMove(const sf::Event::MouseMoveEvent&);
+    virtual bool OnMouseMove(float xw, float yh);
+
+    virtual bool OnMouseScroll(float delta, float xw, float yh);
 
     void SetMouseDownHandler(const std::function<void()> f){mouseDownHandler_ = f;}
     void SetMOuseDownHandler(){mouseDownHandler_ = NULL;}
@@ -85,8 +82,6 @@ protected:
 
     bool mouseIn_ = false;
     bool focused_ = false;
-
-    Screen& screen_;
 };
 
 
