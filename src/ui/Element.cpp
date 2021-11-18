@@ -58,11 +58,11 @@ void Element::Focus(){
 }
 
 float Element::toVHFloat(const ui::pfloat& p) const {
-    return p.p ? p.f / ui::aspectRatio : p.f;
+    return p.p ? p.f * ui::aspectRatio : p.f;
 }
 
 float Element::toVWFloat(const ui::pfloat& p) const {
-    return p.p ? p.f : p.f * ui::aspectRatio;
+    return p.p ? p.f : p.f / ui::aspectRatio;
 }
 
 ui::pfloat Element::toVH(const ui::pfloat& p) const {

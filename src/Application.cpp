@@ -29,8 +29,8 @@ void Application::UpdateView() {
 void Application::Fullscreen() {
     
     const auto& available = sf::VideoMode::getFullscreenModes();
-    if(available.size() > 0) window_.create(available[0], ui::AppName, sf::Style::Fullscreen);
-    else window_.create(sf::VideoMode::getDesktopMode(), ui::AppName, sf::Style::Fullscreen);
+    if(available.size() > 0) window_.create(available[0], ui::appName, sf::Style::Fullscreen);
+    else window_.create(sf::VideoMode::getDesktopMode(), ui::appName, sf::Style::Fullscreen);
     window_.setView(window_.getDefaultView());
     UpdateView();
     isFullScreen_ = true;
@@ -39,7 +39,7 @@ void Application::Fullscreen() {
 
 void Application::Resize(unsigned int width, unsigned int height) {
 
-    if(isFullScreen_) window_.create(sf::VideoMode::getDesktopMode(), ui::AppName, sf::Style::Default);
+    if(isFullScreen_) window_.create(sf::VideoMode::getDesktopMode(), ui::appName, sf::Style::Default);
     //window_.setSize({width, height});
     window_.setView(sf::View({0.0F, 0.0F, (float)width, (float)height}));
     UpdateView();
@@ -125,8 +125,8 @@ bool Application::Loop() {
     //This replaces window.setFrameratelimit as it was causing a freeze with certain desktops
     //No idea why it failed, negative sleep? This hopefully works
     float t;
-    while((t = clock.getElapsedTime().asSeconds()) < ui::TargetFrametime) {
-        t = ui::TargetFrametime - t; if(t < 0) t = 0;
+    while((t = clock.getElapsedTime().asSeconds()) < ui::targetFrametime) {
+        t = ui::targetFrametime - t; if(t < 0) t = 0;
         sf::sleep(sf::seconds(t * 0.5F));
     }
 

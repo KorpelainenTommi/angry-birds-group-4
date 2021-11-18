@@ -70,21 +70,19 @@ namespace ui {
  * 
  */
 
-    const std::string AppName = "AngryTeekkari";
-    const std::string AppVersion = "alpha 1.1";
-    constexpr unsigned int AppMinWidth = 266; //Currently unused
-    constexpr unsigned int AppMinHeight = 200;
-    constexpr unsigned int TargetFramerate = 180;
-    constexpr float TargetFrametime = 1.0F / TargetFramerate;
+    const std::string appName = "AngryTeekkari";
+    const std::string appVersion = "alpha 1.1";
+    const unsigned int appMinWidth = 266; //Currently unused
+    const unsigned int appMinHeight = 200;
+    const unsigned int targetFramerate = 180;
+    const float targetFrametime = 1.0F / targetFramerate;
 
     enum TextAlign { left, center, right };
-    const FontID DefaultFont = FontID::source_serif;
-    const sf::Color DefaultTextColor = {0, 0, 0};
+    const sf::Color textColor = {0, 0, 0};
+    const sf::Color buttonTextColor = {0, 0, 0};
     const sf::Color backgroundColor = {255, 255, 255};
     const sf::Color backgroundColor2 = {221, 221, 221};
-    const sf::Color textColor = {0, 0, 0};
     const sf::Color buttonBackgroundColor = {204, 204, 204};
-    const sf::Color buttonTextColor = {0, 0, 0};
 
     const FontID defaultFont = FontID::source_serif;
 
