@@ -17,8 +17,7 @@ public:
     DemoScreen(Application& app) : Screen(app) {
 
 
-        auto title = std::make_unique<TextElement>(10 VH, 0 VW, 5 VH, 100 VW);
-        title->SetText(ui::appName);
+        auto title = std::make_unique<TextLine>(10 VH, 0 VW, 5 VH, 100 VW, ui::appName);
         
         //Doesn't work because the parameter is sf::Color& when it should be const sf::Color&
         //PLZ FIX
