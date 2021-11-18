@@ -15,8 +15,10 @@ public:
     void SetText(const std::string& s){text_ = s;}
 
     void SetBackgroundColor(const sf::Color& c){backgroundColor_ = c;}
+    void SetBackgroundColor(){backgroundColor_ = ui::backgroundColor;}
 
     void SetTextColor(const sf::Color& c){textColor_ = c;}
+    void SetTextColor(){textColor_ = ui::textColor;}
 
     void SetFont(FontID f){font_ = f;}
 

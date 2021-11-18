@@ -2,6 +2,7 @@
 #include <Application.hpp>
 #include <ui/UIConstants.hpp>
 #include <screens/DemoScreen.hpp>
+#include <screens/MainMenu.hpp>
 
 
 float ui::windowWidth = 0;
@@ -56,7 +57,7 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
     Resize(800, 800);
     window_.setSize({800, 800});
     
-    TransitionTo(std::make_unique<DemoScreen>(*this));
+    TransitionTo(std::make_unique<MainMenu>(*this));
 }
 
 float Application::GetAspectRatio() const { return ui::aspectRatio; }
