@@ -35,7 +35,7 @@ public:
     virtual bool OnMouseScroll(float delta, float xw, float yh);
 
     void SetMouseDownHandler(const std::function<void()> f){mouseDownHandler_ = f;}
-    void SetMOuseDownHandler(){mouseDownHandler_ = NULL;}
+    void SetMouseDownHandler(){mouseDownHandler_ = NULL;}
 
     void SetMouseUpHandler(const std::function<void()> f){mouseUpHandler_ = f;}
     void SetMouseUpHandler(){mouseUpHandler_ = NULL;}

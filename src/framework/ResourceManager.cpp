@@ -6,13 +6,14 @@ const std::pair<FontID, std::string> ResourceManager::fontPaths_[] = {
 };
 
 const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
-    {SoundID::ui_click, "data/audio/ui_click.wav"}
+    {SoundID::ui_click, "data/audio/ui_click.wav"},
+    {SoundID::nice, "data/audio/nice.wav"}
 };
 
 const std::pair<int, std::string> ResourceManager::texturePaths_[] = {
     {0, "data/textures/blocks.png"},
     {1, "data/textures/teekkari.png"},
-    {2, "data/textures/ui.png"},
+    {2, "data/textures/nice.png"},
     {3, "data/textures/background0.jpg"}
 };
 
@@ -27,7 +28,8 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::torso_lgray, 1, {0, 240, 130, 156}},
 
 
-    {SpriteID::teekkari_head1, 1, {0, 0, 214, 240}}
+    {SpriteID::teekkari_head1, 1, {0, 0, 214, 240}},
+    {SpriteID::nice_face, 2, {0, 0, 500, 500}}    
 
 };
 

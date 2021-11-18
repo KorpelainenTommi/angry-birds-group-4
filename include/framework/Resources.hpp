@@ -11,13 +11,13 @@ enum SpriteID {
     torso_lgray,
     leg_lgray,
 
-    teekkari_head1
-
+    teekkari_head1,
+    nice_face
 
 };
 
 /// Enumeration of audio usable with AudioSystem
-enum SoundID { ui_click };
+enum SoundID { ui_click, nice };
 
 /// Enumeration of fonts usable with RenderSystem
 enum FontID { source_serif };

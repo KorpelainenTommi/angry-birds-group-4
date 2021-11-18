@@ -7,13 +7,39 @@
 #include <screens/Screen.hpp>
 #include <framework/Resources.hpp>
 
+#include <iostream>
 
 //An example screen demonstrating some ui and rendering stuff
 
 
 class DemoScreen : public Screen {
 public:
-    DemoScreen(Application& app) : Screen(app) {}
+    DemoScreen(Application& app) : Screen(app) {
+
+
+        auto title = std::make_unique<TextElement>(10 VH, 0 VW, 5 VH, 100 VW);
+        title->SetText(ui::AppName);
+        
+        //Doesn't work because the parameter is sf::Color& when it should be const sf::Color&
+        //PLZ FIX
+        //title->SetTextColor(ui::textColor);
+        
+
+        //title->SetAbsoluteFontSize(26.0F); //verified it works
+        title->SetRelativeFontSize(5 VH);
+        menu_.push_back(std::move(title));
+
+        auto button = std::make_unique<Button>(40 VH, 40 VW, 20 VH, 20 VW, [&app]{ app.GetAudioSystem().PlaySound(SoundID::nice); });
+        button->SetBackgroundColor(sf::Color(0,0,0,0));
+        button->SetText("NICE");
+        menu_.push_back(std::move(button));
+
+    }
+
+    virtual void Render(const RenderSystem& r) {
+        r.RenderSprite(SpriteID::nice_face, 40 VW, 40 VH, 20 VW, 20 VH);
+        Screen::Render(r);
+    }
 /*
         //Example of adding some elements
 

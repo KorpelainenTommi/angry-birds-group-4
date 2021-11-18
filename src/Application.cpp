@@ -4,6 +4,10 @@
 #include <screens/DemoScreen.hpp>
 
 
+float ui::windowWidth = 0;
+float ui::windowHeight = 0;
+float ui::aspectRatio = 1;
+
 void Application::Exit() {
     window_.close();
 }
@@ -36,7 +40,7 @@ void Application::Fullscreen() {
 void Application::Resize(unsigned int width, unsigned int height) {
 
     if(isFullScreen_) window_.create(sf::VideoMode::getDesktopMode(), ui::AppName, sf::Style::Default);
-    window_.setSize({width, height});
+    //window_.setSize({width, height});
     window_.setView(sf::View({0.0F, 0.0F, (float)width, (float)height}));
     UpdateView();
     isFullScreen_ = false;
@@ -50,6 +54,7 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
 
     //Switch to resizable for now
     Resize(800, 800);
+    window_.setSize({800, 800});
     
     TransitionTo(std::make_unique<DemoScreen>(*this));
 }

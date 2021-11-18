@@ -7,6 +7,8 @@
 #include <UpdateListener.hpp>
 #include <Application.hpp>
 
+#include <iostream>
+
 class Application;
 
 /// Base class for screens
