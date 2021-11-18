@@ -14,13 +14,13 @@ public:
     
     void SetText(const std::string& s){text_ = s;}
 
-    void SetBackgroundColor(sf::Color& c){backgroundColor_ = c;}
+    void SetBackgroundColor(const sf::Color& c){backgroundColor_ = c;}
 
-    void SetTextColor(sf::Color& c){textColor_ = c;}
+    void SetTextColor(const sf::Color& c){textColor_ = c;}
 
     void SetFont(FontID f){font_ = f;}
 
-    void SetRelativeFontSize(ui::pfloat& s);
+    void SetRelativeFontSize(const ui::pfloat& s);
 
     void SetAbsoluteFontSize(float s);
 

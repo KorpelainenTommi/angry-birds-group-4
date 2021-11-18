@@ -1,6 +1,6 @@
 #include <ui/TextElement.hpp>
 
-void TextElement::SetRelativeFontSize(ui::pfloat& s){
+void TextElement::SetRelativeFontSize(const ui::pfloat& s){
     useRelativeFontSize_ = true;
     relativeFontSize_ = s;
 }
