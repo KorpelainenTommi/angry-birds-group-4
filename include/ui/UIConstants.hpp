@@ -7,28 +7,10 @@
 
 // A file defining the color scheme and style of the program
 
-
 #define VW % ui::pfloat(1, ui::pfloat::P::vw)
 #define VH % ui::pfloat(1, ui::pfloat::P::vh)
 
 namespace ui {
-
-    const std::string AppName = "AngryTeekkari";
-    const std::string AppVersion = "alpha 1.1";
-    constexpr unsigned int AppMinWidth = 266; //Currently unused
-    constexpr unsigned int AppMinHeight = 200;
-    constexpr unsigned int TargetFramerate = 180;
-    constexpr float TargetFrametime = 1.0F / TargetFramerate;
-
-    enum TextAlign { left, center, right };
-    const FontID DefaultFont = FontID::source_serif;
-    const sf::Color DefaultTextColor = {0, 0, 0};
-
-    //Don't touch this unless u are Application
-    //plz
-    static float windowWidth;
-    static float windowHeight;
-    static float aspectRatio;
 
 
     struct pfloat {
@@ -47,8 +29,7 @@ namespace ui {
         float f;
         P p;
     };
-
-
+    inline ui::pfloat operator%(const float& ff, const ui::pfloat& pp) { return { ff, pp.p }; }
 /* VW and VH should be used like this:
  *
  * auto x = 50 VW;
@@ -89,10 +70,32 @@ namespace ui {
  * 
  */
 
+    const std::string appName = "AngryTeekkari";
+    const std::string appVersion = "alpha 1.1";
+    const unsigned int appMinWidth = 266; //Currently unused
+    const unsigned int appMinHeight = 200;
+    const unsigned int targetFramerate = 180;
+    const float targetFrametime = 1.0F / targetFramerate;
+
+    enum TextAlign { left, center, right };
+    const sf::Color textColor = {0, 0, 0};
+    const sf::Color buttonTextColor = {0, 0, 0};
+    const sf::Color backgroundColor = {255, 255, 255};
+    const sf::Color backgroundColor2 = {221, 221, 221};
+    const sf::Color buttonBackgroundColor = {204, 204, 204};
+
+    const FontID defaultFont = FontID::source_serif;
+
+    const float defaultAbsoluteFontSize = 16.0F;
+    const ui::pfloat defaultFontSize = (100 * defaultAbsoluteFontSize / 1080) VH;
+
+
+    //Don't touch this unless u are Application
+    //plz
+    extern float windowWidth;
+    extern float windowHeight;
+    extern float aspectRatio;
 
 }
-
-    inline ui::pfloat operator%(const float& ff, const ui::pfloat& pp) { return { ff, pp.p }; }
-
 
 #endif

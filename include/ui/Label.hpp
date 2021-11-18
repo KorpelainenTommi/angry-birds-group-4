@@ -1,4 +1,4 @@
-#ifndef LABEL_HPP
+/*#ifndef LABEL_HPP
 #define LABEL_HPP
 
 #include <string>
@@ -22,4 +22,4 @@ private:
     sf::Color color_;
 };
 
-#endif
+#endif*/

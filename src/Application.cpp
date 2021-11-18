@@ -4,6 +4,10 @@
 #include <screens/DemoScreen.hpp>
 
 
+float ui::windowWidth = 0;
+float ui::windowHeight = 0;
+float ui::aspectRatio = 1;
+
 void Application::Exit() {
     window_.close();
 }
@@ -25,8 +29,8 @@ void Application::UpdateView() {
 void Application::Fullscreen() {
     
     const auto& available = sf::VideoMode::getFullscreenModes();
-    if(available.size() > 0) window_.create(available[0], ui::AppName, sf::Style::Fullscreen);
-    else window_.create(sf::VideoMode::getDesktopMode(), ui::AppName, sf::Style::Fullscreen);
+    if(available.size() > 0) window_.create(available[0], ui::appName, sf::Style::Fullscreen);
+    else window_.create(sf::VideoMode::getDesktopMode(), ui::appName, sf::Style::Fullscreen);
     window_.setView(window_.getDefaultView());
     UpdateView();
     isFullScreen_ = true;
@@ -35,8 +39,8 @@ void Application::Fullscreen() {
 
 void Application::Resize(unsigned int width, unsigned int height) {
 
-    if(isFullScreen_) window_.create(sf::VideoMode::getDesktopMode(), ui::AppName, sf::Style::Default);
-    window_.setSize({width, height});
+    if(isFullScreen_) window_.create(sf::VideoMode::getDesktopMode(), ui::appName, sf::Style::Default);
+    //window_.setSize({width, height});
     window_.setView(sf::View({0.0F, 0.0F, (float)width, (float)height}));
     UpdateView();
     isFullScreen_ = false;
@@ -50,6 +54,7 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
 
     //Switch to resizable for now
     Resize(800, 800);
+    window_.setSize({800, 800});
     
     TransitionTo(std::make_unique<DemoScreen>(*this));
 }
@@ -91,7 +96,12 @@ bool Application::Loop() {
             activeScreen_->OnMouseMove(x, y);
         }
 
-        if(event.type == sf::Event::MouseWheelScrolled) activeScreen_->OnMouseScroll(event.mouseWheelScroll);
+        if(event.type == sf::Event::MouseWheelScrolled) {
+            float x = event.mouseWheelScroll.x / GetWindowWidth();
+            float y = event.mouseWheelScroll.y / GetWindowHeight();
+            activeScreen_->OnMouseScroll(event.mouseWheelScroll.delta, x, y);
+        }
+
         if(event.type == sf::Event::TextEntered) activeScreen_->OnTextEntered(event.text);
 
     }
@@ -115,8 +125,8 @@ bool Application::Loop() {
     //This replaces window.setFrameratelimit as it was causing a freeze with certain desktops
     //No idea why it failed, negative sleep? This hopefully works
     float t;
-    while((t = clock.getElapsedTime().asSeconds()) < ui::TargetFrametime) {
-        t = ui::TargetFrametime - t; if(t < 0) t = 0;
+    while((t = clock.getElapsedTime().asSeconds()) < ui::targetFrametime) {
+        t = ui::targetFrametime - t; if(t < 0) t = 0;
         sf::sleep(sf::seconds(t * 0.5F));
     }
 
