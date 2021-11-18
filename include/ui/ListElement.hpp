@@ -1,18 +1,18 @@
 #ifndef UI_LIST_HPP
 #define UI_LIST_HPP
 
-#include <ui/Element.hpp>
+#include <ui/ColoredElement.hpp>
 #include <memory>
 #include <limits.h>
 
-class ListElement: public Element{
+class ListElement: public ColoredElement{
 public:
     ListElement(
         const ui::pfloat& top, 
         const ui::pfloat& left, 
         const ui::pfloat& height, 
         const ui::pfloat& width
-    ): Element(top, left, height, width){}
+    ): ColoredElement(top, left, height, width){}
 
     virtual void Render(const RenderSystem&);
 

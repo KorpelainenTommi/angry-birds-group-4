@@ -14,6 +14,7 @@ std::shared_ptr<Element> ListElement::GetElement(int id){
 }
 
 void ListElement::Render(const RenderSystem& r){
+    ColoredElement::Render(r);
     ui::pfloat h = 0 VH;
     for(const auto t: elements_){
         auto e = t.second;
