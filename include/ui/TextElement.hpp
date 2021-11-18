@@ -20,6 +20,8 @@ public:
 
     void SetFont(FontID f){font_ = f;}
 
+    void SetTextAlign(const ui::TextAlign& a){align_ = a;}
+
     void SetRelativeFontSize(const ui::pfloat& s);
 
     void SetAbsoluteFontSize(float s);
@@ -33,6 +35,7 @@ protected:
     sf::Color backgroundColor_ = ui::backgroundColor;
     sf::Color textColor_ = ui::textColor;
     FontID font_ = ui::defaultFont;
+    ui::TextAlign align_ = ui::TextAlign::left;
 
 private:
     ui::pfloat relativeFontSize_ = ui::defaultFontSize;

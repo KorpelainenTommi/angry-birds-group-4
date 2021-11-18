@@ -15,6 +15,7 @@ public:
         mouseDownHandler_ = mouseDownHandler;
         backgroundColor_ = ui::buttonBackgroundColor;
         textColor_ = ui::buttonTextColor;
+        align_ = ui::TextAlign::center;
     };
 
     virtual void Render(const RenderSystem&);

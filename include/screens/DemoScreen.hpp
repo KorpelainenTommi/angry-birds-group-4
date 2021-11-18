@@ -18,6 +18,8 @@ public:
 
 
         auto title = std::make_unique<TextLine>(10 VH, 0 VW, 5 VH, 100 VW, ui::appName);
+        title->SetTextAlign(ui::TextAlign::center);
+        title->SetBackgroundColor(ui::backgroundColor);
         
         //Doesn't work because the parameter is sf::Color& when it should be const sf::Color&
         //PLZ FIX
