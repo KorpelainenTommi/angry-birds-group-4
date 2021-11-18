@@ -22,6 +22,10 @@ public:
 
     void SetPosition(ui::pfloat x, ui::pfloat y) { x_ = x; y_ = y; }
 
+    void SetTop(ui::pfloat top){y_ = top;}
+
+    void SetLeft(ui::pfloat left){x_ = left;}
+
     void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
 
     bool isInside(float xw, float yh) const;
@@ -64,6 +68,8 @@ public:
 
     void SetOffsetY(const ui::pfloat& oy){offsetY_ = oy;}
     void SetOffsetY(){offsetY_ = 0 VH;}
+
+    const ui::pfloat& GetHeight() const {return h_;}
 
 protected:
     float toVHFloat(const ui::pfloat&) const;

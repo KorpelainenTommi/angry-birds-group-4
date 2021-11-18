@@ -11,16 +11,16 @@ bool Element::isInside(float xw, float yh) const {
 };
 
 bool Element::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    if(isInside(xw, yh)){
-        if(mouseDownHandler_ != NULL) mouseDownHandler_();
+    if(mouseDownHandler_ != NULL && isInside(xw, yh)){
+        mouseDownHandler_();
         return true;
     }
     return false;
 }
 
 bool Element::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh){
-    if(isInside(xw, yh)){
-        if(mouseUpHandler_ != NULL) mouseUpHandler_();
+    if(mouseUpHandler_ != NULL && isInside(xw, yh)){
+        mouseUpHandler_();
         return true;
     }
     return false;
@@ -29,15 +29,21 @@ bool Element::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh){
 bool Element::OnMouseMove(float xw, float yh){
     if(isInside(xw, yh) != mouseIn_){
         mouseIn_ = !mouseIn_;
-        if(mouseEnterHandler_ != NULL && mouseIn_) mouseEnterHandler_();
-        else if(mouseLeaveHandler_ != NULL && !mouseIn_) mouseLeaveHandler_();
+        if(mouseEnterHandler_ != NULL && mouseIn_){
+            mouseEnterHandler_();
+            return true;
+        }
+        else if(mouseLeaveHandler_ != NULL && !mouseIn_){
+            mouseLeaveHandler_();
+            return true;
+        }
     }
     return false;
 }
 
 bool Element::OnMouseScroll(float delta, float xw, float yh){
-    if(isInside(xw, yh)){
-        if(mouseScrollHandler_ != NULL) mouseScrollHandler_(delta);
+    if(mouseScrollHandler_ != NULL && isInside(xw, yh)){
+        mouseScrollHandler_(delta);
         return true;
     }
     return false;
