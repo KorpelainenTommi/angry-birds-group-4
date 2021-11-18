@@ -2,7 +2,7 @@
 #define GAME_HPP
 
 #include <UpdateListener.hpp>
-
+#include <gameplay/GameObject.hpp>
 
 /** 
  * -Game owns and manages all GameObjects. It also needs to manage the box2d world, 
@@ -21,11 +21,28 @@
  * -Game should have a Camera it can move
  * 
  * -Game probably needs a const reference of Screen (probably GameScreen) so it can do stuff like save files and exit out etc.
- * 
+ *
+ * IDs:
+ *  Backgrounds 0-1000
+ *  Blocks 1000-2000
+ *  Birds 2000-3000
+ *
  */
 
 class Game : public UpdateListener {
-
+    Game(const GameScreen &s, Level level);
+    virtual void Render(const RenderSystem& r);
+    virtual void Update();
+    int CreateObject(std::unique_ptr<GameObject>);
+    void DestroyObject(int id);
+    
+private:
+    std::map<int,std::unique_ptr<GameObject>> objects_;
+    Level level_;
+    const GameScreen& screen_;
+    Camera c;
+    int Points;
+    
 };
 
 
