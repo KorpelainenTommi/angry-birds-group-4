@@ -72,3 +72,11 @@ ui::pfloat Element::toVH(const ui::pfloat& p) const {
 ui::pfloat Element::toVW(const ui::pfloat& p) const {
     return (toVWFloat(p)) VW;
 }
+
+ui::pfloat Element::GetTop() const {
+    return (toVHFloat(y_) + toVHFloat(offsetY_)) VH;
+}
+
+ui::pfloat Element::GetLeft() const {
+    return (toVWFloat(x_) + toVWFloat(offsetX_)) VW;
+}

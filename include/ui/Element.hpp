@@ -59,16 +59,27 @@ public:
 
     void Focus();
 
+    void SetOffsetX(const ui::pfloat& ox){offsetX_ = ox;}
+    void SetOffsetX(){offsetX_ = 0 VW;}
+
+    void SetOffsetY(const ui::pfloat& oy){offsetY_ = oy;}
+    void SetOffsetY(){offsetY_ = 0 VH;}
+
 protected:
     float toVHFloat(const ui::pfloat&) const;
     float toVWFloat(const ui::pfloat&) const;
     ui::pfloat toVH(const ui::pfloat&) const;
     ui::pfloat toVW(const ui::pfloat&) const;
 
+    ui::pfloat GetTop() const;
+    ui::pfloat GetLeft() const;
+
     ui::pfloat x_;
     ui::pfloat y_;
     ui::pfloat w_;
     ui::pfloat h_;
+    ui::pfloat offsetX_;
+    ui::pfloat offsetY_;
 
     std::function<void()> mouseDownHandler_ = NULL;
     std::function<void()> mouseUpHandler_ = NULL;

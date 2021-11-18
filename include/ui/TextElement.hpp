@@ -24,7 +24,7 @@ public:
 
     void SetAbsoluteFontSize(float s);
 
-    virtual void Render(const RenderSystem&);
+    //virtual void Render(const RenderSystem&);
 
     ui::pfloat GetFontSize();
 
