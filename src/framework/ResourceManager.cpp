@@ -33,13 +33,6 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
 
 };
 
-/* Note about console logs
- *
- * Logs are not just useful, these are necessary
- * Without them, desktops like Gnome can flag the application
- * as unresponsive during initialization
- */
-
 
 ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(fileManager) {
 
