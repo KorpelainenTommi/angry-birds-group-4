@@ -53,6 +53,10 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
 
     //Switch to resizable for now
     Resize(800, 800);
+    sf::Event ev;
+    window_.pollEvent(ev);
+    window_.clear({128, 128, 128, 255});
+    window_.display();
     
     TransitionTo(std::make_unique<DemoScreen>(*this));
 }
