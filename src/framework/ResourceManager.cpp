@@ -1,5 +1,5 @@
 #include <framework/ResourceManager.hpp>
-
+#include <iostream>
 
 const std::pair<FontID, std::string> ResourceManager::fontPaths_[] = {
     {FontID::source_serif, "data/fonts/source_serif.ttf"}
@@ -34,11 +34,10 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
 };
 
 
-
-
 ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(fileManager) {
 
     //Create missing texture
+    std::cout << "\n-----Loading resources-----" << std::endl;
     missingTexture_.create(32, 32);
     constexpr int N = 32 * 32 * 4;
     sf::Uint8 pixels[N];
@@ -62,26 +61,31 @@ ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(
     missingTexture_.update(pixels);
     missingTexture_.setRepeated(true);
     missingTexture_.setSmooth(true);
+    std::cout << "  Created missingTexture\n" << std::endl;
 
     //Load physical textures
     for(const auto& texPath : texturePaths_)
         if(!fileManager_.LoadTexture(textures_[texPath.first], texPath.second)) textures_.erase(texPath.first);
     
+    std::cout << "  Textures loaded\n" << std::endl;
     //Load sounds
     for(const auto& aPath : audioPaths_)
         if(!fileManager_.LoadAudio(audio_[aPath.first], aPath.second)) audio_[aPath.first] = sf::SoundBuffer();
 
+    std::cout << "  Audio loaded\n" << std::endl;
     //Load fonts
     for(const auto& fPath : fontPaths_)
         if(!fileManager_.LoadFont(fonts_[fPath.first], fPath.second)) fonts_[fPath.first] = sf::Font();
     
-
+    std::cout << "  Fonts loaded\n" << std::endl;
     //Map textures to sprites
     for(const auto& spMap : spriteMaps_) {
         if(textures_.find(spMap.textureID) != textures_.end())
             sprites_[spMap.spriteID] = sf::Sprite(textures_[spMap.textureID], spMap.rect);
         else sprites_[spMap.spriteID] = sf::Sprite(missingTexture_, {0, 0, 128, 128});
     }
+
+    std::cout << "-----Resource loading done-----\n\n" << std::endl;
 }
 
 

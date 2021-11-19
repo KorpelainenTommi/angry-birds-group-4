@@ -9,6 +9,9 @@
 //TODO: Everything
 class Level {
 
+private:
+    int maxpoints_;
+    int BirdsLeft_;
 };
 
 #endif

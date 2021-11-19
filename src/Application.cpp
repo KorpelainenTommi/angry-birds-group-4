@@ -40,8 +40,7 @@ void Application::Fullscreen() {
 
 void Application::Resize(unsigned int width, unsigned int height) {
 
-    if(isFullScreen_) window_.create(sf::VideoMode::getDesktopMode(), ui::appName, sf::Style::Default);
-    //window_.setSize({width, height});
+    if(isFullScreen_) window_.create(sf::VideoMode(width, height), ui::appName, sf::Style::Default);
     window_.setView(sf::View({0.0F, 0.0F, (float)width, (float)height}));
     UpdateView();
     isFullScreen_ = false;
@@ -51,12 +50,16 @@ void Application::Resize(unsigned int width, unsigned int height) {
 Application::Application() : resourceManager_(fileManager_), renderSystem_(window_, resourceManager_), audioSystem_(resourceManager_) {
 
     //Create fullscreen window
-    Fullscreen();
+    //Fullscreen();
 
     //Switch to resizable for now
     Resize(800, 800);
-    window_.setSize({800, 800});
     
+    //This is needed to capture some startup events that happen on certain desktops
+    sf::Event ev;
+    while(window_.pollEvent(ev));
+
+    //TransitionTo(std::make_unique<DemoScreen>(*this));
     TransitionTo(std::make_unique<MainMenu>(*this));
 }
 

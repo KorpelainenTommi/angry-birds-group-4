@@ -48,9 +48,9 @@ private:
 
     //Time stuff
     sf::Clock clock;
-    float accumulatedTime;
+    float accumulatedTime = 0;
+    bool isFullScreen_ = true;
 
-    bool isFullScreen_;
     sf::RenderWindow window_;
     std::unique_ptr<Screen> activeScreen_;
 
