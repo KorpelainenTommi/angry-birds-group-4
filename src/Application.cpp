@@ -54,6 +54,10 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
     //Switch to resizable for now
     Resize(800, 800);
     
+    //This is needed to capture some startup events that happen on certain desktops
+    sf::Event ev;
+    while(window_.pollEvent(ev));
+
     TransitionTo(std::make_unique<DemoScreen>(*this));
 }
 
