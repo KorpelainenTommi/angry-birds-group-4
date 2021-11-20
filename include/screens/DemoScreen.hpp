@@ -3,7 +3,8 @@
 
 #include <math.h>
 #include <memory>
-#include <ui.hpp>
+#include <ui/Button.hpp>
+#include <ui/TextLine.hpp>
 #include <screens/Screen.hpp>
 #include <framework/Resources.hpp>
 

@@ -2,9 +2,12 @@
 #define APPLICATION_HPP
 
 #include <memory>
-#include <framework.hpp>
 #include <screens/Screen.hpp>
 #include <SFML/Graphics.hpp>
+#include <framework/FileManager.hpp>
+#include <framework/ResourceManager.hpp>
+#include <framework/RenderSystem.hpp>
+#include <framework/AudioSystem.hpp>
 
 class Screen;
 

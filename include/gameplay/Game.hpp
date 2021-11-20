@@ -1,8 +1,14 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <memory>
 #include <UpdateListener.hpp>
+#include <screens/GameScreen.hpp>
+
+#include <gameplay/Camera.hpp>
+#include <gameplay/Level.hpp>
 #include <gameplay/GameObject.hpp>
+#include <gameplay/GameObjectTypes.hpp>
 
 /** 
  * -Game owns and manages all GameObjects. It also needs to manage the box2d world, 
@@ -29,11 +35,23 @@
  *
  */
 
+//Forward declaration
+class GameScreen;
+
 class Game : public UpdateListener {
+
+    /// Construct an empty game
+    Game(const GameScreen&);
+
+    /// Construct a game, and load the provided level into it
     Game(const GameScreen &s, Level level);
+
+    virtual ~Game() = default;
+
     virtual void Render(const RenderSystem& r);
     virtual void Update();
-    int CreateObject(std::unique_ptr<GameObject>);
+    int AddObject(std::unique_ptr<GameObject>);
+    int CreateObject()
     void DestroyObject(int id);
     
 private:

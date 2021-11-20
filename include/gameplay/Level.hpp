@@ -1,17 +1,22 @@
 #ifndef LEVEL_HPP
 #define LEVEL_HPP
 
+#include <vector>
+#include <string>
+#include <utility>
+#include <framework/Resources.hpp>
 
-//Level defines the starting positions of all objects etc.
-//Level probably shouldn't manage these objects, or own them.
-//It would make more sense for the level file to be a list of GameObject ids, and related positions
+//Max score calculation shouldn't be saved in level files
+//That would mean old levels would have incorrect max scores
+//if the max score formula is ever changed
 
-//TODO: Everything
-class Level {
+struct Level {
 
-private:
-    int maxpoints_;
-    int BirdsLeft_;
+    std::string levelName;
+    std::vector<int> objectData;
+    std::vector<std::pair<std::string, int>> highscores;
+    SpriteID backgroundImage;
+
 };
 
 #endif
