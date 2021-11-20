@@ -2,102 +2,121 @@
 #include <gameplay/Physics.hpp>
 #include <framework/RenderSystem.hpp>
 
-
 //relative rectangle
 
-void RenderSystem::RenderRect(sf::Color color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
+void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) const {
+    sf::View view = window_.getView();
+    sf::View v = view;
+    float cxw = camera.x.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    float cyw = camera.y.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    v.zoom(camera.zoom.Lerp(ALPHA));
+    v.rotate(camera.rot.Lerp(ALPHA));
+    v.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
+    window_.setView(v);
+    window_.draw(shape);
+    window_.setView(view);
+}
+
+void RenderSystem::RenderRelative(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
     float xx = 0.01F * x * (x.p ? WW : HH);
     float yy = 0.01F * y * (y.p ? WW : HH);
     float ww = 0.01F * w * (w.p ? WW : HH);
     float hh = 0.01F * h * (h.p ? WW : HH);
+    shape.setPosition(xx, yy);
+    shape.setScale(ww, hh);
+    shape.setFillColor(color);
+    window_.draw(shape);
+}
+
+void RenderSystem::RenderRelativeCrop(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
+    sf::View view = window_.getView();
+    sf::View v = view;
+
+    float viewPortX = 0.01F * (cropArea.left.p ? cropArea.left : cropArea.left / ui::aspectRatio);
+    float viewPortY = 0.01F * (cropArea.top.p ? cropArea.top * ui::aspectRatio : cropArea.top);
+    float viewPortW = 0.01F * (cropArea.width.p ? cropArea.width : cropArea.width / ui::aspectRatio);
+    float viewPortH = 0.01F * (cropArea.height.p ? cropArea.height * ui::aspectRatio : cropArea.height);
+
+    if(viewPortW < 0.000001F) viewPortW = 0.000001F;
+    if(viewPortH < 0.000001F) viewPortH = 0.000001F;
+
+    float wScale = 1 / viewPortW;
+    float hScale = 1 / viewPortH;
+
+    float cx = wScale * 0.01F * cropArea.left * (cropArea.left.p ? WW : HH);
+    float cy = hScale * 0.01F * cropArea.top * (cropArea.top.p ? WW : HH);
+
+    float xx = wScale * 0.01F * x * (x.p ? WW : HH) - cx;
+    float yy = hScale * 0.01F * y * (y.p ? WW : HH) - cy;
+    float ww = wScale * 0.01F * w * (w.p ? WW : HH);
+    float hh = hScale * 0.01F * h * (h.p ? WW : HH);
+
+    v.setViewport({viewPortX, viewPortY, viewPortW, viewPortH});
+
+    shape.setPosition(xx, yy);
+    shape.setScale(ww, hh);
+    shape.setFillColor(color);
+
+    window_.setView(v);
+    window_.draw(shape);
+    window_.setView(view);
+}
+
+void RenderSystem::RenderAbs(sf::Shape& shape, const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
+    float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    float ww = w.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    shape.setOrigin(0.5F, 0.5F);
+    shape.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);
+    shape.rotate(rot.Lerp(ALPHA));
+    shape.scale(WW * ww, WW * hw);
+    shape.setFillColor(color);
+    CameraDraw(shape, camera);
+}
+
+//relative rectangle
+
+void RenderSystem::RenderRect(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
     sf::RectangleShape rect({1, 1});
-    rect.setPosition(xx, yy);
-    rect.setScale(ww, hh);
-    rect.setFillColor(color);
-    window_.draw(rect);
+    RenderRelative(rect, color, x, y, w, h);
+}
+
+void RenderSystem::RenderRect(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
+    sf::RectangleShape rect({1, 1});
+    RenderRelativeCrop(rect, color, x, y, w, h, cropArea);
 }
 
 //game rectangle
 
-void RenderSystem::RenderRect(sf::Color color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
-    
-    sf::View wView = window_.getView();
-    sf::View view = wView;
+void RenderSystem::RenderRect(const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     sf::RectangleShape rect({1, 1});
-    rect.setOrigin(0.5F, 0.5F);
-
-    float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float ww = w.Lerp(ALPHA) / ph::FullscreenPlayArea;
-
-    float cxw = camera.x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float cyw = camera.y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-
-    rect.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);
-    rect.rotate(rot.Lerp(ALPHA));
-    rect.scale(WW * ww, WW * hw);
-    rect.setFillColor(color);
-
-    view.zoom(camera.zoom.Lerp(ALPHA));
-    view.rotate(camera.rot.Lerp(ALPHA));
-    view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
-    
-    window_.setView(view);
-    window_.draw(rect);
-    window_.setView(wView);
+    RenderAbs(rect, color, x, y, w, h, rot, camera);
 }
 
 //relative oval
 
-void RenderSystem::RenderOval(sf::Color color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
-    float xx = 0.01F * x * (x.p ? WW : HH);
-    float yy = 0.01F * y * (y.p ? WW : HH);
-    float ww = 0.01F * w * (w.p ? WW : HH);
-    float hh = 0.01F * h * (h.p ? WW : HH);
-    sf::CircleShape circ(1);
-    circ.setPosition(xx, yy);
-    circ.setScale(ww, hh);
-    circ.setFillColor(color);
-    window_.draw(circ);
+void RenderSystem::RenderOval(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
+    sf::CircleShape circ(0.5F);
+    RenderRelative(circ, color, x, y, w, h);
+}
+
+void RenderSystem::RenderOval(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
+    sf::CircleShape circ(0.5F);
+    RenderRelativeCrop(circ, color, x, y, w, h, cropArea);
 }
 
 //game oval
 
-void RenderSystem::RenderOval(sf::Color color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
-    
-    sf::View wView = window_.getView();
-    sf::View view = wView;
+void RenderSystem::RenderOval(const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     sf::CircleShape circ(0.5F);
-    circ.setOrigin(0.5F, 0.5F);
-
-    float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float ww = w.Lerp(ALPHA) / ph::FullscreenPlayArea;
-
-    float cxw = camera.x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float cyw = camera.y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-
-    circ.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);
-    circ.rotate(rot.Lerp(ALPHA));
-    circ.scale(WW * ww, WW * hw);
-    circ.setFillColor(color);
-
-    view.zoom(camera.zoom.Lerp(ALPHA));
-    view.rotate(camera.rot.Lerp(ALPHA));
-    view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
-    
-
-    window_.setView(view);
-    window_.draw(circ);
-    window_.setView(wView);
+    RenderAbs(circ, color, x, y, w, h, rot, camera);
 }
 
 
 // relative text
 
-void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, sf::Color color, FontID id, ui::TextAlign textAlign) const {
+void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const sf::Color& color, FontID id, ui::TextAlign textAlign) const {
     float xx = 0.01F * x * (x.p ? WW : HH);
     float yy = 0.01F * y * (y.p ? WW : HH);
     float ww = 0.01F * w * (w.p ? WW : HH);
@@ -111,6 +130,49 @@ void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat 
     window_.draw(t);
 }
 
+void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h,
+const ui::CropArea& cropArea, const sf::Color& color, FontID id, ui::TextAlign textAlign) const {
+    sf::View view = window_.getView();
+    sf::View v = view;
+
+    float viewPortX = 0.01F * (cropArea.left.p ? cropArea.left : cropArea.left / ui::aspectRatio);
+    float viewPortY = 0.01F * (cropArea.top.p ? cropArea.top * ui::aspectRatio : cropArea.top);
+    float viewPortW = 0.01F * (cropArea.width.p ? cropArea.width : cropArea.width / ui::aspectRatio);
+    float viewPortH = 0.01F * (cropArea.height.p ? cropArea.height * ui::aspectRatio : cropArea.height);
+
+    if(viewPortW < 0.000001F) viewPortW = 0.000001F;
+    if(viewPortH < 0.000001F) viewPortH = 0.000001F;
+
+    float wScale = 1 / viewPortW;
+    float hScale = 1 / viewPortH;
+    float fontScale = viewPortH / viewPortW;
+
+    float cx = wScale * 0.01F * cropArea.left * (cropArea.left.p ? WW : HH);
+    float cy = hScale * 0.01F * cropArea.top * (cropArea.top.p ? WW : HH);
+
+    float xx = wScale * 0.01F * x * (x.p ? WW : HH) - cx;
+    float yy = hScale * 0.01F * y * (y.p ? WW : HH) - cy;
+    float ww = wScale * 0.01F * w * (w.p ? WW : HH);
+    float hh = hScale * 0.01F * h * (h.p ? WW : HH);
+
+    v.setViewport({viewPortX, viewPortY, viewPortW, viewPortH});
+
+    sf::Text t(text, resourceManager_.GetFont(id), (unsigned int)hh);
+    if(textAlign == ui::TextAlign::center) t.setOrigin((ww / fontScale - t.getLocalBounds().width) * -0.5F, hh * 0.25F);
+    else if(textAlign == ui::TextAlign::right) t.setOrigin(t.getLocalBounds().width - ww / fontScale, hh * 0.25F);
+    else t.setOrigin(0, hh * 0.25F);
+
+    t.setScale(fontScale, 1);
+    t.setPosition(xx, yy);
+    t.setFillColor(color);
+
+    RenderRect({0, 100, 0}, x, y, w, h, cropArea);
+
+    window_.setView(v);
+    window_.draw(t);
+    window_.setView(view);
+}
+
 ui::pfloat RenderSystem::MeasureText(const std::string& text, ui::pfloat h, ui::pfloat::P p, FontID id) const {
     float hh = 0.01F * h * (h.p ? WW : HH);
     sf::Text t(text, resourceManager_.GetFont(id), (unsigned int)hh);
@@ -120,37 +182,25 @@ ui::pfloat RenderSystem::MeasureText(const std::string& text, ui::pfloat h, ui::
 
 //game text
 
-void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, sf::Color color, FontID id) const {
+void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color, FontID id) const {
 
-    sf::View wView = window_.getView();
-    sf::View view = wView;
     float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
     float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
     float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
 
     sf::Text t(text, resourceManager_.GetFont(id), (unsigned int)(hw * WW));
     t.setOrigin(t.getLocalBounds().width / 2, t.getLocalBounds().height);
-
-    float cxw = camera.x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float cyw = camera.y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-
     t.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);
     t.rotate(rot.Lerp(ALPHA));
     t.setFillColor(color);
 
-    view.zoom(camera.zoom.Lerp(ALPHA));
-    view.rotate(camera.rot.Lerp(ALPHA));
-    view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
-    
-    window_.setView(view);
-    window_.draw(t);
-    window_.setView(wView);
+    CameraDraw(t, camera);
 
 }
 
 // relative sprite
 
-void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, sf::Color color) const {
+void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const sf::Color& color) const {
     sf::Sprite sp = resourceManager_.GetSprite(id);
     float xx = 0.01F * x * (x.p ? WW : HH);
     float yy = 0.01F * y * (y.p ? WW : HH);
@@ -158,15 +208,51 @@ void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfl
     float hh = 0.01F * h * (h.p ? WW : HH);
     sp.setPosition(xx, yy);
     sp.scale(ww / sp.getLocalBounds().width, hh / sp.getLocalBounds().height);
+    sp.setColor(color);
     window_.draw(sp);
 }
+
+void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea, const sf::Color& color) const {
+    sf::Sprite sp = resourceManager_.GetSprite(id);
+    sf::View view = window_.getView();
+    sf::View v = view;
+
+    float viewPortX = 0.01F * (cropArea.left.p ? cropArea.left : cropArea.left / ui::aspectRatio);
+    float viewPortY = 0.01F * (cropArea.top.p ? cropArea.top * ui::aspectRatio : cropArea.top);
+    float viewPortW = 0.01F * (cropArea.width.p ? cropArea.width : cropArea.width / ui::aspectRatio);
+    float viewPortH = 0.01F * (cropArea.height.p ? cropArea.height * ui::aspectRatio : cropArea.height);
+
+    if(viewPortW < 0.000001F) viewPortW = 0.000001F;
+    if(viewPortH < 0.000001F) viewPortH = 0.000001F;
+
+    float wScale = 1 / viewPortW;
+    float hScale = 1 / viewPortH;
+
+    float cx = wScale * 0.01F * cropArea.left * (cropArea.left.p ? WW : HH);
+    float cy = hScale * 0.01F * cropArea.top * (cropArea.top.p ? WW : HH);
+
+    float xx = wScale * 0.01F * x * (x.p ? WW : HH) - cx;
+    float yy = hScale * 0.01F * y * (y.p ? WW : HH) - cy;
+    float ww = wScale * 0.01F * w * (w.p ? WW : HH);
+    float hh = hScale * 0.01F * h * (h.p ? WW : HH);
+
+    v.setViewport({viewPortX, viewPortY, viewPortW, viewPortH});
+
+    sp.setPosition(xx, yy);
+    sp.setScale(ww / sp.getLocalBounds().width, hh / sp.getLocalBounds().height);
+    sp.setColor(color);
+
+    window_.setView(v);
+    window_.draw(sp);
+    window_.setView(view);
+}
+
+
 
 // game sprite
 
 void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
-
-    sf::View wView = window_.getView();
-    sf::View view = wView;
+    
     sf::Sprite sp = resourceManager_.GetSprite(id);
     float spw = sp.getLocalBounds().width;
     float sph = sp.getLocalBounds().height;
@@ -177,19 +263,10 @@ void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfl
     float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
     float ww = hw * (spw / sph);
 
-    float cxw = camera.x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float cyw = camera.y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-
     sp.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);
     sp.rotate(rot.Lerp(ALPHA));
     sp.scale(WW * ww / spw, WW * hw / sph);
 
-    view.zoom(camera.zoom.Lerp(ALPHA));
-    view.rotate(camera.rot.Lerp(ALPHA));
-    view.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
-    
-    window_.setView(view);
-    window_.draw(sp);
-    window_.setView(wView);
+    CameraDraw(sp, camera);
 
 }
