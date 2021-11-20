@@ -68,7 +68,17 @@ namespace ui {
  * 
  * 
  * 
- */
+ */ 
+
+    struct CropArea {
+        CropArea() {}
+        CropArea(const pfloat& t, const pfloat& l, const pfloat& h, const pfloat& w) : 
+        top(t), left(l), height(h), width(w) {}
+        pfloat top = 0 VH;
+        pfloat left = 0 VW;
+        pfloat height = 100 VH;
+        pfloat width = 100 VW;
+    };
 
     const std::string appName = "AngryTeekkari";
     const std::string appVersion = "alpha 1.1";
