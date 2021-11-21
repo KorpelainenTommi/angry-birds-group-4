@@ -69,9 +69,11 @@
 namespace ph {
 
 
-    constexpr float Gravity = 9.81F;
-    constexpr float FullscreenPlayArea = 50.0F;
-    constexpr float Timestep = 0.02F;
+    const float FullscreenPlayArea = 50.0F;
+    const float Gravity = 9.81F;
+    const int velocityIters = 8;
+    const int positionIters = 3;
+    const float Timestep = 0.02F;
 
 
     /* A tfloat is simply a float that keeps track of its last value

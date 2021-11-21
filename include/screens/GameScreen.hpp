@@ -9,16 +9,16 @@
 class GameScreen : public Screen {
 public:
 
-    //Create a 
-    GameScreen() {}
+    /// Create a screen with an empty Game
+    GameScreen(Application& app) : Screen(app), game_(*this) { }
 
-    GameScreen(const Level&) {
+    /// Create a screen and start the Game with the selected level
+    GameScreen(Application& app, const Level& initialLevel) : Screen(app), game_(*this, initialLevel) {}
 
+    virtual ~GameScreen() = default;
 
-    }
-
-private:
-    Game game;
+protected:
+    Game game_;
 
 };
 

@@ -4,18 +4,26 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <gameplay/GameObjectTypes.hpp>
 #include <framework/Resources.hpp>
 
-//Max score calculation shouldn't be saved in level files
-//That would mean old levels would have incorrect max scores
-//if the max score formula is ever changed
+
+enum LevelMode { normal, time_trial, endless };
 
 struct Level {
 
     std::string levelName;
-    std::vector<int> objectData;
+    LevelMode levelMode;
+    std::vector<gm::GameObjectData> objectData;
     std::vector<std::pair<std::string, int>> highscores;
     SpriteID backgroundImage;
+
+    int CalculateMaxScore() {
+
+        
+
+    }
+
 
 };
 
