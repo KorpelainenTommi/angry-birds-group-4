@@ -21,7 +21,7 @@ std::shared_ptr<Element> ListElement::GetElement(int id){
 
 void ListElement::Render(const RenderSystem& r){
     ColoredElement::Render(r);
-    float h = 0;
+    float h = GetTop();
     float s = toVHFloat(spacing_);
     //std::cout << "render" << std::endl;
     for(const auto t: elements_){
