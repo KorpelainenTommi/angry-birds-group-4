@@ -16,7 +16,8 @@ public:
     void SetBackgroundColor(){backgroundColor_ = ui::backgroundColor;}
 
     virtual void Render(const RenderSystem& r){
-        r.RenderRect(backgroundColor_, GetLeft(), GetTop(), w_, h_);
+        if(cropped_) r.RenderRect(backgroundColor_, GetLeft(), GetTop(), w_, h_, cropArea_);
+        else r.RenderRect(backgroundColor_, GetLeft(), GetTop(), w_, h_);
     }
 
 protected:

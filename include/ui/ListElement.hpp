@@ -5,6 +5,9 @@
 #include <memory>
 #include <limits.h>
 
+/**
+ * No support for cropping.
+ */
 class ListElement: public ColoredElement{
 public:
     ListElement(
@@ -49,7 +52,7 @@ private:
     std::map<int, std::shared_ptr<Element>> elements_;
     ui::pfloat scrollOffset_;
     ui::pfloat spacing_ = 1 VH;
-    float scrollMultiplier_ = 10.0;
+    float scrollMultiplier_ = 5000.0;
 };
 
 #endif

@@ -17,7 +17,7 @@ public:
     DemoScreen(Application& app) : Screen(app) {
 
 
-        auto title = std::make_unique<TextLine>(10 VH, 0 VW, 5 VH, 100 VW, ui::appName);
+        auto title = std::make_shared<TextLine>(10 VH, 0 VW, 5 VH, 100 VW, ui::appName);
         title->SetTextAlign(ui::TextAlign::center);
         title->SetBackgroundColor(ui::backgroundColor);
         
@@ -28,12 +28,12 @@ public:
 
         //title->SetAbsoluteFontSize(26.0F); //verified it works
         title->SetRelativeFontSize(5 VH);
-        menu_.push_back(std::move(title));
+        menu_.push_back(title);
 
-        auto button = std::make_unique<Button>(40 VH, 40 VW, 20 VW, 20 VW, [&app]{ app.GetAudioSystem().PlaySound(SoundID::nice); });
+        auto button = std::make_shared<Button>(40 VH, 40 VW, 20 VW, 20 VW, [&app]{ app.GetAudioSystem().PlaySound(SoundID::nice); });
         button->SetBackgroundColor(sf::Color(0,0,0,0));
         button->SetText("NICE");
-        menu_.push_back(std::move(button));
+        menu_.push_back(button);
 
     }
 

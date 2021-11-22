@@ -71,6 +71,12 @@ public:
 
     const ui::pfloat& GetHeight() const {return h_;}
 
+    void SetCropArea(const ui::CropArea& a){
+        cropArea_ = a;
+        cropped_ = true;
+    }
+    void SetCropArea(){cropped_ = false;}
+
 protected:
     float toVHFloat(const ui::pfloat&) const;
     float toVWFloat(const ui::pfloat&) const;
@@ -96,6 +102,9 @@ protected:
 
     bool mouseIn_ = false;
     bool focused_ = false;
+
+    bool cropped_ = false;
+    ui::CropArea cropArea_;
 };
 
 

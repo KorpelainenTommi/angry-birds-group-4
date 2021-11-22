@@ -3,8 +3,8 @@
 bool Element::isInside(float xw, float yh) const {
     float xvw = xw * 100;
     float yvh = yh * 100;
-    float left = toVWFloat(x_);
-    float top = toVHFloat(y_);
+    float left = toVWFloat(GetLeft());
+    float top = toVHFloat(GetTop());
     float right = toVWFloat(w_) + left;
     float bottom = toVHFloat(h_) + top;
     return xvw > left && xvw < right && yvh > top && yvh < bottom;
