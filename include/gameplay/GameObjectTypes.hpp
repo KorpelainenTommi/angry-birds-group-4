@@ -18,7 +18,23 @@ namespace gm {
 //Defined in the cpp file
 
 /// A unique identifier defining the type of GameObject. All GameObjects should be spawnable without extra info
-enum GameObjectType;
+enum GameObjectType {
+
+    terrain1x1, //Unmovable block of terrain
+    background_tree,
+    background_lamp_pole,
+    background_bench,
+    background_person,
+
+    Catapult,
+
+    block_wood1x1,
+    block_metal1x1,
+    block_glass1x1,
+
+
+
+};
 
 /// Used to save objects to file
 struct GameObjectData {
