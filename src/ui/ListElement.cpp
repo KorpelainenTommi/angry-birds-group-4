@@ -1,13 +1,9 @@
 #include <ui/ListElement.hpp>
 
-//development
-#include <iostream>
-
 int ListElement::InsertElement(std::shared_ptr<Element> element){
     element->SetOffsetX(x_);
     element->SetCropArea({y_, x_, h_, w_});
     elements_[nextId_] = element;
-    //std::cout << elements_.size() << std::endl;
     return nextId_++;
 }
 
@@ -23,11 +19,9 @@ void ListElement::Render(const RenderSystem& r){
     ColoredElement::Render(r);
     float h = GetTop();
     float s = toVHFloat(spacing_);
-    //std::cout << "render" << std::endl;
     for(const auto t: elements_){
         auto e = t.second;
         e->SetTop(h VH);
-        //std::cout << "top set " << h << std::endl;
         h += toVHFloat(e->GetHeight()) + s;
     }
 }
