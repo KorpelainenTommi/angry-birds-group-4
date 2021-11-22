@@ -1,6 +1,6 @@
 #include <ui/Button.hpp>
 
-void Button::Render(const RenderSystem& r){
+/*void Button::Render(const RenderSystem& r){
     ui::pfloat top = GetTop();
     ui::pfloat left = GetLeft();
     ui::pfloat s = GetFontSize();
@@ -9,4 +9,4 @@ void Button::Render(const RenderSystem& r){
     //requires updating
     if(cropped_) r.RenderText(text_, left, y, w_, s, textColor_, font_, align_);
     else r.RenderText(text_, left, y, w_, s, textColor_, font_, align_);
-}
+}*/

@@ -15,10 +15,16 @@ ui::pfloat TextElement::GetFontSize(){
     return (100.0F * absoluteFontSize_ / ui::windowHeight) VH;
 }
 
-//Simply copied from Button render, replace with better implementation
-/*void TextElement::Render(const RenderSystem& r){
-    r.RenderRect(backgroundColor_, x_, y_, w_, h_);
+void TextElement::Render(const RenderSystem& r){
+    ui::pfloat top = GetTop();
+    ui::pfloat left = GetLeft();
     ui::pfloat s = GetFontSize();
-    auto y = (toVHFloat(y_) + (toVHFloat(h_) - toVHFloat(s)) / 2) VH;
-    r.RenderText(text_, x_, y, w_, s, textColor_, font_, ui::TextAlign::center);
-}*/
+    ui::pfloat y = (toVHFloat(top) + (toVHFloat(h_) - toVHFloat(s)) / 2) VH;
+    if(cropped_){
+        r.RenderRect(backgroundColor_, left, top, w_, h_, cropArea_);
+        r.RenderText(text_, left, y, w_, s, cropArea_, textColor_, font_ , align_);
+    }else{
+        r.RenderRect(backgroundColor_, left, top, w_, h_);
+        r.RenderText(text_, left, y, w_, s, textColor_, font_ , align_);
+    }
+}

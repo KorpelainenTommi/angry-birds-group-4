@@ -18,7 +18,7 @@ public:
         align_ = ui::TextAlign::center;
     };
 
-    virtual void Render(const RenderSystem&);
+    //virtual void Render(const RenderSystem&);
 };
 
 #endif
