@@ -15,7 +15,7 @@ public:
     PhysObject(Game& game, gm::GameObjectType objectID, float x, float y, float rot) : 
     GameObject(game, objectID, x, y, rot) { }
 
-    virtual ~PhysObject() = default;
+    virtual ~PhysObject() { game_.GetB2World().DestroyBody(mainBody_); };
 
     /// Update this objects position to reflect the state in the box2d world
     virtual void Update();
@@ -49,7 +49,7 @@ public:
 protected:
 
     // This is the main (root) box2d body. Objects can have subparts such as bodies connected by joints
-    std::unique_ptr<b2Body> mainBody_;
+    b2Body* mainBody_;
 };
 
 

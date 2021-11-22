@@ -16,7 +16,9 @@ public:
     /// Construct a Block identified by this GameObjectType. It is assumed the type is a valid block
     Block(Game& game, gm::GameObjectType type, float x, float y, float rot) : 
     PhysObject(game, type, x, y, rot), blockData_(gm::blockTypes.at(type)), shapeData_(gm::shapeProperties.at(blockData_.shape)),
-    materialData_(gm::materialProperties.at(blockData_.material)) { }
+    materialData_(gm::materialProperties.at(blockData_.material)) {
+
+    }
 
     virtual void Render(const RenderSystem& r) {
 
