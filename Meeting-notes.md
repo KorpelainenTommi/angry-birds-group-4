@@ -96,3 +96,48 @@ Project file structure and class hierarchy are defined. Basic top level function
 3. Ilari Tulkki: writing the Screen and Element clasess.
 4. Joonas Palmulaakso: writing the GameObject class.
 
+# Meeting 18.11.2021 18::00
+
+**Participants**: 
+Tommi Korpelainen
+Aleksi Rintanen
+Ilari Tulkki
+Joonas Palmulaakso
+
+## Summary of works
+1. Tommi Korpelainen
+   
+   Implementing framework and overall structure.
+
+2. Aleksi Rintanen
+
+   Implementing Game class and basic functionality.
+
+3. Ilari Tulkki
+ 
+   Creating meeting notes and begun implementing UI.
+   
+4. Joonas Palmulaakso
+
+   Implementing GameObject class and its subclasses.
+
+
+## Challenges
+
+The way a level is loaded and the objects are stored is not fully determined yet. 
+
+## Actions
+1. Tommi Korpelainen is going to continue to finish frameworks and begins to work with box2d.
+2. Aleksi Rintanen is going to develop the game and level class further.
+3. Ilari Tulkki is going to continue with UI.
+4. Joonas Palmulaakso is going to proceed with gameobjects. 
+
+## Project status 
+Implementing game's basic functionality is now on the go. Framework is nearly completed and the full focus is on the game class and its related classes.
+
+### TODOs
+1. Tommi Korpelainen: finishing frameworks and begin with box2d.
+2. Aleksi Rintanen: continuing with the Game and level class and creating meeting-notes.
+3. Ilari Tulkki: continue with the UI.
+4. Joonas Palmulaakso: writing gameobject classes further.
+
