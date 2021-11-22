@@ -10,7 +10,7 @@
 #include <gameplay/GameObjectTypes.hpp>
 #include <framework/AudioSystem.hpp>
 
-//#include "b2_world.h"
+#include <box2d/b2_world.h>
 
 /** 
  * Game owns and manages all GameObjects. It also manages the box2d world, 
@@ -28,16 +28,18 @@
  *  ..              
  * 
  *  the namespace gm defines a constant called objectGroupSize, and a method 
- *  int GetObjectGroup(GameObjectID) that returns an integer 0, 1, 2, 3 etc.
+ *  int GetObjectGroup(GameObjectType) that returns an integer 0, 1, 2, 3 etc.
  *
  */
 
 //Forward declaration
 class GameScreen;
 
+/// A Game encapsulates a single game session that starts when entering a GameScreen, and ends when exiting it
 class Game : public UpdateListener {
 public:
-    /// Construct an empty game
+
+    /// Construct a game but don't add any objects
     Game(GameScreen&);
 
     /// Construct a game, and load the provided level into it
@@ -45,7 +47,10 @@ public:
 
     virtual ~Game() = default;
 
+    /// Render all objects in this game
     virtual void Render(const RenderSystem& r);
+
+    /// Update all objects in this game
     virtual void Update();
 
 
@@ -56,9 +61,10 @@ public:
     /* Note about object creation:
      *
      * A class can construct a GameObject themselves, and add the pointer
-     * with AddObject. This method then needs to simply assign the object a valid gameID
+     * with AddObject. AddObject then needs to simply assign the object a valid gameID
      * 
-     * 
+     * CreateObject should use gm::IDToObject to create the correct subclass of GameObject based on
+     * GameObjectType. It should then add it just like with AddObject
      */
 
 
@@ -69,32 +75,44 @@ public:
     int CreateObject(gm::GameObjectData data);
 
     /// Create a new GameObject with specified type, at this location and rotation
-    int CreateObject(gm::GameObjectID id, float x = 0, float y = 0, float rot = 0);
+    int CreateObject(gm::GameObjectType type, float x = 0, float y = 0, float rot = 0);
 
-    /// Destroy object with specified id
+    /// Destroy the object with specified id
     void DestroyObject(int id);
 
     /// Clear all objects
     void ClearObjects();
 
-    /// Get a reference to the GameObject with this gameID. Returns true if it exists, false otherwise
+    /// Get a reference to the GameObject with this id. Returns true if it exists, false otherwise
     bool GetObject(int id, GameObject&);
 
 
-    /// Get time in ticks
+    /// Get the time in ticks
     unsigned int GetTicks() const;
 
-    /// Get time in seconds
+    /// Get the time in seconds
     float GetTime() const;
 
-    AudioSystem& GetAudioSystem() const; //Through screen => app => audiosystem
-    //b2World& GetB2World() const;
+    /// Get a reference to an AudioSystem to play sounds
+    AudioSystem& GetAudioSystem() const;
+
+    /// Get a reference to a b2World to add rigidbodies
+    b2World& GetB2World();
 
 
+    /// Get a copy of current Camera
     Camera GetCamera() const;
+
+    /// Reset the camera to a natural fullscreen view
     void ResetCamera();
+
+    /// Set the camera position
     void SetCameraPos(float x, float y);
+
+    /// Set the camera zoom
     void SetCameraZoom(float zoom);
+
+    /// Set the camera rotation
     void SetCameraRot(float rot);
 
 
@@ -106,10 +124,14 @@ protected:
     Level level_;
     Camera camera_;
 
+    /// List of teekkaris that can be spawned to the catapult
+    std::vector<gm::GameObjectType> teekkarisLeft_;
+
+
     int points_;
     unsigned int time_; //Game ticks since starting => number of update calls
 
-    //b2World world_;
+    b2World world_;
     
 };
 

@@ -11,11 +11,14 @@
 class Game;
 class GameObject;
 
+
 namespace gm {
 
-//List of all game object ids
+//List of all game object types
 //Defined in the cpp file
-enum GameObjectID;
+
+/// A unique identifier defining the type of GameObject. All GameObjects should be spawnable without extra info
+enum GameObjectType;
 
 /// Used to save objects to file
 struct GameObjectData {
@@ -23,23 +26,20 @@ struct GameObjectData {
     float x;
     float y;
     float rot;
-    GameObjectID id;
+    GameObjectType type;
 
 };
 
 const int objectGroupSize = 100000000;
 
-/// Get the desired object group based on a GameObjectID
-int GetObjectGroup(GameObjectID);
+/// Get the desired object group based on a GameObjectType
+int GetObjectGroup(GameObjectType);
 
 /// Get the object score if broken, or 0 if not applicable
-int GetObjectScore(GameObjectID id);
+int GetObjectScore(GameObjectType id);
 
-/// Construct a child class based on GameObjectID
-std::unique_ptr<GameObject> IDToObject(Game& game, GameObjectID id, float x, float y, float rot);
-
-/// Is this object affected by physics (b2World.step)
-bool IsPhysicsObject(GameObjectID id);
+/// Construct a child class based on GameObjectType
+std::unique_ptr<GameObject> IDToObject(Game& game, GameObjectType type, float x, float y, float rot);
 
 
 
@@ -62,7 +62,7 @@ struct BlockMaterialData {
 struct BlockShapeData {
     BlockShape shape;
     float volume;
-    b2Shape& b2shape;
+    const b2Shape& b2shape;
     b2Vec2 spriteOffset;
 };
 
@@ -72,8 +72,13 @@ struct BlockData {
     BlockShape shape;
 };
 
-extern const std::unordered_map<GameObjectID, BlockData> blockTypes;
+/// Lookup for all types of blocks
+extern const std::unordered_map<GameObjectType, BlockData> blockTypes;
+
+/// Lookup for all block materials
 extern const std::unordered_map<BlockMaterial, BlockMaterialData> materialProperties;
+
+/// Lookup for all block shapes
 extern const std::unordered_map<BlockShape, BlockShapeData> shapeProperties;
 
 

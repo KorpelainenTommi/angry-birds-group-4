@@ -11,6 +11,7 @@
  * will see an area that is 50 meters wide.
  */
 
+/// A camera can be moved and zoomed, and can be used to translate object positions
 struct Camera {
     ph::tfloat x = 0;
     ph::tfloat y = 0;

@@ -8,9 +8,11 @@
 #include <SFML/Graphics.hpp>
 #include <framework/ResourceManager.hpp>
 
+/// Framework class for drawing sprites and basic shapes with relative or absolute units
 class RenderSystem {
 public:
         
+    /// Construct a RenderSystem that draws to this Window, and queries sprites from this ResourceManager
     RenderSystem(sf::RenderWindow& window, ResourceManager& resourceManager) : resourceManager_(resourceManager), window_(window) {}
 
     //For the definition of screen independent coordinates, see gameplay/Physics.hpp
@@ -65,17 +67,35 @@ private:
 
     //Allow Application to set these values
     friend class Application;
+
+    /// Interpolation value for drawing between physics updates
     float ALPHA;
+
+    /// Window width
     float WW;
+
+    /// Window height
     float HH;
 
+
+
+    
     sf::RenderWindow& window_;
     ResourceManager& resourceManager_;
 
+
+
+    /// Translate this Drawable with a camera, then draw it
     void CameraDraw(const sf::Drawable& shape, const Camera& camera) const;
+
+    /// Resolve the pixel coordinates of this Shape, then draw it
     void RenderRelative(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const;
-    void RenderAbs(sf::Shape& shape, const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const;
+
+    /// Resolve the pixel coordinates of this Shape drawn with this CropArea
     void RenderRelativeCrop(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const;
+    
+    /// Resolve the camera position of this Shape, then translate it with a camera and draw it
+    void RenderAbs(sf::Shape& shape, const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const;
     
 };
 

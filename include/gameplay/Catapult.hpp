@@ -1,5 +1,5 @@
-#ifndef GAME_BLOCK_HPP
-#define GAME_BLOCK_HPP
+#ifndef CATAPULT_HPP
+#define CATAPULT_HPP
 
 #include <gameplay/PhysObject.hpp>
 #include <gameplay/GameObjectTypes.hpp>
@@ -10,26 +10,17 @@
 #include <box2d/b2_body.h>
 
 /// A Block is a single body physics object with a shape and a material, that can give points when broken
-class Block : public PhysObject {
+class Catapult : public PhysObject {
 public:
 
-    /// Construct a Block identified by this GameObjectType. It is assumed the type is a valid block
-    Block(Game& game, gm::GameObjectType type, float x, float y, float rot) : 
+    /// Construct a catapult at this position facing right. If mirrored, it will face left
+    Catapult(Game& game, float x, float y, bool mirror) : 
     PhysObject(game, type, x, y, rot), blockData_(gm::blockTypes.at(type)), shapeData_(gm::shapeProperties.at(blockData_.shape)),
-    materialData_(gm::materialProperties.at(blockData_.material)) { 
-
-
-
-    }
+    materialData_(gm::materialProperties.at(blockData_.material)) { }
 
     virtual void Render(const RenderSystem& r) {
 
     }
-
-private:
-    gm::BlockData blockData_;
-    gm::BlockShapeData shapeData_;
-    gm::BlockMaterialData materialData_;
 
 };
 
