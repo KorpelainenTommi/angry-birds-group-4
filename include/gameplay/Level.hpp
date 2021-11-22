@@ -23,6 +23,7 @@ struct Level {
     int CalculateMaxScore() {
         //TODO: implement
 
+        return 0;
 
     }
 

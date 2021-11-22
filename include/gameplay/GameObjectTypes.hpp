@@ -63,8 +63,8 @@ std::unique_ptr<GameObject> IDToObject(Game& game, GameObjectType type, float x,
 
 // Block properties
 
-enum BlockMaterial;
-enum BlockShape;
+enum BlockMaterial { };
+enum BlockShape { };
 
 struct BlockMaterialData {
     BlockMaterial material;
