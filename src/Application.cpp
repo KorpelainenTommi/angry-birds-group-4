@@ -59,8 +59,8 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
     sf::Event ev;
     while(window_.pollEvent(ev));
 
-    //TransitionTo(std::make_unique<MainMenu>(*this));
-    TransitionTo(std::make_unique<DemoScreen>(*this));
+    TransitionTo(std::make_unique<MainMenu>(*this));
+    //TransitionTo(std::make_unique<DemoScreen>(*this));
 }
 
 float Application::GetAspectRatio() const { return ui::aspectRatio; }

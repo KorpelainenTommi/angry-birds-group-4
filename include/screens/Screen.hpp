@@ -64,7 +64,7 @@ public:
 
 protected:
     Application& app_;
-    std::vector<std::unique_ptr<Element>> menu_;
+    std::vector<std::shared_ptr<Element>> menu_;
 };
 
 

@@ -166,7 +166,7 @@ const ui::CropArea& cropArea, const sf::Color& color, FontID id, ui::TextAlign t
     t.setPosition(xx, yy);
     t.setFillColor(color);
 
-    RenderRect({0, 100, 0}, x, y, w, h, cropArea);
+    //RenderRect({0, 100, 0}, x, y, w, h, cropArea);
 
     window_.setView(v);
     window_.draw(t);

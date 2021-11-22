@@ -1,6 +1,8 @@
 #include <ui/ListElement.hpp>
 
 int ListElement::InsertElement(std::shared_ptr<Element> element){
+    element->SetOffsetX(x_);
+    element->SetCropArea({y_, x_, h_, w_});
     elements_[nextId_] = element;
     return nextId_++;
 }
@@ -15,11 +17,12 @@ std::shared_ptr<Element> ListElement::GetElement(int id){
 
 void ListElement::Render(const RenderSystem& r){
     ColoredElement::Render(r);
-    ui::pfloat h = 0 VH;
+    float h = GetTop();
+    float s = toVHFloat(spacing_);
     for(const auto t: elements_){
         auto e = t.second;
-        e->SetTop(h);
-        h += toVH(e->GetHeight()) + spacing_;
+        e->SetTop(h VH);
+        h += toVHFloat(e->GetHeight()) + s;
     }
 }
 
@@ -70,10 +73,19 @@ bool ListElement::OnMouseMove(float xw, float yh){
 
 bool ListElement::OnMouseScroll(float delta, float xw, float yh){
     if(isInside(xw, yh)){
+        float h = toVHFloat(h_);
+        float s = toVHFloat(spacing_);
         for(auto t: elements_){
             if(t.second->OnMouseScroll(delta, xw, yh)) return true;
+            h -= toVHFloat(t.second->GetHeight()) + s;
         }
+        if(scrollOffset_.f >= 0 && delta * scrollMultiplier_ >= 0) return false;
         scrollOffset_ += (delta * scrollMultiplier_ / ui::windowHeight) VH;
+
+        //set scroll limits
+        if(scrollOffset_.f > 0) scrollOffset_ = 0 VH;
+        if(scrollOffset_.f < h && h < 0) scrollOffset_ = h VH;
+
         for(auto t: elements_) t.second->SetOffsetY(scrollOffset_);
         return true;
     }
