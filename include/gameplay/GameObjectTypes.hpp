@@ -139,7 +139,7 @@ const int objectGroupSize = 100000000;
 int GetObjectGroup(GameObjectType);
 
 /// Get the object score if broken, or 0 if not applicable
-int GetObjectScore(GameObjectType id);
+int GetObjectScore(GameObjectType type);
 
 /// Construct a child class based on GameObjectType
 std::unique_ptr<GameObject> IDToObject(Game& game, GameObjectType type, float x, float y, float rot);

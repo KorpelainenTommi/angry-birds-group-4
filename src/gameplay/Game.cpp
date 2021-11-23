@@ -106,6 +106,9 @@ void Game::Render(const RenderSystem& r) {
 }
 
 
+unsigned int Game::GetTicks() const { time_; };
+float Game::GetTime() const { time_ * ph::timestep; }
+
 
 const Camera& Game::GetCamera() const { return camera_; }
 
