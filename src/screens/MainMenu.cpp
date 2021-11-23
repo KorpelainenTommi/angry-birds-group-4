@@ -68,9 +68,10 @@ void MainMenu::checkListWidth(){
 
 void MainMenu::addLevel(std::string level){
     auto e = std::make_shared<Button>(0 VH, listSpacing_, 20 VH, curElementW_);
-    e->SetMouseDownHandler([level, e, this](){
+    auto w = std::weak_ptr<Button>(e);
+    e->SetMouseDownHandler([level, w, this](){
         std::cout << level << std::endl;
-        this->SelectLevel(level, e);
+        this->SelectLevel(level, w);
     });
     e->SetText(level);
     //e->SetMouseEnterHandler([e](){e->SetBackgroundColor({0, 100, 200});});
@@ -79,9 +80,9 @@ void MainMenu::addLevel(std::string level){
     menu_.push_back(e);
 }
 
-void MainMenu::SelectLevel(const std::string level, std::shared_ptr<Button> button){
-    if(hasSelectedLevel_) selectedLevel_.second->SetBackgroundColor();
+void MainMenu::SelectLevel(const std::string level, std::weak_ptr<Button> button){
+    if(hasSelectedLevel_) selectedLevel_.second.lock()->SetBackgroundColor();
     else hasSelectedLevel_ = true;
     selectedLevel_ = {level, button};
-    button->SetBackgroundColor(selectedLevelBackground_);
+    button.lock()->SetBackgroundColor(selectedLevelBackground_);
 }

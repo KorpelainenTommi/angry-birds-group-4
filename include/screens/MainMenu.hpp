@@ -11,7 +11,7 @@ public:
 
     virtual void Render(const RenderSystem&);
 
-    void SelectLevel(const std::string level, std::shared_ptr<Button> button);
+    void SelectLevel(const std::string level, std::weak_ptr<Button> button);
 
 private:
     const sf::Color selectedLevelBackground_ = {200, 200, 255};
@@ -22,7 +22,7 @@ private:
     ui::pfloat listSpacing_ = 1 VH;
     std::shared_ptr<ColoredElement> listTop_;
     std::shared_ptr<ColoredElement> listBottom_;
-    std::pair<std::string, std::shared_ptr<Button>> selectedLevel_;
+    std::pair<std::string, std::weak_ptr<Button>> selectedLevel_;
     bool hasSelectedLevel_ = false;
 
     ui::pfloat calcListWidth() const;
