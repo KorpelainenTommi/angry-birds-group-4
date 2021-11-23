@@ -6,7 +6,7 @@
 #include <iostream>
 
 MainMenu::MainMenu(Application& app): Screen(app){
-    auto list = std::make_shared<ListElement>(0 VH, 0 VW, 100 VH, 74 VW);
+    auto list = std::make_shared<ListElement>(2 VH, 2 VH, 96 VH, 74 VW);
     list->SetBackgroundColor(ui::backgroundColor2);
     menu_.push_back(list);
 

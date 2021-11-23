@@ -8,6 +8,11 @@ public:
     MainMenu(Application& app);
 
     virtual void Render(const RenderSystem&);
+
+private:
+    ui::pfloat calcListWidth(){
+        
+    }
 };
 
 #endif
