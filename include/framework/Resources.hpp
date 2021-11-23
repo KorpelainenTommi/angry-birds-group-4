@@ -182,7 +182,7 @@ enum SpriteID {
 
 };
 
-/// All animations usable with
+/// All animations usable with RenderSystem
 enum AnimationID { 
 
     //Block break particles

@@ -62,8 +62,15 @@ const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties
 };
 
 
+//TODO: Not implemented
+int gm::GetObjectGroup(gm::GameObjectType type) {
+    if(type < gm::GameObjectType::block_wood1x1) return 0;
+    else return 1;
+}
 
-
+int GetObjectScore(gm::GameObjectType type) {
+    return 0;
+}
 
 std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, float x, float y, float rot) {
 
