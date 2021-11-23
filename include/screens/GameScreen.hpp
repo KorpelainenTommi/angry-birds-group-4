@@ -37,6 +37,14 @@ public:
             float yPos = cam.y + ((1.0F - y) * ch - 0.5F * ch) * cam.zoom;
             game_.CreateObject(gm::GameObjectType::block_wood1x1, xPos, yPos);
         }
+        if(e == sf::Mouse::Button::Middle) {
+            const Camera& cam = game_.GetCamera();
+            float cw = ph::fullscreenPlayArea;
+            float ch = cw / ui::aspectRatio;
+            float xPos = cam.x  + (x * cw - 0.5F * cw ) * cam.zoom;
+            float yPos = cam.y + ((1.0F - y) * ch - 0.5F * ch) * cam.zoom;
+            game_.CreateObject(gm::GameObjectType::block_metal1x1, xPos, yPos);
+        }        
 
         return false;
     }

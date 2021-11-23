@@ -96,10 +96,7 @@ namespace ph {
     const float collisionTreshold = 40.0F;
 
     /// A scaling factor applied to velocity when determining damage
-    const float damageScaling = 10.0F;
-
-    /// The mass of the ground when considering damage
-    const float groundMass = 80;
+    const float damageScaling = 0.1F;
 
 
     /* A tfloat is simply a float that keeps track of its last value

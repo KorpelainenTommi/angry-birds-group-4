@@ -56,11 +56,13 @@ Game::~Game() {
     ClearObjects();
 }
 
+
 void Game::BeginContact(b2Contact* contact) {
     
-    b2Body* bodyA = contact->GetFixtureA()->GetBody();
+    if(contact->GetFixtureA()->IsSensor() || contact->GetFixtureB()->IsSensor()) return;
+    b2Body* bodyA = contact->GetFixtureA()->GetBody();  
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
-    b2WorldManifold worldManifold;
+    b2WorldManifold worldManifold;   
     contact->GetWorldManifold(&worldManifold);
 
     b2Vec2 velocity = bodyA->GetLinearVelocityFromWorldPoint(worldManifold.points[0]) - bodyB->GetLinearVelocityFromWorldPoint(worldManifold.points[0]);
@@ -70,7 +72,6 @@ void Game::BeginContact(b2Contact* contact) {
 
     if(bodyA != ground_) objA = ((PhysObject*)contact->GetFixtureA()->GetUserData().data);
     if(bodyB != ground_) objB = ((PhysObject*)contact->GetFixtureB()->GetUserData().data);
-
     if(objA) objA->OnCollision(-velocity, *objB, bodyB == ground_);
     if(objB) objB->OnCollision(velocity, *objA, bodyA == ground_);
 }

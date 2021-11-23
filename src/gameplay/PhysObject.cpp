@@ -64,7 +64,7 @@ void PhysObject::SetPosition(float x, float y) {
 
 void PhysObject::OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround) {
     
-    float mass = (isGround) ? 0.5F * mainBody_->GetMass() + ph::groundMass : other.mainBody_->GetMass(); //Needs to be reworked
-    hp_ -= (ph::damageScaling * velocity.Length() + 0.333F * mass);
+    hp_ -= ph::damageScaling * velocity.Length() * mainBody_->GetMass();
+    if(hp_ <= 0) mainBody_->GetFixtureList()->SetSensor(true);
 
 }
