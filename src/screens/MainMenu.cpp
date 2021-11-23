@@ -1,5 +1,4 @@
 #include <screens/MainMenu.hpp>
-#include <ui/Button.hpp>
 #include <Application.hpp>
 #include <screens/GameScreen.hpp>
 
@@ -68,12 +67,21 @@ void MainMenu::checkListWidth(){
 }
 
 void MainMenu::addLevel(std::string level){
-    auto e = std::make_shared<Button>(0 VH, listSpacing_, 20 VH, curElementW_, [level](){
+    auto e = std::make_shared<Button>(0 VH, listSpacing_, 20 VH, curElementW_);
+    e->SetMouseDownHandler([level, e, this](){
         std::cout << level << std::endl;
+        this->SelectLevel(level, e);
     });
     e->SetText(level);
-    e->SetMouseEnterHandler([e](){e->SetBackgroundColor({0, 100, 200});});
-    e->SetMouseLeaveHandler([e](){e->SetBackgroundColor();});
+    //e->SetMouseEnterHandler([e](){e->SetBackgroundColor({0, 100, 200});});
+    //e->SetMouseLeaveHandler([e](){e->SetBackgroundColor();});
     list_->InsertElement(e);
     menu_.push_back(e);
+}
+
+void MainMenu::SelectLevel(const std::string level, std::shared_ptr<Button> button){
+    if(hasSelectedLevel_) selectedLevel_.second->SetBackgroundColor();
+    else hasSelectedLevel_ = true;
+    selectedLevel_ = {level, button};
+    button->SetBackgroundColor(selectedLevelBackground_);
 }
