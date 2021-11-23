@@ -15,6 +15,8 @@ private:
     ui::pfloat curListW_ = 0 VW;
     ui::pfloat curElementW_ = 0 VW;
     ui::pfloat listSpacing_ = 1 VH;
+    std::shared_ptr<ColoredElement> listTop_;
+    std::shared_ptr<ColoredElement> listBottom_;
 
     ui::pfloat calcListWidth() const;
 

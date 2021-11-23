@@ -17,7 +17,7 @@ std::shared_ptr<Element> ListElement::GetElement(int id){
 
 void ListElement::Render(const RenderSystem& r){
     ColoredElement::Render(r);
-    float h = toVHFloat(GetTop()) + toVHFloat(spacing_);
+    float h = toVHFloat(GetTop());
     float s = toVHFloat(spacing_);
     for(const auto t: elements_){
         auto e = t.second;
@@ -79,6 +79,7 @@ bool ListElement::OnMouseScroll(float delta, float xw, float yh){
             if(t.second->OnMouseScroll(delta, xw, yh)) return true;
             h -= toVHFloat(t.second->GetHeight()) + s;
         }
+        h += s;
         if(scrollOffset_.f >= 0 && delta * scrollMultiplier_ >= 0) return false;
         scrollOffset_ += (delta * scrollMultiplier_ / ui::windowHeight) VH;
 

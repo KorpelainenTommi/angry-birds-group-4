@@ -1,6 +1,5 @@
 #include <screens/MainMenu.hpp>
 #include <ui/Button.hpp>
-
 #include <Application.hpp>
 #include <screens/GameScreen.hpp>
 
@@ -8,13 +7,21 @@
 #include <iostream>
 
 MainMenu::MainMenu(Application& app): Screen(app){
-    list_ = std::make_shared<ListElement>(2 VH, 2 VH, 96 VH, curListW_);
+    list_ = std::make_shared<ListElement>(3 VH, 2 VH, 94 VH, curListW_);
     curListW_ = calcListWidth();
     curElementW_ = calcListElementWidth();
     list_->SetWidth(curListW_);
     list_->SetBackgroundColor(ui::backgroundColor2);
     list_->SetSpacing(listSpacing_);
     menu_.push_back(list_);
+
+    listTop_ = std::make_shared<ColoredElement>(2 VH, 2 VH, 1 VH, curListW_);
+    listTop_->SetBackgroundColor(ui::backgroundColor2);
+    menu_.push_back(listTop_);
+
+    listBottom_ = std::make_shared<ColoredElement>(97 VH, 2 VH, 1 VH, curListW_);
+    listBottom_->SetBackgroundColor(ui::backgroundColor2);
+    menu_.push_back(listBottom_);
 
     addLevel("level1");
     menu_[menu_.size() - 1]->SetMouseDownHandler([&app](){
@@ -54,6 +61,8 @@ void MainMenu::checkListWidth(){
     if(w.f == curListW_.f) return;
     curListW_ = w;
     list_->SetWidth(w);
+    listTop_->SetWidth(w);
+    listBottom_->SetWidth(w);
     curElementW_ = calcListElementWidth();
     for(auto e: list_->GetElements()) e.second->SetWidth(curElementW_);
 }
