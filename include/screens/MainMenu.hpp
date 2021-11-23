@@ -17,7 +17,7 @@ public:
     void SelectLevel(const std::string level, std::weak_ptr<Button> button);
 
 private:
-    const ui::pfloat padding_ = 2 VH; //currently both padding_ and listPadding_ must be in VH
+    const ui::pfloat padding_ = 2 VH;
     const ui::pfloat listPadding_ = 5 VH;
     const ui::pfloat listSpacing_ = 1 VH;
     const sf::Color selectedLevelBackground_ = {200, 200, 255};

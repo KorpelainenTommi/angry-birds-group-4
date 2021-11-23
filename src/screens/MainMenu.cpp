@@ -7,7 +7,10 @@
 
 MainMenu::MainMenu(Application& app): Screen(app){
     list_ = std::make_shared<ListElement>(
-        (padding_.f + listPadding_.f) VH, padding_, (100 - 2 * listPadding_.f - 2 * padding_.f) VH, curListW_
+        (ui::toVHFloat(padding_) + ui::toVHFloat(listPadding_)) VH, 
+        padding_, 
+        (100 - 2 * ui::toVHFloat(listPadding_) - 2 * ui::toVHFloat(padding_)) VH, 
+        curListW_
     );
     curListW_ = calcListWidth();
     curElementW_ = calcListElementWidth();

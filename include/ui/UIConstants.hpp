@@ -106,6 +106,10 @@ namespace ui {
     extern float windowHeight;
     extern float aspectRatio;
 
+
+    float toVHFloat(const pfloat& p);
+    float toVWFloat(const pfloat& p);
+
 }
 
 #endif
