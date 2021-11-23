@@ -11,6 +11,9 @@
 #include <framework/AudioSystem.hpp>
 
 #include <box2d/b2_world.h>
+#include <box2d/b2_world_callbacks.h>
+#include <box2d/b2_body.h>
+#include <box2d/b2_contact.h>
 
 /** 
  * Game owns and manages all GameObjects. It also manages the box2d world, 
@@ -35,17 +38,25 @@
 //Forward declaration
 class GameScreen;
 
+
+//TODO:
+//Methods marked with <!> have not been implemented in the cpp file
+
+
+
+
+
 /// A Game encapsulates a single game session that starts when entering a GameScreen, and ends when exiting it
-class Game : public UpdateListener {
+class Game : public UpdateListener, public b2ContactListener {
 public:
 
     /// Construct a game but don't add any objects
     Game(GameScreen&);
 
     /// Construct a game, and load the provided level into it
-    Game(GameScreen &s, Level level);
+    Game(GameScreen &s, Level level);                                       //<!>
 
-    virtual ~Game() = default;
+    virtual ~Game();
 
     /// Render all objects in this game
     virtual void Render(const RenderSystem& r);
@@ -55,7 +66,7 @@ public:
 
 
     /// Create all objects from this level.
-    void LoadLevel(Level level);
+    void LoadLevel(Level level);                                            //<!>
 
 
     /* Note about object creation:
@@ -99,9 +110,12 @@ public:
     /// Get a reference to a b2World to add rigidbodies
     b2World& GetB2World();
 
+    /// Callback for Box2D contacts
+	virtual void BeginContact(b2Contact* contact);
+
 
     /// Get a copy of current Camera
-    Camera GetCamera() const;
+    const Camera& GetCamera() const;
 
     /// Reset the camera to a natural fullscreen view
     void ResetCamera();
@@ -132,7 +146,14 @@ protected:
     unsigned int time_; //Game ticks since starting => number of update calls
 
     b2World world_;
+
+    // The ground (b2Body* ground_ cannot be a smart pointer because box2d allocates and deallocates this on its own)
+    b2Body* ground_;
     
+
+    //Gives new gameIDs without grouping. This should be removed when proper grouping is implemented
+    int simpleIDCounter = 0;
+
 };
 
 

@@ -2,6 +2,9 @@
 #include <ui/ListElement.hpp>
 #include <ui/Button.hpp>
 
+#include <Application.hpp>
+#include <screens/GameScreen.hpp>
+
 //development
 #include <iostream>
 
@@ -10,7 +13,10 @@ MainMenu::MainMenu(Application& app): Screen(app){
     list->SetBackgroundColor(ui::backgroundColor2);
     menu_.push_back(list);
 
-    auto level1 = std::make_shared<Button>(0 VH, 1 VW, 40 VH, 72 VW, [](){std::cout << "level1" << std::endl;});
+    auto level1 = std::make_shared<Button>(0 VH, 1 VW, 40 VH, 72 VW, [&app](){
+        std::cout << "level1" << std::endl;
+        app.TransitionTo(std::make_unique<GameScreen>(app));
+    });
     level1->SetText("level1");
     list->InsertElement(level1);
     menu_.push_back(level1);

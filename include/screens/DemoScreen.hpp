@@ -87,8 +87,8 @@ public:
         if(mDown) {
             mouseX = x;
             mouseY = y;
-            c.x -= ph::FullscreenPlayArea * c.zoom * (mouseX.f1 - mouseX.f0);
-            c.y += ph::FullscreenPlayArea * c.zoom * (mouseY.f1 - mouseY.f0);
+            c.x -= ph::fullscreenPlayArea * c.zoom * (mouseX.f1 - mouseX.f0);
+            c.y += ph::fullscreenPlayArea * c.zoom * (mouseY.f1 - mouseY.f0);
             mouseX.Record();
             mouseY.Record();
         }
