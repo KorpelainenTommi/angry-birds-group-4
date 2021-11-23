@@ -38,7 +38,7 @@
  * 
  * A Camera at fullscreen zoom (zoom = 1F), will see an area that is 50 meters wide around the origin.
  * 
- * This is defined in the constant FullscreenPlayArea. 50 meters was chosen based on Box2D's documentation of units.
+ * This is defined in the constant fullscreenPlayArea. 50 meters was chosen based on Box2D's documentation of units.
  * Based on this definition, we can define objects in meters, such as a Teekkari as 1.8 meters tall,
  * and a box as 2 meters tall. Their distance can be 5.89 meters, and Teekkari's position can be (-9.3, 15.05)
  * These definitions can be directly used in Box2D, and they can be directly rendered with RenderSystem.
@@ -52,7 +52,7 @@
  * With aspect ratio 16:9, the same camera will see an area that is 50m x 28m.
  * 
  * 
- * The "size" of the world can be changed simply by changing the FullscreenPlayArea constant, without modifying the RenderSystem or
+ * The "size" of the world can be changed simply by changing the fullscreenPlayArea constant, without modifying the RenderSystem or
  * definitions of object sizes, gravity or anything else.
  * 
  * Alternatively, the constant could be removed altogether, and instead the camera zoom parameter given in meters.
@@ -61,7 +61,7 @@
  *
  */
 
-
+#include <SFML/Graphics/Color.hpp>
 
 
 
@@ -69,11 +69,28 @@
 namespace ph {
 
 
-    const float FullscreenPlayArea = 50.0F;
-    const float Gravity = 9.81F;
+    /// Width of the area seen by a camera at zoom = 1.0F
+    const float fullscreenPlayArea = 50.0F;
+
+    /// Thickness of the ground. More ground than this will not be visible at the lowest camera position
+    const float groundThickness = 20.0F;
+
+    const sf::Color groundColor = {98, 122, 31};
+
+    /// The magnitude of gravity
+    const float gravity = 9.81F;
+
+    /// Number of velocity iterations per b2World.Step()
     const int velocityIters = 8;
+
+    /// Number of position iterations per b2World.Step()    
     const int positionIters = 3;
-    const float Timestep = 0.02F;
+
+    /// Update is called at a rate of 1/timestep. b2World also uses this as a fixed time step
+    const float timestep = 0.02F; //50 updates per second
+
+    /// The decay factor lambda in exponential decay (Nt = N0 * e^(-lambda * t))
+    const float explosionDecay = 0.69314718F; //ln(2), half the power at 1 meter, fourth at 2...
 
 
     /* A tfloat is simply a float that keeps track of its last value

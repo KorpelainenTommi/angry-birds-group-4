@@ -21,7 +21,7 @@ public:
     bool LoadFont(sf::Font& font, const std::string& path) const;
 
 
-    //TODO: Load and Save level are not implemented
+    //TODO: Load and Save level are not implemented. Check the Level struct for reference
     /// Load a level from this path, true if successful, false if not
     bool LoadLevel(Level& level, const std::string& path) const { return false; }
 

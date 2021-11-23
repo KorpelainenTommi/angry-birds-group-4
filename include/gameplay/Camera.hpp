@@ -1,6 +1,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
+#include <ui/UIConstants.hpp>
 #include <gameplay/Physics.hpp>
 
 /* A Camera has a position in world space, and a zoom.
@@ -23,9 +24,11 @@ struct Camera {
         rot.Record();
         zoom.Record();
     }
+
+    /// Set camera at fullscreen zoom, and at the center of the world
     void SetFullscreen() {
         x = 0;
-        y = 0;
+        y = 0.5F * ph::fullscreenPlayArea / ui::aspectRatio - ph::groundThickness;
         rot = 0;
         zoom = 1;
         Record();

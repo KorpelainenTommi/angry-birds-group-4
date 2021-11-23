@@ -114,15 +114,15 @@ bool Application::Loop() {
     if(frametime > 0.2F) frametime = 0.2F;
     accumulatedTime += frametime;
 
-    while(accumulatedTime >= ph::Timestep) {
+    while(accumulatedTime >= ph::timestep) {
         activeScreen_->Update();
-        accumulatedTime -= ph::Timestep;
+        accumulatedTime -= ph::timestep;
     }
     
     
     //Gray color
     window_.clear({128, 128, 128, 255});
-    renderSystem_.ALPHA = accumulatedTime / ph::Timestep;
+    renderSystem_.ALPHA = accumulatedTime / ph::timestep;
     activeScreen_->Render(renderSystem_);
     window_.display();
 

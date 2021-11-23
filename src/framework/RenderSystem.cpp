@@ -7,8 +7,8 @@
 void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) const {
     sf::View view = window_.getView();
     sf::View v = view;
-    float cxw = camera.x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float cyw = camera.y.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    float cxw = camera.x.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float cyw = camera.y.Lerp(ALPHA) / ph::fullscreenPlayArea;
     v.zoom(camera.zoom.Lerp(ALPHA));
     v.rotate(camera.rot.Lerp(ALPHA));
     v.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
@@ -63,10 +63,10 @@ void RenderSystem::RenderRelativeCrop(sf::Shape& shape, const sf::Color& color, 
 }
 
 void RenderSystem::RenderAbs(sf::Shape& shape, const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
-    float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float ww = w.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    float xw = x.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float yw = y.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float hw = h.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float ww = w.Lerp(ALPHA) / ph::fullscreenPlayArea;
     shape.setOrigin(0.5F, 0.5F);
     shape.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);
     shape.rotate(rot.Lerp(ALPHA));
@@ -184,9 +184,9 @@ ui::pfloat RenderSystem::MeasureText(const std::string& text, ui::pfloat h, ui::
 
 void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color, FontID id) const {
 
-    float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    float xw = x.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float yw = y.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float hw = h.Lerp(ALPHA) / ph::fullscreenPlayArea;
 
     sf::Text t(text, resourceManager_.GetFont(id), (unsigned int)(hw * WW));
     t.setOrigin(t.getLocalBounds().width / 2, t.getLocalBounds().height);
@@ -258,9 +258,9 @@ void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfl
     float sph = sp.getLocalBounds().height;
     sp.setOrigin(spw / 2, sph / 2);
 
-    float xw = x.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float yw = y.Lerp(ALPHA) / ph::FullscreenPlayArea;
-    float hw = h.Lerp(ALPHA) / ph::FullscreenPlayArea;
+    float xw = x.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float yw = y.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float hw = h.Lerp(ALPHA) / ph::fullscreenPlayArea;
     float ww = hw * (spw / sph);
 
     sp.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);

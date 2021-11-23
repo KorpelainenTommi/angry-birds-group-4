@@ -76,6 +76,7 @@ struct B2_API b2FixtureUserData
 
 	/// For legacy compatibility
 	uintptr_t pointer;
+	void* data;
 };
 
 /// You can define this to inject whatever data you want in b2Joint

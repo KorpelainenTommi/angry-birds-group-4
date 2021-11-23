@@ -9,15 +9,17 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_body.h>
 
-/// A Block is a single body physics object with a shape and a material, that can give points when broken
+
+/// A Catapult consists of base that is a static rigidbody, and a lever that is a dynamic rigidbody
 class Catapult : public PhysObject {
 public:
 
-    /// Construct a catapult at this position facing right. If mirrored, it will face left
-    Catapult(Game& game, float x, float y, bool mirror) : 
-    PhysObject(game, type, x, y, rot), blockData_(gm::blockTypes.at(type)), shapeData_(gm::shapeProperties.at(blockData_.shape)),
-    materialData_(gm::materialProperties.at(blockData_.material)) { }
+    /// Construct a catapult at this position facing right
+    Catapult(Game& game, float x, float y) : 
+    PhysObject(game, gm::GameObjectType::catapult, x, y, 0) { }
 
+
+    /// 
     virtual void Render(const RenderSystem& r) {
 
     }
