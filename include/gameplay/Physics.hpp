@@ -92,6 +92,15 @@ namespace ph {
     /// The decay factor lambda in exponential decay (Nt = N0 * e^(-lambda * t))
     const float explosionDecay = 0.69314718F; //ln(2), half the power at 1 meter, fourth at 2...
 
+    /// Impulses below this treshold don't call PhysObject OnCollision
+    const float collisionTreshold = 40.0F;
+
+    /// A scaling factor applied to velocity when determining damage
+    const float damageScaling = 10.0F;
+
+    /// The mass of the ground when considering damage
+    const float groundMass = 80;
+
 
     /* A tfloat is simply a float that keeps track of its last value
      * Treat these like any normal float. In fact, you can freely assign floats to tfloats,

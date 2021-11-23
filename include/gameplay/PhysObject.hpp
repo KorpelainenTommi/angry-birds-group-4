@@ -24,9 +24,8 @@ public:
     /// Update this GameObjects position to reflect the state in the box2d world
     virtual void Update();
 
-
     /// OnCollision is called when this PhysObject collides with another PhysObject
-    virtual void OnCollision();
+    virtual void OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround);
 
     /// Set this rigidbody's x
     virtual void SetX(float x);
@@ -73,6 +72,7 @@ protected:
 
     /// This is the main (root) box2d body. Objects can have subparts such as bodies connected by joints
     b2Body* mainBody_;
+    float hp_ = 0;
 };
 
 

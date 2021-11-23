@@ -30,7 +30,7 @@ const std::unordered_map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
 const std::unordered_map<gm::BlockMaterial, gm::BlockMaterialData> gm::materialProperties = {
     { gm::BlockMaterial::wood, { gm::BlockMaterial::wood, 200, 0.3F, 0, 1, 1 }},
     { gm::BlockMaterial::metal, { gm::BlockMaterial::metal, 900, 0.2F, 0, 0.5F, 1.5F }},
-    { gm::BlockMaterial::glass, { gm::BlockMaterial::glass, 50, 0.15F, 0.12F, 1.5F, 2.5F }},
+    { gm::BlockMaterial::glass, { gm::BlockMaterial::glass, 50, 0.15F, 0.12F, 3.0F, 2.5F }},
     { gm::BlockMaterial::plastic, { gm::BlockMaterial::plastic, 170, 0.23F, 0.18F, 1, 0.8824F }},
     { gm::BlockMaterial::rubber, { gm::BlockMaterial::rubber, 100, 0.18F, 0.6F, 5, 4 }},
     { gm::BlockMaterial::concrete, { gm::BlockMaterial::concrete, 1000, 0.88F, 0, 0.5F, 0.4F }}

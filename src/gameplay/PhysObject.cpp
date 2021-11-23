@@ -25,11 +25,14 @@ void PhysObject::Update() {
     x_ = pos.x;
     y_ = pos.y;
     rot_ = mainBody_->GetAngle();
-    
+
 
     //Destroy off screen objects
     if(x_ > 0.5F * ph::fullscreenPlayArea || x_ < -0.5F * ph::fullscreenPlayArea) game_.DestroyObject(gameID_);
     else if(y_ < 0.0F) game_.DestroyObject(gameID_);
+
+    //Destroy zero hp objects
+    if(hp_ <= 0) game_.DestroyObject(gameID_);
 
 
 }
@@ -59,3 +62,9 @@ void PhysObject::SetPosition(float x, float y) {
     mainBody_->SetTransform({x, y}, a);
 }
 
+void PhysObject::OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround) {
+    
+    float mass = (isGround) ? 0.5F * mainBody_->GetMass() + ph::groundMass : other.mainBody_->GetMass(); //Needs to be reworked
+    hp_ -= (ph::damageScaling * velocity.Length() + 0.333F * mass);
+
+}

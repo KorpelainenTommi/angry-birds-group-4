@@ -35,7 +35,7 @@ public:
             float ch = cw / ui::aspectRatio;
             float xPos = cam.x  + (x * cw - 0.5F * cw ) * cam.zoom;
             float yPos = cam.y + ((1.0F - y) * ch - 0.5F * ch) * cam.zoom;
-            game_.CreateObject(gm::GameObjectType::block_glass1x1, xPos, yPos);
+            game_.CreateObject(gm::GameObjectType::block_wood1x1, xPos, yPos);
         }
 
         return false;

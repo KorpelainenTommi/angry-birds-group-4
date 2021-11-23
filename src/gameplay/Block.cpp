@@ -29,6 +29,8 @@ Block::Block(Game& game, gm::GameObjectType type, float x, float y, float rot) :
     
     mainBody_->CreateFixture(&fixture);
 
+    hp_ = mainBody_->GetMass() * materialData_.hpMassRatio;
+
 }
 
 void Block::Render(const RenderSystem& r) {
@@ -40,5 +42,11 @@ void Block::Render(const RenderSystem& r) {
     ph::tfloat x; x.f0 = x_.f0 + offset0.x; x.f1 = x_.f1 + offset1.x;
     ph::tfloat y; y.f0 = y_.f0 + offset0.y; y.f1 = y_.f1 + offset1.y;
     r.RenderSprite(blockData_.sprite, x, y, shapeData_.height, -180 * rot_ / 3.14159265F, game_.GetCamera());
+
+}
+
+void Block::OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround) {
+    
+    PhysObject::OnCollision(velocity, other, isGround);
 
 }

@@ -13,6 +13,7 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_world_callbacks.h>
 #include <box2d/b2_body.h>
+#include <box2d/b2_contact.h>
 
 /** 
  * Game owns and manages all GameObjects. It also manages the box2d world, 
@@ -39,7 +40,7 @@ class GameScreen;
 
 
 //TODO:
-//Methods marked with <!> need to be implemented in the cpp file
+//Methods marked with <!> have not been implemented in the cpp file
 
 
 
@@ -53,7 +54,7 @@ public:
     Game(GameScreen&);
 
     /// Construct a game, and load the provided level into it
-    Game(GameScreen &s, Level level);
+    Game(GameScreen &s, Level level);                                       //<!>
 
     virtual ~Game();
 
@@ -65,7 +66,7 @@ public:
 
 
     /// Create all objects from this level.
-    void LoadLevel(Level level);
+    void LoadLevel(Level level);                                            //<!>
 
 
     /* Note about object creation:
@@ -109,6 +110,9 @@ public:
     /// Get a reference to a b2World to add rigidbodies
     b2World& GetB2World();
 
+    /// Callback for Box2D contacts
+	virtual void BeginContact(b2Contact* contact);
+
 
     /// Get a copy of current Camera
     const Camera& GetCamera() const;
@@ -147,7 +151,7 @@ protected:
     b2Body* ground_;
     
 
-    //TODO: Replace this with an actual implementation
+    //Gives new gameIDs without grouping. This should be removed when proper grouping is implemented
     int simpleIDCounter = 0;
 
 };
