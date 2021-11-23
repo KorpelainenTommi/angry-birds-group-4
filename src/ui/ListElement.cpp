@@ -91,3 +91,11 @@ bool ListElement::OnMouseScroll(float delta, float xw, float yh){
     }
     return false;
 }
+
+void ListElement::SetSpacing(const ui::pfloat& s){
+    spacing_ = s;
+}
+
+const std::map<int, std::shared_ptr<Element>>& ListElement::GetElements() const {
+    return elements_;
+}

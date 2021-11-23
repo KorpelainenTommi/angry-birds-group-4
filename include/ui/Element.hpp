@@ -28,6 +28,10 @@ public:
 
     void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
 
+    void SetHeight(ui::pfloat height){h_ = height;}
+
+    void SetWidth(ui::pfloat width){w_ = width;}
+
     bool isInside(float xw, float yh) const;
 
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
@@ -77,7 +81,6 @@ public:
     }
     void SetCropArea(){cropped_ = false;}
 
-protected:
     float toVHFloat(const ui::pfloat&) const;
     float toVWFloat(const ui::pfloat&) const;
     ui::pfloat toVH(const ui::pfloat&) const;
@@ -86,12 +89,14 @@ protected:
     ui::pfloat GetTop() const;
     ui::pfloat GetLeft() const;
 
+protected:
+
     ui::pfloat x_;
     ui::pfloat y_;
     ui::pfloat w_;
     ui::pfloat h_;
-    ui::pfloat offsetX_;
-    ui::pfloat offsetY_;
+    ui::pfloat offsetX_ = 0 VW;
+    ui::pfloat offsetY_ = 0 VH;
 
     std::function<void()> mouseDownHandler_ = NULL;
     std::function<void()> mouseUpHandler_ = NULL;

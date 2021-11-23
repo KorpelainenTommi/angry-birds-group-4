@@ -47,6 +47,11 @@ public:
      */
     void SetSpacing(const ui::pfloat&);
 
+    /**
+     * Returns constant reference to the map of elements. 
+     */
+    const std::map<int, std::shared_ptr<Element>>& GetElements() const;
+
 private:
     int nextId_ = INT_MIN;
     std::map<int, std::shared_ptr<Element>> elements_;
