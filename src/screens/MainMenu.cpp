@@ -24,10 +24,10 @@ MainMenu::MainMenu(Application& app): Screen(app){
     menu_.push_back(listBottom_);
 
     addLevel("level1");
-    menu_[menu_.size() - 1]->SetMouseDownHandler([&app](){
+    /*menu_[menu_.size() - 1]->SetMouseDownHandler([&app](){
         std::cout << "level1" << std::endl;
         app.TransitionTo(std::make_unique<GameScreen>(app));
-    });
+    });*/
 
     addLevel("level2");
     addLevel("level3");
@@ -72,6 +72,8 @@ void MainMenu::addLevel(std::string level){
         std::cout << level << std::endl;
     });
     e->SetText(level);
+    e->SetMouseEnterHandler([e](){e->SetBackgroundColor({0, 100, 200});});
+    e->SetMouseLeaveHandler([e](){e->SetBackgroundColor();});
     list_->InsertElement(e);
     menu_.push_back(e);
 }

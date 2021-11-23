@@ -26,7 +26,7 @@ void ListElement::Render(const RenderSystem& r){
     }
 }
 
-bool ListElement::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
+/*bool ListElement::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
     if(isInside(xw, yh)){
         for(auto t: elements_){
             if(t.second->OnMouseDown(button, xw, yh)) return true;
@@ -69,7 +69,7 @@ bool ListElement::OnMouseMove(float xw, float yh){
         }
     }
     return b;
-}
+}*/
 
 bool ListElement::OnMouseScroll(float delta, float xw, float yh){
     if(isInside(xw, yh)){
@@ -87,7 +87,10 @@ bool ListElement::OnMouseScroll(float delta, float xw, float yh){
         if(scrollOffset_.f > 0) scrollOffset_ = 0 VH;
         if(scrollOffset_.f < h && h < 0) scrollOffset_ = h VH;
 
-        for(auto t: elements_) t.second->SetOffsetY(scrollOffset_);
+        for(auto t: elements_){
+            t.second->SetOffsetY(scrollOffset_);
+            t.second->OnMouseMove(xw, yh);
+        }
         return true;
     }
     return false;

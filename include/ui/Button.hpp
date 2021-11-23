@@ -12,6 +12,7 @@ public:
         const ui::pfloat& width,
         const std::function<void()> mouseDownHandler
     ): TextElement(top, left, height, width){
+        defaultBackgroundColor_ = ui::buttonBackgroundColor;
         mouseDownHandler_ = mouseDownHandler;
         backgroundColor_ = ui::buttonBackgroundColor;
         textColor_ = ui::buttonTextColor;
@@ -19,6 +20,7 @@ public:
     };
 
     //virtual void Render(const RenderSystem&);
+
 };
 
 #endif
