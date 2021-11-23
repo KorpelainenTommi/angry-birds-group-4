@@ -6,7 +6,9 @@
 #include <iostream>
 
 MainMenu::MainMenu(Application& app): Screen(app){
-    list_ = std::make_shared<ListElement>(3 VH, 2 VH, 94 VH, curListW_);
+    list_ = std::make_shared<ListElement>(
+        (padding_.f + listPadding_.f) VH, padding_, (100 - 2 * listPadding_.f - 2 * padding_.f) VH, curListW_
+    );
     curListW_ = calcListWidth();
     curElementW_ = calcListElementWidth();
     list_->SetWidth(curListW_);
@@ -14,11 +16,16 @@ MainMenu::MainMenu(Application& app): Screen(app){
     list_->SetSpacing(listSpacing_);
     menu_.push_back(list_);
 
-    listTop_ = std::make_shared<ColoredElement>(2 VH, 2 VH, 1 VH, curListW_);
+    listTop_ = std::make_shared<ColoredElement>(padding_, padding_, listPadding_, curListW_);
     listTop_->SetBackgroundColor(ui::backgroundColor2);
     menu_.push_back(listTop_);
 
-    listBottom_ = std::make_shared<ColoredElement>(97 VH, 2 VH, 1 VH, curListW_);
+    listBottom_ = std::make_shared<ColoredElement>(
+        (padding_.f + list_->toVHFloat(listPadding_) + list_->GetHeight().f) VH, 
+        padding_, 
+        listPadding_, 
+        curListW_
+    );
     listBottom_->SetBackgroundColor(ui::backgroundColor2);
     menu_.push_back(listBottom_);
 
@@ -36,6 +43,8 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addLevel("level7");
     addLevel("level8");
     addLevel("level9");
+
+    
 }
 
 void MainMenu::Render(const RenderSystem& r){
@@ -48,11 +57,11 @@ void MainMenu::Render(const RenderSystem& r){
 }
 
 ui::pfloat MainMenu::calcListWidth() const {
-    return (74.0F - list_->toVWFloat(list_->GetLeft())) VW;
+    return (74.5F - list_->toVWFloat(padding_)) VW;
 }
 
 ui::pfloat MainMenu::calcListElementWidth() const {
-    return (list_->toVWFloat(curListW_) - 2 * list_->toVWFloat(listSpacing_)) VW;
+    return (list_->toVWFloat(curListW_) - 2 * list_->toVWFloat(listPadding_)) VW;
 }
 
 void MainMenu::checkListWidth(){
@@ -67,7 +76,7 @@ void MainMenu::checkListWidth(){
 }
 
 void MainMenu::addLevel(std::string level){
-    auto e = std::make_shared<Button>(0 VH, listSpacing_, 20 VH, curElementW_);
+    auto e = std::make_shared<Button>(0 VH, listPadding_, 20 VH, curElementW_);
     auto w = std::weak_ptr<Button>(e);
     e->SetMouseDownHandler([level, w, this](){
         std::cout << level << std::endl;
@@ -85,4 +94,21 @@ void MainMenu::SelectLevel(const std::string level, std::weak_ptr<Button> button
     else hasSelectedLevel_ = true;
     selectedLevel_ = {level, button};
     button.lock()->SetBackgroundColor(selectedLevelBackground_);
+}
+
+ui::pfloat MainMenu::calcRightSideElementWidth() const {
+    return (24.5 - list_->toVWFloat(padding_)) VW;
+}
+
+void MainMenu::addRightSideButton(
+    const ui::pfloat& top, 
+    const ui::pfloat& left, 
+    const ui::pfloat& height, 
+    const ui::pfloat& width, 
+    const std::function<void()> mouseDownHandler
+){
+    auto e = std::make_shared<Button>(top, left, height, width, mouseDownHandler);
+    e->SetWidth(rightSideElementW_);
+    rightSideElements_.push_back(e);
+    menu_.push_back(e);
 }
