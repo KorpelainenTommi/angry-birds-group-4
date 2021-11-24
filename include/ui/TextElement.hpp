@@ -12,7 +12,7 @@ public:
         const ui::pfloat& width
     ): ColoredElement(top, left, height, width){}
     
-    void SetText(const std::string& s){text_ = s;}
+    virtual void SetText(const std::string& s){text_ = s;}
 
     void SetTextColor(const sf::Color& c){textColor_ = c;}
     void SetTextColor(){textColor_ = ui::textColor;}
