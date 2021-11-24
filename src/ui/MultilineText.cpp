@@ -9,7 +9,7 @@ void MultilineText::SetText(const std::string& s){
             lines_.push_back(buffer);
             buffer = "";
         }else{
-            buffer += "";
+            buffer += s[i];
         }
     }
     lines_.push_back(buffer);

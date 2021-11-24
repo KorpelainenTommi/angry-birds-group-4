@@ -4,6 +4,7 @@
 #include <screens/Screen.hpp>
 #include <ui/ListElement.hpp>
 #include <ui/Button.hpp>
+#include <ui/MultilineText.hpp>
 
 class MainMenu : public Screen {
 public:
@@ -34,6 +35,7 @@ private:
     bool hasSelectedLevel_ = false;
     std::vector<std::shared_ptr<Element>> rightSideElements_;
     ui::pfloat rightSideElementW_ = 0 VW;
+    std::shared_ptr<MultilineText> scoreboard_;
 
     ui::pfloat calcListWidth() const;
 
@@ -52,6 +54,12 @@ private:
         const std::string& text, 
         const std::function<void()> mouseDownHandler
     );
+
+    ui::pfloat getRightSideLeft() const;
+
+    float getRightSideButtonsVHFloatHeight() const;
+
+    void addScoreboard();
 };
 
 #endif

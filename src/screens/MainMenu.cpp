@@ -45,6 +45,9 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addRightSideButton("Exit", [&app](){app.Exit();});
     addRightSideButton("jotain", [](){std::cout << "jotain" << std::endl;});
     addRightSideButton("Play", [&app](){app.TransitionTo(std::make_unique<GameScreen>(app));});
+
+    addScoreboard();
+    scoreboard_->SetText("Some\ntext\nhere\nto try\nthis out");
 }
 
 void MainMenu::Render(const RenderSystem& r){
@@ -110,11 +113,9 @@ void MainMenu::addRightSideButton(
     const std::string& text,
     const std::function<void()> mouseDownHandler
 ){
-    float bhvh = ui::toVHFloat(buttonHeight_);
     auto e = std::make_shared<Button>(
-        (100 - rightSideElements_.size() * (bhvh + ui::toVHFloat(spacingY_)) 
-            - ui::toVHFloat(padding_) - bhvh) VH, 
-        (75.0F + ui::toVWFloat(spacingX_) / 2) VW, 
+        (getRightSideButtonsVHFloatHeight() - ui::toVHFloat(buttonHeight_)) VH, 
+        getRightSideLeft(), 
         buttonHeight_, 
         rightSideElementW_, 
         mouseDownHandler
@@ -122,4 +123,45 @@ void MainMenu::addRightSideButton(
     e->SetText(text);
     rightSideElements_.push_back(e);
     menu_.push_back(e);
+}
+
+ui::pfloat MainMenu::getRightSideLeft() const {
+    return (75.0F + ui::toVWFloat(spacingX_) / 2) VW;
+}
+
+float MainMenu::getRightSideButtonsVHFloatHeight() const {
+    return (100 - rightSideElements_.size() * (ui::toVHFloat(buttonHeight_) 
+        + ui::toVHFloat(spacingY_)) - ui::toVHFloat(padding_));
+}
+
+void MainMenu::addScoreboard(){
+    //sry for the spagethi
+    ui::pfloat left = getRightSideLeft();
+    float pf = ui::toVHFloat(padding_);
+    float hl = getRightSideButtonsVHFloatHeight() - pf;
+    std::cout << hl << std::endl;
+    auto header = std::make_shared<TextElement>(
+        padding_, 
+        left,  
+        1 VH,
+        rightSideElementW_
+    );
+    rightSideElements_.push_back(header);
+    menu_.push_back(header);
+    header->SetBackgroundColor(ui::backgroundColor2);
+    header->SetText("Scoreboard");
+    header->SetTextAlign(ui::TextAlign::center);
+    float hh = ui::toVHFloat(header->GetFontSize()) * 2;
+    header->SetHeight(hh VH);
+    hl -= hh;
+    std::cout << hl << std::endl;
+    scoreboard_ = std::make_shared<MultilineText>(
+        (pf + hh) VH,
+        left,
+        hl VH,
+        rightSideElementW_
+    );
+    rightSideElements_.push_back(scoreboard_);
+    menu_.push_back(scoreboard_);
+    scoreboard_->SetBackgroundColor(ui::backgroundColor2);
 }
