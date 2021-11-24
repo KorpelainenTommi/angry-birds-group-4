@@ -54,7 +54,7 @@ public:
     Game(GameScreen&);
 
     /// Construct a game, and load the provided level into it
-    Game(GameScreen &s, Level level);                                       //<!>
+    Game(GameScreen &s, Level level);           
 
     virtual ~Game();
 
