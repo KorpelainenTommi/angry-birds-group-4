@@ -18,8 +18,11 @@ public:
 
 private:
     const ui::pfloat padding_ = 2 VH;
-    const ui::pfloat listPadding_ = 5 VH;
+    const ui::pfloat listPadding_ = 1 VH;
     const ui::pfloat listSpacing_ = 1 VH;
+    const ui::pfloat spacingY_ = 1 VH;
+    const ui::pfloat spacingX_ = 1 VW;
+    const ui::pfloat buttonHeight_ = 5 VH;
     const sf::Color selectedLevelBackground_ = {200, 200, 255};
 
     std::shared_ptr<ListElement> list_;
@@ -46,10 +49,7 @@ private:
     void checkRightSideElementWidth();
 
     void addRightSideButton(
-        const ui::pfloat& top, 
-        const ui::pfloat& left, 
-        const ui::pfloat& height, 
-        const ui::pfloat& width, 
+        const std::string& text, 
         const std::function<void()> mouseDownHandler
     );
 };

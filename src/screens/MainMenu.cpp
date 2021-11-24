@@ -33,11 +33,6 @@ MainMenu::MainMenu(Application& app): Screen(app){
     menu_.push_back(listBottom_);
 
     addLevel("level1");
-    /*menu_[menu_.size() - 1]->SetMouseDownHandler([&app](){
-        std::cout << "level1" << std::endl;
-        app.TransitionTo(std::make_unique<GameScreen>(app));
-    });*/
-
     addLevel("level2");
     addLevel("level3");
     addLevel("level4");
@@ -47,7 +42,9 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addLevel("level8");
     addLevel("level9");
 
-    
+    addRightSideButton("Exit", [&app](){app.Exit();});
+    addRightSideButton("jotain", [](){std::cout << "jotain" << std::endl;});
+    addRightSideButton("Play", [&app](){app.TransitionTo(std::make_unique<GameScreen>(app));});
 }
 
 void MainMenu::Render(const RenderSystem& r){
@@ -55,16 +52,17 @@ void MainMenu::Render(const RenderSystem& r){
     r.RenderRect(ui::backgroundColor, 0 VW, 0 VH, 100 VW, 100 VH);
 
     checkListWidth();
+    checkRightSideElementWidth();
 
     for(const auto& e : menu_) e->Render(r);
 }
 
 ui::pfloat MainMenu::calcListWidth() const {
-    return (74.5F - list_->toVWFloat(padding_)) VW;
+    return (75.0F - ui::toVWFloat(spacingX_) / 2 - ui::toVWFloat(padding_)) VW;
 }
 
 ui::pfloat MainMenu::calcListElementWidth() const {
-    return (list_->toVWFloat(curListW_) - 2 * list_->toVWFloat(listPadding_)) VW;
+    return (ui::toVWFloat(curListW_) - 2 * ui::toVWFloat(listPadding_)) VW;
 }
 
 void MainMenu::checkListWidth(){
@@ -86,8 +84,6 @@ void MainMenu::addLevel(std::string level){
         this->SelectLevel(level, w);
     });
     e->SetText(level);
-    //e->SetMouseEnterHandler([e](){e->SetBackgroundColor({0, 100, 200});});
-    //e->SetMouseLeaveHandler([e](){e->SetBackgroundColor();});
     list_->InsertElement(e);
     menu_.push_back(e);
 }
@@ -100,18 +96,30 @@ void MainMenu::SelectLevel(const std::string level, std::weak_ptr<Button> button
 }
 
 ui::pfloat MainMenu::calcRightSideElementWidth() const {
-    return (24.5 - list_->toVWFloat(padding_)) VW;
+    return (25.0F - ui::toVWFloat(spacingX_) / 2 - ui::toVWFloat(padding_)) VW;
+}
+
+void MainMenu::checkRightSideElementWidth(){
+    ui::pfloat w = calcRightSideElementWidth();
+    if(w.f == rightSideElementW_.f) return;
+    rightSideElementW_ = w;
+    for(auto e: rightSideElements_) e->SetWidth(w);
 }
 
 void MainMenu::addRightSideButton(
-    const ui::pfloat& top, 
-    const ui::pfloat& left, 
-    const ui::pfloat& height, 
-    const ui::pfloat& width, 
+    const std::string& text,
     const std::function<void()> mouseDownHandler
 ){
-    auto e = std::make_shared<Button>(top, left, height, width, mouseDownHandler);
-    e->SetWidth(rightSideElementW_);
+    float bhvh = ui::toVHFloat(buttonHeight_);
+    auto e = std::make_shared<Button>(
+        (100 - rightSideElements_.size() * (bhvh + ui::toVHFloat(spacingY_)) 
+            - ui::toVHFloat(padding_) - bhvh) VH, 
+        (75.0F + ui::toVWFloat(spacingX_) / 2) VW, 
+        buttonHeight_, 
+        rightSideElementW_, 
+        mouseDownHandler
+    );
+    e->SetText(text);
     rightSideElements_.push_back(e);
     menu_.push_back(e);
 }
