@@ -30,6 +30,8 @@ namespace ui {
         P p;
     };
     inline ui::pfloat operator%(const float& ff, const ui::pfloat& pp) { return { ff, pp.p }; }
+    // This for clang
+    inline ui::pfloat operator%(const int& ff, const ui::pfloat& pp) { return { (float) ff, pp.p }; }
 /* VW and VH should be used like this:
  *
  * auto x = 50 VW;

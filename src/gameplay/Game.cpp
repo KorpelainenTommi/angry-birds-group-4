@@ -30,6 +30,22 @@ Game::Game(GameScreen& gameScreen) : screen_(gameScreen), world_({0, -ph::gravit
 
 }
 
+Game::Game(GameScreen& gameScreen, Level level) : Game(gameScreen) {
+    LoadLevel(level);
+}
+
+
+void Game::LoadLevel(Level level) {
+    level_  = level;
+    ClearObjects();
+    teekkarisLeft_.clear();
+    ResetCamera();
+    for(auto objectdata : level.objectData) {
+        CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
+    }
+}
+
+
 //TODO: should use gm::GetObjectGroup(GameObjectType) give object ids from groups
 int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
 
