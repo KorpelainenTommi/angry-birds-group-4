@@ -32,7 +32,7 @@ public:
 
     void SetWidth(ui::pfloat width){w_ = width;}
 
-    bool isInside(float xw, float yh) const;
+    virtual bool isInside(float xw, float yh) const;
 
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
 
