@@ -23,7 +23,10 @@ void MultilineText::Render(const RenderSystem& r){
     else r.RenderRect(backgroundColor_, left, top, w_, h_);
     float dy = ui::toVHFloat(GetLineSpacing()) + ui::toVHFloat(s);
     float y = ui::toVHFloat(top);
+    float lim = ui::toVHFloat(top) + ui::toVHFloat(h_);
+    float svhf = ui::toVHFloat(s);
     for(auto line: lines_){
+        if(y + svhf > lim) break;
         if(useRelativeLineSpacing_) r.RenderText(line, left, y VH, w_, s, cropArea_, textColor_, font_, align_);
         else r.RenderText(line, left, y VH, w_, s, textColor_, font_, align_);
         y += dy;
