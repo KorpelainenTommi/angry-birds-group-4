@@ -13,7 +13,7 @@
 Level TestLevel() {
     Level level = {};
     level.levelName = "TESTLEVEL";
-    level.objectData.push_back((gm::GameObjectData) {0,0,0,gm::block_wood1x1});
+    level.objectData.push_back({0,0,0,gm::block_wood1x1});
     return level;
 }
 
