@@ -17,9 +17,17 @@ public:
     GameScreen(Application& app, const Level& initialLevel) : Screen(app), game_(*this, initialLevel) {}
     
     virtual void Update() { game_.Update(); }
-    virtual void Render(const RenderSystem& r) { game_.Render(r); }
+    virtual void Render(const RenderSystem& r){
+        game_.Render(r);
+        Screen::Render(r);
+    }
 
     virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
+        if(Screen::OnMouseDown(e, x, y)) return true;
+        if(game_.OnMouseDown(e, x, y)) return true;
+
+        //move this code to game
+        //=====================================================================
         if(e == sf::Mouse::Button::Right) {
             mDown = true;
             mouseX = x;
@@ -28,7 +36,6 @@ public:
             mouseY.Record();
             return true;
         }
-        
         if(e == sf::Mouse::Button::Left) {
             const Camera& cam = game_.GetCamera();
             float cw = ph::fullscreenPlayArea;
@@ -44,30 +51,50 @@ public:
             float xPos = cam.x  + (x * cw - 0.5F * cw ) * cam.zoom;
             float yPos = cam.y + ((1.0F - y) * ch - 0.5F * ch) * cam.zoom;
             game_.CreateObject(gm::GameObjectType::block_metal1x1, xPos, yPos);
-        }        
+        }
+        //=====================================================================
 
         return false;
     }
 
     virtual bool OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
+        if(Screen::OnMouseUp(e, x, y)) return true;
+        if(game_.OnMouseUp(e, x, y)) return true;
+
+        //move this code to game
+        //=====================================================================
         if(e == sf::Mouse::Button::Right) {
             mDown = false;
         }
+        //=====================================================================
+
         return false;
     }
 
     virtual bool OnMouseScroll(float delta, float xw, float yh) {
+        if(Screen::OnMouseScroll(delta, xw, yh)) return true;
+        if(game_.OnMouseScroll(delta, xw, yh)) return true;
+
+        //move this code to game
+        //=====================================================================
         float zoom = game_.GetCamera().zoom;
         zoom -= delta * 0.1F;
         if(zoom <= 0.1F) game_.SetCameraZoom(0.1F);
         else if(zoom > 1.0F) game_.SetCameraZoom(1.0F);
         else game_.SetCameraZoom(zoom);
+        //=====================================================================
+
         return true;
     }
 
 
 
     virtual bool OnMouseMove(float x, float y) {
+        bool b = Screen::OnMouseMove(x, y);
+        b = game_.OnMouseMove(x, y) || b;
+
+        //move this code to game
+        //=====================================================================
         if(mDown) {
             mouseX = x;
             mouseY = y;
@@ -78,16 +105,21 @@ public:
             mouseX.Record();
             mouseY.Record();
         }
-        return false;
+        //=====================================================================
+
+        return b;
     }    
 
     virtual ~GameScreen() = default;
 
 protected:
 
+    //move these to game
+    //=====================================================================
     bool mDown = false;
     ph::tfloat mouseX;
     ph::tfloat mouseY;
+    //=====================================================================
 
     Game game_;
 

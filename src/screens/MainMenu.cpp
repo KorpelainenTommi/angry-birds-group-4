@@ -175,5 +175,5 @@ void MainMenu::addScoreboardMultiline(
     rightSideElements_.push_back(scoreboard_);
     menu_.push_back(scoreboard_);
     scoreboard_->SetBackgroundColor(ui::backgroundColor2);
-    scoreboard_->SetRelativeFontSize(ui::defaultFontSize);
+    scoreboard_->SetRelativeFontSize(ui::defaultFontSize * 1.3);
 }
