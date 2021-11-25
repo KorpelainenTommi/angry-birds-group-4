@@ -32,7 +32,23 @@ namespace ui {
     inline ui::pfloat operator%(const float& ff, const ui::pfloat& pp) { return { ff, pp.p }; }
     // This for clang
     inline ui::pfloat operator%(const int& ff, const ui::pfloat& pp) { return { (float) ff, pp.p }; }
-    inline ui::pfloat operator%(const double& ff, const ui::pfloat& pp) { return { (float) ff, pp.p }; }    
+    inline ui::pfloat operator%(const double& ff, const ui::pfloat& pp) { return { (float) ff, pp.p }; }
+
+    inline ui::pfloat operator*(const float& ff, const ui::pfloat& pp){return {pp.f * ff, pp.p};}
+    inline ui::pfloat operator*(const int& ff, const ui::pfloat& pp){return {pp.f * (float)ff, pp.p};}
+    inline ui::pfloat operator*(const double& ff, const ui::pfloat& pp){return {pp.f * (float)ff, pp.p};}
+
+    inline ui::pfloat operator/(const float& ff, const ui::pfloat& pp){return {pp.f / ff, pp.p};}
+    inline ui::pfloat operator/(const int& ff, const ui::pfloat& pp){return {pp.f / (float)ff, pp.p};}
+    inline ui::pfloat operator/(const double& ff, const ui::pfloat& pp){return {pp.f / (float)ff, pp.p};}
+
+    inline ui::pfloat operator*(const ui::pfloat& pp, const float& ff){return {pp.f * ff, pp.p};}
+    inline ui::pfloat operator*(const ui::pfloat& pp, const int& ff){return {pp.f * (float)ff, pp.p};}
+    inline ui::pfloat operator*(const ui::pfloat& pp, const double& ff){return {pp.f * (float)ff, pp.p};}
+
+    inline ui::pfloat operator/(const ui::pfloat& pp, const float& ff){return {pp.f / ff, pp.p};}
+    inline ui::pfloat operator/(const ui::pfloat& pp, const int& ff){return {pp.f / (float)ff, pp.p};}
+    inline ui::pfloat operator/(const ui::pfloat& pp, const double& ff){return {pp.f / (float)ff, pp.p};}
 
 /* VW and VH should be used like this:
  *

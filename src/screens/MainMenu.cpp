@@ -87,6 +87,7 @@ void MainMenu::addLevel(std::string level){
         this->SelectLevel(level, w);
     });
     e->SetText(level);
+    e->SetRelativeFontSize(ui::defaultFontSize * 2.5);
     list_->InsertElement(e);
     menu_.push_back(e);
 }
@@ -121,6 +122,7 @@ void MainMenu::addRightSideButton(
         mouseDownHandler
     );
     e->SetText(text);
+    e->SetRelativeFontSize(ui::defaultFontSize * 1.5);
     rightSideElements_.push_back(e);
     menu_.push_back(e);
 }
@@ -135,10 +137,15 @@ float MainMenu::getRightSideButtonsVHFloatHeight() const {
 }
 
 void MainMenu::addScoreboard(){
-    //sry for the spagethi
     ui::pfloat left = getRightSideLeft();
     float pf = ui::toVHFloat(padding_);
     float hl = getRightSideButtonsVHFloatHeight() - pf;
+    float hh = addScoreboardHeader(left);
+    hl -= hh;
+    addScoreboardMultiline((pf + hh) VH, left, hl VH);
+}
+
+float MainMenu::addScoreboardHeader(const ui::pfloat& left){
     auto header = std::make_shared<TextElement>(
         padding_, 
         left,  
@@ -150,16 +157,23 @@ void MainMenu::addScoreboard(){
     header->SetBackgroundColor(ui::backgroundColor2);
     header->SetText("Scoreboard");
     header->SetTextAlign(ui::TextAlign::center);
+    header->SetRelativeFontSize(ui::defaultFontSize * 2);
     float hh = ui::toVHFloat(header->GetFontSize()) * 2;
     header->SetHeight(hh VH);
-    hl -= hh;
+    return hh;
+}
+
+void MainMenu::addScoreboardMultiline(
+    const ui::pfloat& top, const ui::pfloat& left, const ui::pfloat& height
+){
     scoreboard_ = std::make_shared<MultilineText>(
-        (pf + hh) VH,
+        top,
         left,
-        hl VH,
+        height,
         rightSideElementW_
     );
     rightSideElements_.push_back(scoreboard_);
     menu_.push_back(scoreboard_);
     scoreboard_->SetBackgroundColor(ui::backgroundColor2);
+    scoreboard_->SetRelativeFontSize(ui::defaultFontSize);
 }

@@ -24,6 +24,7 @@ private:
     const ui::pfloat spacingY_ = 1 VH;
     const ui::pfloat spacingX_ = 1 VW;
     const ui::pfloat buttonHeight_ = 5 VH;
+    const ui::pfloat scoreboardLeftPadding_ = 0.5 VW;
     const sf::Color selectedLevelBackground_ = {200, 200, 255};
 
     std::shared_ptr<ListElement> list_;
@@ -60,6 +61,10 @@ private:
     float getRightSideButtonsVHFloatHeight() const;
 
     void addScoreboard();
+
+    float addScoreboardHeader(const ui::pfloat&);
+
+    void addScoreboardMultiline(const ui::pfloat& top, const ui::pfloat& left, const ui::pfloat& height);
 };
 
 #endif
