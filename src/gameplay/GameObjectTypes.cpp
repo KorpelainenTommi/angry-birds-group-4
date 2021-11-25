@@ -62,10 +62,13 @@ const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties
 };
 
 
-//TODO: Not implemented
+
 int gm::GetObjectGroup(gm::GameObjectType type) {
-    if(type < gm::GameObjectType::block_wood1x1) return 0;
-    else return 1;
+    if(type < gm::GameObjectType::background_person3) return gm::GameObjectGroup::background;
+    else if(type < gm::GameObjectType::catapult) return gm::GameObjectGroup::block;
+    else if(type < gm::GameObjectType::fuksi) return gm::GameObjectGroup::teekkari;
+    else if(type < gm::GameObjectType::ability_integral) return gm::GameObjectGroup::effect;
+    else return -1;
 }
 
 int GetObjectScore(gm::GameObjectType type) {

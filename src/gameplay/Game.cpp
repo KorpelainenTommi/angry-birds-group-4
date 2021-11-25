@@ -4,7 +4,7 @@
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_body.h>
 #include <gameplay/PhysObject.hpp>
-
+#include <gameplay/GameObjectTypes.hpp>
 #include <iostream>
 
 Game::Game(GameScreen& gameScreen) : screen_(gameScreen), world_({0, -ph::gravity}) {
@@ -40,6 +40,7 @@ void Game::LoadLevel(Level level) {
     ClearObjects();
     teekkarisLeft_.clear();
     ResetCamera();
+    IDCounter_ = IDCounter {};
     for(auto objectdata : level.objectData) {
         CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
     }
@@ -50,7 +51,13 @@ void Game::LoadLevel(Level level) {
 int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
 
     std::unique_ptr<GameObject> obj = gm::IDToObject(*this, type, x, y, rot);
-    int id = simpleIDCounter++;
+    int id;
+    switch (gm::GetObjectGroup(type)) {
+        case gm::GameObjectGroup::background : id = IDCounter_.backgrounds++;
+        case gm::GameObjectGroup::block : id = IDCounter_.blocks++;
+        case gm::GameObjectGroup::teekkari : id = IDCounter_.teekkaris++;
+        case gm::GameObjectGroup::effect : id = IDCounter_.effects++;
+    }
     obj->gameID_ = id;
     objects_[obj->gameID_] = std::move(obj);
 
@@ -136,5 +143,6 @@ void Game::SetCameraRot(float rot) { camera_.rot = rot; }
 
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
+
 
 

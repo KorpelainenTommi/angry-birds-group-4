@@ -34,6 +34,12 @@
  *  int GetObjectGroup(GameObjectType) that returns an integer 0, 1, 2, 3 etc.
  *
  */
+struct IDCounter {
+    unsigned int backgrounds = 0;
+    unsigned int blocks = 100000000;
+    unsigned int teekkaris = 200000000;
+    unsigned int effects = 300000000;
+};
 
 //Forward declaration
 class GameScreen;
@@ -66,7 +72,7 @@ public:
 
 
     /// Create all objects from this level.
-    void LoadLevel(Level level);                                            //<!>
+    void LoadLevel(Level level);
 
 
     /* Note about object creation:
@@ -150,9 +156,7 @@ protected:
     // The ground (b2Body* ground_ cannot be a smart pointer because box2d allocates and deallocates this on its own)
     b2Body* ground_;
     
-
-    //Gives new gameIDs without grouping. This should be removed when proper grouping is implemented
-    int simpleIDCounter = 0;
+    IDCounter IDCounter_;
 
 };
 
