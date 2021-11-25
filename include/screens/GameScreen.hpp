@@ -20,7 +20,11 @@ public:
     }
 
     /// Create a screen and start the Game with the selected level
-    GameScreen(Application& app, const Level& initialLevel) : Screen(app), game_(*this, initialLevel) {}
+    GameScreen(Application& app, const Level& initialLevel) : Screen(app), game_(*this, initialLevel) {
+        auto rce = std::make_shared<RoundIcon>(1 VH, 1 VH, 3 VH, SpriteID::ui_button_exit);
+        rce->SetMouseDownHandler([&app](){app.TransitionTo(std::make_unique<MainMenu>(app));});
+        menu_.push_back(rce);
+    }
     
     virtual void Update() { game_.Update(); }
     virtual void Render(const RenderSystem& r){

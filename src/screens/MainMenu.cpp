@@ -4,6 +4,7 @@
 
 //development
 #include <iostream>
+#include <gameplay/TestLevel.hpp>
 
 MainMenu::MainMenu(Application& app): Screen(app){
     list_ = std::make_shared<ListElement>(
@@ -43,7 +44,9 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addLevel("level9");
 
     addRightSideButton("Exit", [&app](){app.Exit();});
-    addRightSideButton("jotain", [](){std::cout << "jotain" << std::endl;});
+    addRightSideButton("test level", [&app](){
+        app.TransitionTo(std::make_unique<GameScreen>(app,TestLevel()));
+    });
     addRightSideButton("Play", [&app](){app.TransitionTo(std::make_unique<GameScreen>(app));});
 
     addScoreboard();
