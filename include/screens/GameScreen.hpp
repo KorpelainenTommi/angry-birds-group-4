@@ -6,12 +6,17 @@
 #include <gameplay/Level.hpp>
 #include <gameplay/Physics.hpp>
 #include <screens/Screen.hpp>
+#include <ui/RoundColoredElement.hpp>
 
 class GameScreen : public Screen {
 public:
 
     /// Create a screen with an empty Game
-    GameScreen(Application& app) : Screen(app), game_(*this) { }
+    GameScreen(Application& app) : Screen(app), game_(*this) {
+        auto rce = std::make_shared<RoundColoredElement>(1 VH, 1 VW, 3 VH);
+        rce->SetMouseDownHandler([](){std::cout << "hit" << std::endl;});
+        menu_.push_back(rce);
+    }
 
     /// Create a screen and start the Game with the selected level
     GameScreen(Application& app, const Level& initialLevel) : Screen(app), game_(*this, initialLevel) {}
