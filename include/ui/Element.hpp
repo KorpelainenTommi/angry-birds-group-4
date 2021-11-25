@@ -75,11 +75,11 @@ public:
 
     const ui::pfloat& GetHeight() const {return h_;}
 
-    void SetCropArea(const ui::CropArea& a){
+    virtual void SetCropArea(const ui::CropArea& a){
         cropArea_ = a;
         cropped_ = true;
     }
-    void SetCropArea(){cropped_ = false;}
+    virtual void SetCropArea(){cropped_ = false;}
 
     float toVHFloat(const ui::pfloat&) const;
     float toVWFloat(const ui::pfloat&) const;

@@ -17,13 +17,22 @@ std::shared_ptr<Element> ListElement::GetElement(int id){
 
 void ListElement::Render(const RenderSystem& r){
     ColoredElement::Render(r);
+    ui::CropArea ca;
+    if(cropped_) ca = ui::combineCropAreas(cropArea_, {y_, x_, h_, w_});
     float h = toVHFloat(GetTop());
     float s = toVHFloat(spacing_);
     for(const auto t: elements_){
         auto e = t.second;
+        if(cropped_) e->SetCropArea(ca);
         e->SetTop(h VH);
         h += toVHFloat(e->GetHeight()) + s;
     }
+}
+
+void ListElement::SetCropArea(){
+    cropped_ = false;
+    ui::CropArea ca = {y_, x_, h_, w_};
+    for(auto t: elements_) t.second->SetCropArea(ca);
 }
 
 /*bool ListElement::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
