@@ -114,6 +114,8 @@ namespace ui {
     float toVHFloat(const pfloat& p);
     float toVWFloat(const pfloat& p);
 
+    CropArea combineCropAreas(const CropArea& a, const CropArea& b);
+
 }
 
 #endif

@@ -139,7 +139,6 @@ void MainMenu::addScoreboard(){
     ui::pfloat left = getRightSideLeft();
     float pf = ui::toVHFloat(padding_);
     float hl = getRightSideButtonsVHFloatHeight() - pf;
-    std::cout << hl << std::endl;
     auto header = std::make_shared<TextElement>(
         padding_, 
         left,  
@@ -154,7 +153,6 @@ void MainMenu::addScoreboard(){
     float hh = ui::toVHFloat(header->GetFontSize()) * 2;
     header->SetHeight(hh VH);
     hl -= hh;
-    std::cout << hl << std::endl;
     scoreboard_ = std::make_shared<MultilineText>(
         (pf + hh) VH,
         left,
