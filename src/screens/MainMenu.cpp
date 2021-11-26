@@ -50,7 +50,7 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addRightSideButton("Play", [&app](){app.TransitionTo(std::make_unique<GameScreen>(app));});
 
     addScoreboard();
-    scoreboard_->SetText("Some\ntext\nhere\nto\ntry\nthis\nout");
+    scoreboard_->SetText("  Some\n  text\n  here\n  to\n  try\n  this\n  out");
 }
 
 void MainMenu::Render(const RenderSystem& r){
