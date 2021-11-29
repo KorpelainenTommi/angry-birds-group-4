@@ -25,7 +25,7 @@ public:
     virtual void Update();
 
     /// OnCollision is called when this PhysObject collides with another PhysObject
-    virtual void OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround);
+    virtual void OnCollision(b2Vec2 relativeVelocity, PhysObject& other);
 
     /// Set this rigidbody's x
     virtual void SetX(float x);
@@ -65,6 +65,11 @@ public:
 
     /// Add explosive force away from this
     virtual void Explosion(const b2Vec2& center, float magnitude);
+
+
+
+    virtual float GetHP() const;
+    virtual float GetMass() const;
 
 
 

@@ -13,8 +13,13 @@ void PhysObject::Force(const b2Vec2& f, const b2Vec2& p) { mainBody_->ApplyForce
 void PhysObject::Torque(float t) { mainBody_->ApplyTorque(t, true); }
 void PhysObject::Angular(float a) { mainBody_->ApplyAngularImpulse(a, true); }
 
-void PhysObject::Explosion(const b2Vec2& center, float magnitude) { }
+void PhysObject::Explosion(const b2Vec2& center, float magnitude) { 
 
+}
+
+
+float PhysObject::GetHP() const { return hp_; }
+float PhysObject::GetMass() const { return mainBody_->GetMass(); }
 
 
 void PhysObject::Update() { 
@@ -62,9 +67,9 @@ void PhysObject::SetPosition(float x, float y) {
     mainBody_->SetTransform({x, y}, a);
 }
 
-void PhysObject::OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround) {
+void PhysObject::OnCollision(b2Vec2 relativeVelocity, PhysObject& other) {
     
-    hp_ -= ph::damageScaling * velocity.Length() * mainBody_->GetMass();
+    hp_ -= ph::damageScaling * relativeVelocity.Length() * 0.5F * (GetMass() + other.GetMass());
     if(hp_ <= 0) mainBody_->GetFixtureList()->SetSensor(true);
 
 }

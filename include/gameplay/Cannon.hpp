@@ -10,13 +10,13 @@
 #include <box2d/b2_body.h>
 
 
-/// A Catapult consists of base that is a static rigidbody, and a lever that is a dynamic rigidbody
-class Catapult : public PhysObject {
+/// A Cannon always aims at the mouse cursor. The launch force is based on cursor distance to the cannon
+class Cannon : public PhysObject {
 public:
 
-    /// Construct a catapult at this position facing right
-    Catapult(Game& game, float x, float y) : 
-    PhysObject(game, gm::GameObjectType::catapult, x, y, 0) { }
+    /// Construct a cannon at this position facing right
+    Cannon(Game& game, float x, float y) : 
+    PhysObject(game, gm::GameObjectType::cannon, x, y, 0) { }
 
 
     /// 

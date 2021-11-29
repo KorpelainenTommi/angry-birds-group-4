@@ -145,9 +145,6 @@ protected:
     unsigned int time_; //Game ticks since starting => number of update calls
 
     b2World world_;
-
-    // The ground (b2Body* ground_ cannot be a smart pointer because box2d allocates and deallocates this on its own)
-    b2Body* ground_;
     
     IDCounter IDCounter_;
 

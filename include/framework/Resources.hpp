@@ -95,10 +95,9 @@ enum SpriteID {
     tnt,
 
 
-    //Catapult
-    catapult_base,
-    catapult_lever,
-    catapult_head,
+    //Cannon
+    cannon_base,
+    cannon_head,
 
 
     //Teekkari parts
@@ -204,6 +203,9 @@ enum AnimationID {
     can_crack,
 
     explosion,
+    cannon_explosion,
+
+
 
 
     //Object collisions
@@ -259,9 +261,9 @@ enum SoundID {
     tnt_explode,
 
 
-    //Catapult sounds
-    catapult_click,
-    catapult_sling,
+    //Cannon sounds
+    cannon_load,
+    cannon_shot,
 
 
     //Teekkari sounds

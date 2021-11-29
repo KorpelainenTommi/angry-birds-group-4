@@ -48,6 +48,8 @@ void Block::Render(const RenderSystem& r) {
 
 void Block::OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround) {
     
-    PhysObject::OnCollision(velocity, other, isGround);
+    PhysObject::OnCollision(velocity, other);
+
+    //Play sounds and stuff
 
 }

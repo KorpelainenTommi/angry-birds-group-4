@@ -25,6 +25,7 @@ enum GameObjectGroup {
     block,
     teekkari,
     effect,
+    ground
 };
 
 /// A unique identifier defining the type of GameObject. All GameObjects should be spawnable without extra info
@@ -103,8 +104,8 @@ enum GameObjectType {
     prop_tnt,
 
 
-    //Catapult
-    catapult,
+    //Cannon
+    cannon,
 
 
     //Teekkaris
@@ -127,7 +128,7 @@ enum GameObjectType {
     ability_integral,
 
 
-
+    ground_obj
 
 };
 

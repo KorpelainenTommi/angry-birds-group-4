@@ -1,5 +1,6 @@
 #include <gameplay/GameObjectTypes.hpp>
 #include <gameplay/Block.hpp>
+#include <gameplay/Ground.hpp>
 
 
 const std::unordered_map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
@@ -65,10 +66,10 @@ const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties
 
 int gm::GetObjectGroup(gm::GameObjectType type) {
     if(type <= gm::GameObjectType::background_person3) return gm::GameObjectGroup::background;
-    else if(type < gm::GameObjectType::catapult) return gm::GameObjectGroup::block;
+    else if(type < gm::GameObjectType::cannon) return gm::GameObjectGroup::block;
     else if(type <= gm::GameObjectType::fuksi) return gm::GameObjectGroup::teekkari;
     else if(type <= gm::GameObjectType::ability_integral) return gm::GameObjectGroup::effect;
-    else return -1;
+    else return gm::GameObjectGroup::ground;
 }
 
 int GetObjectScore(gm::GameObjectType type) {
@@ -77,8 +78,11 @@ int GetObjectScore(gm::GameObjectType type) {
 
 std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, float x, float y, float rot) {
 
+    // TODO: make this cleaner, easier to do once all basic types are added
+
     // Block
     if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) return std::make_unique<Block>(game, type, x, y, rot);
+    if(type == gm::GameObjectType::ground_obj) return std::make_unique<Ground>(game);
     else return std::unique_ptr<GameObject>(nullptr);
 
 
