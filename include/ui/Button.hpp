@@ -27,8 +27,23 @@ public:
         mouseDownHandler_ = mouseDownHandler;
     };
 
-    //virtual void Render(const RenderSystem&);
+    void Deactivate(){active_ = false;};
 
+    void Activate(){active_ = true;};
+
+    void SetDeactivatedBackgroundColor(const sf::Color& c){deactivatedBackgroundColor_ = c;}
+    void SetDeactivatedBackgroundColor(){deactivatedBackgroundColor_ = defaultDeactivatedBackgroundColor_;}
+
+    virtual void Render(const RenderSystem&);
+
+    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
+
+    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
+
+private:
+    bool active_ = true;
+    sf::Color defaultDeactivatedBackgroundColor_ = ui::deactivatedButtonBackgroundColor;
+    sf::Color deactivatedBackgroundColor_ = ui::deactivatedButtonBackgroundColor;
 };
 
 #endif

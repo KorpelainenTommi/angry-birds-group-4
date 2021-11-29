@@ -5,6 +5,7 @@
 #include <ui/ListElement.hpp>
 #include <ui/Button.hpp>
 #include <ui/MultilineText.hpp>
+#include <gameplay/Level.hpp>
 
 class MainMenu : public Screen {
 public:
@@ -15,7 +16,7 @@ public:
     /**
      * This should be used only by buttons created in Mainmenu::addLevel()
      */
-    void SelectLevel(const std::string level, std::weak_ptr<Button> button);
+    void SelectLevel(const Level& level, std::weak_ptr<Button> button);
 
 private:
     const ui::pfloat padding_ = 2 VH;
@@ -32,11 +33,12 @@ private:
     ui::pfloat curElementW_ = 0 VW;
     std::shared_ptr<ColoredElement> listTop_;
     std::shared_ptr<ColoredElement> listBottom_;
-    std::pair<std::string, std::weak_ptr<Button>> selectedLevel_;
+    std::pair<Level, std::weak_ptr<Button>> selectedLevel_;
     bool hasSelectedLevel_ = false;
     std::vector<std::shared_ptr<Element>> rightSideElements_;
     ui::pfloat rightSideElementW_ = 0 VW;
     std::shared_ptr<MultilineText> scoreboard_;
+    std::vector<std::shared_ptr<Button>> deactivatingButtons_;
 
     ui::pfloat calcListWidth() const;
 
@@ -44,8 +46,9 @@ private:
 
     void checkListWidth();
 
-    //this will change later on
-    void addLevel(std::string level);
+    void generateLevels();
+
+    void addLevel(Level level);
 
     ui::pfloat calcRightSideElementWidth() const;
 
@@ -53,7 +56,8 @@ private:
 
     void addRightSideButton(
         const std::string& text, 
-        const std::function<void()> mouseDownHandler
+        const std::function<void()> mouseDownHandler,
+        bool deactivating = false
     );
 
     ui::pfloat getRightSideLeft() const;

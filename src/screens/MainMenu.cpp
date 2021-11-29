@@ -32,21 +32,13 @@ MainMenu::MainMenu(Application& app): Screen(app){
     listBottom_->SetBackgroundColor(ui::backgroundColor2);
     menu_.push_back(listBottom_);
 
-    addLevel("level1");
-    addLevel("level2");
-    addLevel("level3");
-    addLevel("level4");
-    addLevel("level5");
-    addLevel("level6");
-    addLevel("level7");
-    addLevel("level8");
-    addLevel("level9");
+    generateLevels();
 
     addRightSideButton("Exit", [&app](){app.Exit();});
     addRightSideButton("test level", [&app](){
         app.TransitionTo(std::make_unique<GameScreen>(app,TestLevel()));
     });
-    addRightSideButton("Play", [&app](){app.TransitionTo(std::make_unique<GameScreen>(app));});
+    addRightSideButton("Play", [&app](){app.TransitionTo(std::make_unique<GameScreen>(app));}, true);
 
     addScoreboard();
     scoreboard_->SetText("  Some\n  text\n  here\n  to\n  try\n  this\n  out");
@@ -81,22 +73,30 @@ void MainMenu::checkListWidth(){
     for(auto e: list_->GetElements()) e.second->SetWidth(curElementW_);
 }
 
-void MainMenu::addLevel(std::string level){
+void MainMenu::generateLevels(){
+    auto list = std::vector<Level>();//app_.GetFileManager().ListLevels();
+    list.push_back(TestLevel());
+    for(auto e: list) addLevel(e);
+}
+
+void MainMenu::addLevel(Level level){
     auto e = std::make_shared<Button>(0 VH, listPadding_, 20 VH, curElementW_);
     auto w = std::weak_ptr<Button>(e);
     e->SetMouseDownHandler([level, w, this](){
-        std::cout << level << std::endl;
         this->SelectLevel(level, w);
     });
-    e->SetText(level);
+    e->SetText(level.levelName);
     e->SetRelativeFontSize(ui::defaultFontSize * 2.5);
     list_->InsertElement(e);
     menu_.push_back(e);
 }
 
-void MainMenu::SelectLevel(const std::string level, std::weak_ptr<Button> button){
+void MainMenu::SelectLevel(const Level& level, std::weak_ptr<Button> button){
     if(hasSelectedLevel_) selectedLevel_.second.lock()->SetBackgroundColor();
-    else hasSelectedLevel_ = true;
+    else{
+        hasSelectedLevel_ = true;
+        for(auto e: deactivatingButtons_) e->Activate();
+    }
     selectedLevel_ = {level, button};
     button.lock()->SetBackgroundColor(selectedLevelBackground_);
 }
@@ -114,7 +114,8 @@ void MainMenu::checkRightSideElementWidth(){
 
 void MainMenu::addRightSideButton(
     const std::string& text,
-    const std::function<void()> mouseDownHandler
+    const std::function<void()> mouseDownHandler,
+    bool deactivating
 ){
     auto e = std::make_shared<Button>(
         (getRightSideButtonsVHFloatHeight() - ui::toVHFloat(buttonHeight_)) VH, 
@@ -126,6 +127,10 @@ void MainMenu::addRightSideButton(
     e->SetText(text);
     e->SetRelativeFontSize(ui::defaultFontSize * 1.5);
     rightSideElements_.push_back(e);
+    if(deactivating){
+        deactivatingButtons_.push_back(e);
+        e->Deactivate();
+    }
     menu_.push_back(e);
 }
 
