@@ -4,6 +4,7 @@ project (AngryTeekkari)
 # Target C++ 17 standard (these are optional)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+#set(CMAKE_BUILD_TYPE Debug)
 
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE)
@@ -37,7 +38,8 @@ add_subdirectory("libs/box2d")
 
 # link sfml libraries depending on build variant
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_link_libraries(${EXECUTABLE_NAME} sfml-system-d sfml-window-d sfml-graphics-d sfml-audio-d)
+    #target_link_libraries(${EXECUTABLE_NAME} sfml-system-d sfml-window-d sfml-graphics-d sfml-audio-d)
+    target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics sfml-audio)
 else()
     target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics sfml-audio)
 endif()
