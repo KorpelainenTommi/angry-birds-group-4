@@ -2,7 +2,9 @@
 
 #include <iostream>
 
-PhysObject::~PhysObject() { game_.GetB2World().DestroyBody(mainBody_); }
+PhysObject::~PhysObject() { 
+    game_.GetB2World().DestroyBody(mainBody_);
+}
 
 void PhysObject::Impulse(const b2Vec2& f) { mainBody_->ApplyLinearImpulseToCenter(f, true);}
 void PhysObject::Impulse(const b2Vec2& f, const b2Vec2& p) { mainBody_->ApplyLinearImpulse(f, p, true);}
@@ -26,14 +28,12 @@ void PhysObject::Update() {
     y_ = pos.y;
     rot_ = mainBody_->GetAngle();
 
-
     //Destroy off screen objects
     if(x_ > 0.5F * ph::fullscreenPlayArea || x_ < -0.5F * ph::fullscreenPlayArea) game_.DestroyObject(gameID_);
     else if(y_ < 0.0F) game_.DestroyObject(gameID_);
 
     //Destroy zero hp objects
     if(hp_ <= 0) game_.DestroyObject(gameID_);
-
 
 }
 

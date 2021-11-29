@@ -41,7 +41,8 @@ void Block::Render(const RenderSystem& r) {
     b2Vec2 offset1 = { cosf(rot_) * xOfs - sinf(rot_) * yOfs, sinf(rot_) * xOfs + cosf(rot_) * yOfs };
     ph::tfloat x; x.f0 = x_.f0 + offset0.x; x.f1 = x_.f1 + offset1.x;
     ph::tfloat y; y.f0 = y_.f0 + offset0.y; y.f1 = y_.f1 + offset1.y;
-    r.RenderSprite(blockData_.sprite, x, y, shapeData_.height, -180 * rot_ / 3.14159265F, game_.GetCamera());
+    ph::tfloat rot; rot.f0 = -180 * rot_.f0 / 3.14159265F; rot.f1 = -180 * rot_.f1 / 3.14159265F;
+    r.RenderSprite(blockData_.sprite, x, y, shapeData_.height, rot, game_.GetCamera());
 
 }
 

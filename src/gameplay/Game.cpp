@@ -38,16 +38,15 @@ Game::Game(GameScreen& gameScreen, Level level) : Game(gameScreen) {
 void Game::LoadLevel(Level level) {
     level_  = level;
     ClearObjects();
-    teekkarisLeft_.clear();
+    if(level.levelMode != LevelMode::endless) teekkarisLeft_.clear();
     ResetCamera();
-    IDCounter_ = IDCounter {};
-    for(auto objectdata : level.objectData) {
+    IDCounter_ = {};
+    for(const auto& objectdata : level.objectData) {
         CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
     }
 }
 
 
-//TODO: should use gm::GetObjectGroup(GameObjectType) give object ids from groups
 int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
 
     std::unique_ptr<GameObject> obj = gm::IDToObject(*this, type, x, y, rot);
@@ -59,7 +58,7 @@ int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
         case gm::GameObjectGroup::effect : id = IDCounter_.effects++;
     }
     obj->gameID_ = id;
-    objects_[obj->gameID_] = std::move(obj);
+    objects_[id] = std::move(obj);
 
     return id;
 }
@@ -83,9 +82,9 @@ Game::~Game() {
 void Game::BeginContact(b2Contact* contact) {
     
     if(contact->GetFixtureA()->IsSensor() || contact->GetFixtureB()->IsSensor()) return;
-    b2Body* bodyA = contact->GetFixtureA()->GetBody();  
+    b2Body* bodyA = contact->GetFixtureA()->GetBody();
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
-    b2WorldManifold worldManifold;   
+    b2WorldManifold worldManifold;
     contact->GetWorldManifold(&worldManifold);
 
     b2Vec2 velocity = bodyA->GetLinearVelocityFromWorldPoint(worldManifold.points[0]) - bodyB->GetLinearVelocityFromWorldPoint(worldManifold.points[0]);
@@ -109,10 +108,12 @@ void Game::Update() {
     world_.Step(ph::timestep, ph::velocityIters, ph::positionIters);
 
     //Call update on objects. They will handle their own business
-    for(auto& obj : objects_) {
-        obj.second->Update();
-    }
 
+    auto it = objects_.begin();
+    while(it != objects_.end()) {
+        (it++)->second->Update();
+    }
+    
 }
 
 void Game::Render(const RenderSystem& r) {

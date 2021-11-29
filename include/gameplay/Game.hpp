@@ -35,21 +35,14 @@
  *
  */
 struct IDCounter {
-    unsigned int backgrounds = 0;
-    unsigned int blocks = 100000000;
-    unsigned int teekkaris = 200000000;
-    unsigned int effects = 300000000;
+    int backgrounds = 0;
+    int blocks = 1 * gm::objectGroupSize;
+    int teekkaris = 2 * gm::objectGroupSize;
+    int effects = 3 * gm::objectGroupSize;
 };
 
 //Forward declaration
 class GameScreen;
-
-
-//TODO:
-//Methods marked with <!> have not been implemented in the cpp file
-
-
-
 
 
 /// A Game encapsulates a single game session that starts when entering a GameScreen, and ends when exiting it
@@ -144,7 +137,7 @@ protected:
     Level level_;
     Camera camera_;
 
-    /// List of teekkaris that can be spawned to the catapult
+    /// List of teekkaris that can be spawned to the cannon
     std::vector<gm::GameObjectType> teekkarisLeft_;
 
 

@@ -64,10 +64,10 @@ const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties
 
 
 int gm::GetObjectGroup(gm::GameObjectType type) {
-    if(type < gm::GameObjectType::background_person3) return gm::GameObjectGroup::background;
+    if(type <= gm::GameObjectType::background_person3) return gm::GameObjectGroup::background;
     else if(type < gm::GameObjectType::catapult) return gm::GameObjectGroup::block;
-    else if(type < gm::GameObjectType::fuksi) return gm::GameObjectGroup::teekkari;
-    else if(type < gm::GameObjectType::ability_integral) return gm::GameObjectGroup::effect;
+    else if(type <= gm::GameObjectType::fuksi) return gm::GameObjectGroup::teekkari;
+    else if(type <= gm::GameObjectType::ability_integral) return gm::GameObjectGroup::effect;
     else return -1;
 }
 
