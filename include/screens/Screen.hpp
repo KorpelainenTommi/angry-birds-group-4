@@ -39,6 +39,8 @@ public:
 
     void Confirm(std::string text, const std::function<void(bool)> callBack);
 
+    void DequeueMessage();
+
 protected:
     Application& app_;
     std::vector<std::shared_ptr<Element>> menu_;

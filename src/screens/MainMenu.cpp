@@ -3,7 +3,6 @@
 #include <screens/GameScreen.hpp>
 
 //development
-#include <iostream>
 #include <gameplay/TestLevel.hpp>
 
 MainMenu::MainMenu(Application& app): Screen(app){
@@ -60,7 +59,7 @@ void MainMenu::Render(const RenderSystem& r){
     checkListWidth();
     checkRightSideElementWidth();
 
-    for(const auto& e : menu_) e->Render(r);
+    Screen::Render(r);
 }
 
 ui::pfloat MainMenu::calcListWidth() const {

@@ -25,7 +25,7 @@ private:
     const ui::pfloat spacingX_ = 1 VW;
     const ui::pfloat buttonHeight_ = 5 VH;
     const ui::pfloat scoreboardLeftPadding_ = 0.5 VW;
-    const sf::Color selectedLevelBackground_ = {200, 200, 255};
+    const sf::Color selectedLevelBackground_ = ui::highlightColor;
 
     std::shared_ptr<ListElement> list_;
     ui::pfloat curListW_ = 0 VW;
