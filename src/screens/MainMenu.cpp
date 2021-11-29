@@ -3,7 +3,6 @@
 #include <screens/GameScreen.hpp>
 
 //development
-#include <iostream>
 #include <gameplay/TestLevel.hpp>
 
 MainMenu::MainMenu(Application& app): Screen(app){
@@ -50,7 +49,7 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addRightSideButton("Play", [&app](){app.TransitionTo(std::make_unique<GameScreen>(app));});
 
     addScoreboard();
-    scoreboard_->SetText("Some\ntext\nhere\nto\ntry\nthis\nout");
+    scoreboard_->SetText("  Some\n  text\n  here\n  to\n  try\n  this\n  out");
 }
 
 void MainMenu::Render(const RenderSystem& r){
@@ -60,7 +59,7 @@ void MainMenu::Render(const RenderSystem& r){
     checkListWidth();
     checkRightSideElementWidth();
 
-    for(const auto& e : menu_) e->Render(r);
+    Screen::Render(r);
 }
 
 ui::pfloat MainMenu::calcListWidth() const {
