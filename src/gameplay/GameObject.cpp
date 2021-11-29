@@ -1,3 +1,4 @@
+/*
 #include <GameObject.hpp>
 
 ///         GameObject          ///
@@ -28,17 +29,17 @@ void GameObject::SetCollisionsOff(){
     /*for(int i = 0; i < (body_->GetFixtureList()).size; i++){
         body_->GetFixtureList().get(i).setSensor(true);
     }*/
-}
-
+/*}*/
+/*
 void GameObject::SetCollisionsOn(){
     body_->GetFixtureList()->SetSensor(false);
     /*for(int i = 0; i < body_->GetFixtureList().size; i++){
         body_->GetFixtureList().get(i).setSensor(false);
     }*/
-}
+/*}
 
 ///         Block           ///
-
+/*
 Block::Block(BOX2D_H::b2World* world, float x, float y, char material = 'w', float height = 1.0f, float width = 1.0f) : PhysObject(world, x, y){
     shapeDef_.SetAsBox(height/2, width/2);
     fixtureDef_.shape = &shapeDef_;
@@ -97,3 +98,4 @@ GroundBlock::GroundBlock(BOX2D_H::b2World* world, float x, float y, float height
     fixtureDef_.friction = 0.3f;
     GameObject::SetFixture(fixtureDef_);
 };
+*/

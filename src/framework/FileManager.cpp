@@ -1,5 +1,7 @@
 #include <framework/FileManager.hpp>
+#include <sstream>
 #include <iostream>
+#include <filesystem>
 
 bool FileManager::LoadTexture(sf::Texture& texture, const std::string& path) const {
     std::cout << "  Loading texture: " << path << std::endl;
@@ -16,18 +18,43 @@ bool FileManager::LoadFont(sf::Font& font, const std::string& path) const {
     return font.loadFromFile(path);
 }
 
+std::vector<std::string> FileManager::ListLevelPaths(std::string folder) const {
+    std::vector<std::string> paths;
+    for(const auto& entry : std::filesystem::directory_iterator(folder)) {
+        if(entry.is_regular_file() && entry.path().extension() == "lvl") paths.push_back(entry.path().string());
+    }
+    return paths;
+}
 
-void PrintGameObjectData(std::ofstream& file, gm::GameObjectData& data){
+std::vector<Level> FileManager::LoadLevels(std::string path) const {
+    std::vector<std::string> paths = ListLevelPaths(path);
+    std::vector<Level> levels; Level l;
+    for(const auto& p : paths)
+        if(LoadLevel(l, p)) levels.push_back(l);
+
+    return levels;
+}
+
+std::vector<Level> FileManager::ListLevels() const {
+    return LoadLevels(levelPath);
+}
+
+std::vector<Level> FileManager::ListEndless() const {
+    return LoadLevels(endlessPath);
+}
+
+
+void FileManager::PrintGameObjectData(std::ofstream& file, const gm::GameObjectData& data) const {
     file << "DATA " << data.x << " " << data.y << " " << data.rot << " " << data.type << "\n";
 }
 
-void PrintHighScores(std::ofstream& file, std::pair<std::string, int>& score){
+void FileManager::PrintHighScores(std::ofstream& file, const std::pair<std::string, int>& score) const {
     file << "HIGH " << score.first << " " << score.second << "\n";
 }
 
 bool FileManager::SaveLevel(const Level& level, const std::string& path) const{
     std::ofstream file;
-    file.open(path, std::ios::in);
+    file.open(path, std::ios::out);
     if (!file.is_open()){
         return false;
     }
@@ -35,11 +62,11 @@ bool FileManager::SaveLevel(const Level& level, const std::string& path) const{
     file << "NAME " << level.levelName << "\n";
     file << "MODE " << level.levelMode << "\n";
     
-    for(auto i : level.objectData){
+    for(const auto& i : level.objectData){
         PrintGameObjectData(file, i);
     }
 
-    for(auto i : level.highscores){
+    for(const auto& i : level.highscores){
         PrintHighScores(file, i);
     }
 
@@ -52,7 +79,7 @@ bool FileManager::SaveLevel(const Level& level, const std::string& path) const{
 
 bool FileManager::LoadLevel(Level& level, const std::string& path) const {
     std::ifstream file;
-    file.open(path, std::ios::out);
+    file.open(path, std::ios::in);
     if (!file.is_open()){
         return false;
     }
@@ -70,7 +97,7 @@ bool FileManager::LoadLevel(Level& level, const std::string& path) const {
             level.levelName = lineData[1];
         }   else if (lineData[0] == "MODE"){
             int num = std::stoi(lineData[1]);
-            LevelMode mode = static_cast<LevelMode>(num); //+1?
+            LevelMode mode = static_cast<LevelMode>(num);
             level.levelMode = mode;
 
         }   else if (lineData[0] == "DATA"){
