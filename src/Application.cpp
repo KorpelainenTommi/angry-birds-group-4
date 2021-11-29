@@ -3,8 +3,8 @@
 #include <ui/UIConstants.hpp>
 #include <screens/DemoScreen.hpp>
 #include <screens/MainMenu.hpp>
-
-
+#include <screens/GameScreen.hpp>
+//#include <gameplay/TestLevel.hpp>
 float ui::windowWidth = 0;
 float ui::windowHeight = 0;
 float ui::aspectRatio = 1;
@@ -59,7 +59,9 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
     sf::Event ev;
     while(window_.pollEvent(ev));
 
+    
     TransitionTo(std::make_unique<MainMenu>(*this));
+    //TransitionTo(std::make_unique<GameScreen>(*this,TestLevel()));
     //TransitionTo(std::make_unique<DemoScreen>(*this));
 }
 

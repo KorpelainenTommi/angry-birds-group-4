@@ -10,6 +10,10 @@ enum SpriteID {
     ui_button,
     ui_star_empty,
     ui_star,
+    ui_button_pause,
+    ui_button_restart,
+    ui_button_exit,
+    ui_button_resume,
 
 
     //Level backgrounds

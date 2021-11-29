@@ -19,11 +19,13 @@ public:
 
     virtual void Render(const RenderSystem&);
 
-    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
+    virtual void SetCropArea();
+
+    /*virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
 
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
 
-    virtual bool OnMouseMove(float xw, float yh);
+    virtual bool OnMouseMove(float xw, float yh);*/
 
     virtual bool OnMouseScroll(float delta, float xw, float yh);
 
@@ -46,6 +48,11 @@ public:
      * Set the amount of space between elements.
      */
     void SetSpacing(const ui::pfloat&);
+
+    /**
+     * Returns constant reference to the map of elements. 
+     */
+    const std::map<int, std::shared_ptr<Element>>& GetElements() const;
 
 private:
     int nextId_ = INT_MIN;

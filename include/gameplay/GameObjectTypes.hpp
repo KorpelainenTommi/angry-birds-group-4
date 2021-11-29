@@ -19,6 +19,14 @@ namespace gm {
 //List of all game object types
 //Defined in the cpp file
 
+
+enum GameObjectGroup {
+    background,
+    block,
+    teekkari,
+    effect,
+};
+
 /// A unique identifier defining the type of GameObject. All GameObjects should be spawnable without extra info
 enum GameObjectType {
 
