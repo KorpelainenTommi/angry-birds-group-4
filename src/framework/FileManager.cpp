@@ -1,7 +1,11 @@
 #include <framework/FileManager.hpp>
 #include <sstream>
 #include <iostream>
+#include <random>
+#include <iomanip>
 #include <filesystem>
+#include <algorithm>
+
 
 bool FileManager::LoadTexture(sf::Texture& texture, const std::string& path) const {
     std::cout << "  Loading texture: " << path << std::endl;
@@ -21,16 +25,18 @@ bool FileManager::LoadFont(sf::Font& font, const std::string& path) const {
 std::vector<std::string> FileManager::ListLevelPaths(std::string folder) const {
     std::vector<std::string> paths;
     for(const auto& entry : std::filesystem::directory_iterator(folder)) {
-        if(entry.is_regular_file() && entry.path().extension() == "lvl") paths.push_back(entry.path().string());
+        if(entry.is_regular_file() && entry.path().extension() == ".lvl") paths.push_back(entry.path().string());
     }
     return paths;
 }
 
 std::vector<Level> FileManager::LoadLevels(std::string path) const {
     std::vector<std::string> paths = ListLevelPaths(path);
-    std::vector<Level> levels; Level l;
-    for(const auto& p : paths)
+    std::vector<Level> levels;
+    for(const auto& p : paths) {
+        Level l;
         if(LoadLevel(l, p)) levels.push_back(l);
+    }
 
     return levels;
 }
@@ -42,6 +48,31 @@ std::vector<Level> FileManager::ListLevels() const {
 std::vector<Level> FileManager::ListEndless() const {
     return LoadLevels(endlessPath);
 }
+
+std::string FileManager::GenerateFilepath(const std::string folder) const {
+
+    std::random_device dev;
+    std::default_random_engine rng(dev());
+    std::uniform_int_distribution<std::default_random_engine::result_type> dist;
+    unsigned int i = dist(rng);
+
+    std::stringstream ss;
+    ss << "f" << std::hex << i;
+    std::string path = folder + ss.str() + ".lvl";
+    std::vector<std::string> paths = ListLevelPaths(folder);
+    if(std::find(paths.begin(), paths.end(), path) == paths.end()) return path;
+    else return GenerateFilepath(folder);
+
+}
+
+bool FileManager::SaveLevel(const Level& level) const {
+    std::string path = level.levelPath;
+    if(path.empty())
+        path = (level.levelMode == LevelMode::endless) ? GenerateFilepath(endlessPath) : GenerateFilepath(levelPath);
+    return SaveLevel(level, path);
+}
+
+
 
 
 void FileManager::PrintGameObjectData(std::ofstream& file, const gm::GameObjectData& data) const {
@@ -118,6 +149,7 @@ bool FileManager::LoadLevel(Level& level, const std::string& path) const {
             level.backgroundImage = static_cast<SpriteID>(stoi(lineData[1]));
             
         }   else if (lineData[0] == "END"){
+            level.levelPath = path;
             file.close();
             return true;
         }

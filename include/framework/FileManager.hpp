@@ -31,17 +31,23 @@ public:
     /// Return a list of levels that can extend an endless game
     std::vector<Level> ListEndless() const;
 
+    /// Save a level. If the level already existed, this will overwrite it
+    bool SaveLevel(const Level& level) const;
 
-    /// Load a level from this path, true if successful, false if not
-    bool LoadLevel(Level& level, const std::string& path) const;
-
-    /// Save a level to this path, true if successful, false if not
-    bool SaveLevel(const Level& level, const std::string& path) const;
 
 private:
 
     const std::string levelPath = "data/levels/";
     const std::string endlessPath = "data/levels/endless";
+
+    /// Generate a unique filepath for a level file
+    std::string GenerateFilepath(const std::string folder) const;
+
+    /// Load a level from this path, true if successful, false if not
+    bool LoadLevel(Level& level, const std::string& path) const;
+    
+    /// Save a level to this path, true if successful, false if not
+    bool SaveLevel(const Level& level, const std::string& path) const;
 
     /// Write a gameobject to output stream
     void PrintGameObjectData(std::ofstream& file, const gm::GameObjectData& data) const;
