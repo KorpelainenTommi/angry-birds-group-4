@@ -18,6 +18,8 @@ public:
      */
     void SelectLevel(const Level& level, std::weak_ptr<Button> button);
 
+    Level GetSelectedLevel() const {return selectedLevel_.first;};
+
 private:
     const ui::pfloat padding_ = 2 VH;
     const ui::pfloat listPadding_ = 1 VH;

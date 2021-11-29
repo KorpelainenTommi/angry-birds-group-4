@@ -38,7 +38,9 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addRightSideButton("test level", [&app](){
         app.TransitionTo(std::make_unique<GameScreen>(app,TestLevel()));
     });
-    addRightSideButton("Play", [&app](){app.TransitionTo(std::make_unique<GameScreen>(app));}, true);
+    addRightSideButton("Play", [&app, this](){
+        app.TransitionTo(std::make_unique<GameScreen>(app, this->GetSelectedLevel()));
+    }, true);
 
     addScoreboard();
     scoreboard_->SetText("  Some\n  text\n  here\n  to\n  try\n  this\n  out");
