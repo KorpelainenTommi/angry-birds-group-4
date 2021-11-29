@@ -10,6 +10,18 @@ public:
     ){}
 
     virtual void Render(const RenderSystem&);
+
+    virtual bool OnKeyDown(const sf::Event::KeyEvent&) {return true;}
+
+    virtual bool OnKeyUp(const sf::Event::KeyEvent&) {return true;}
+
+    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
+
+    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
+
+    virtual bool OnMouseScroll(float delta, float xw, float yh);
+
+    virtual bool OnTextEntered(const sf::Event::TextEvent&){return true;}
 };
 
 #endif
