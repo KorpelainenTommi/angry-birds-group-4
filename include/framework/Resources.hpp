@@ -14,6 +14,8 @@ enum SpriteID {
     ui_button_restart,
     ui_button_exit,
     ui_button_resume,
+    ui_button_cancel,
+    ui_button_ok,
 
 
     //Level backgrounds

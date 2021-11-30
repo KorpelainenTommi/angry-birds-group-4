@@ -7,6 +7,8 @@
 #include <UpdateListener.hpp>
 #include <Application.hpp>
 #include <queue>
+#include <ui/RoundIcon.hpp>
+#include <ui/TextElement.hpp>
 
 #include <iostream>
 
@@ -41,10 +43,43 @@ public:
 
     void DequeueMessage();
 
+    ui::pfloat calcMessageBoxButtonTop() const;
+
+    /**
+     * button number is the number of the button from right starting from 1.
+     */
+    ui::pfloat calcMessageBoxButtonLeft(unsigned char buttonNumber) const;
+
+    ui::pfloat calcConfirmTextTop() const;
+
+    ui::pfloat calcConfirmTextLeft() const;
+
+    ui::pfloat calcConfirmTextHeight() const;
+
+    ui::pfloat calcConfirmTextWidth() const;
+
 protected:
+    const ui::pfloat messageBoxHeight_ = 15 VH;
+    const ui::pfloat messageBoxWidth_ = 30 VW;
+    const ui::pfloat messageBoxButtonSize_ = 4 VH;
+    const ui::pfloat messageBoxSpacing_ = 1 VH;
+
     Application& app_;
     std::vector<std::shared_ptr<Element>> menu_;
     std::queue<std::vector<std::shared_ptr<Element>>> messages_;
+    float windowWidth_ = 0.0F;
+    float windowHeight_ = 0.0F;
+
+    /**
+     * button number is the number of the button from right starting from 1.
+     */
+    std::shared_ptr<RoundIcon> generateMessageBoxButton(
+        unsigned char buttonNumber, 
+        const std::function<void()> callBack, 
+        const SpriteID& sprite
+    );
+
+    std::shared_ptr<TextElement> generateConfirmText(const std::string& text);
 };
 
 

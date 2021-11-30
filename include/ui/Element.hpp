@@ -42,6 +42,8 @@ public:
 
     virtual bool OnMouseScroll(float delta, float xw, float yh);
 
+    void OnWindowResize();
+
     void SetMouseDownHandler(const std::function<void()> f){mouseDownHandler_ = f;}
     void SetMouseDownHandler(){mouseDownHandler_ = NULL;}
 
@@ -62,6 +64,9 @@ public:
 
     void SetFocusChangeHandler(const std::function<void(bool focused)> f){focusChangeHandler_ = f;}
     void SetFocusChangeHandler(){focusChangeHandler_ = NULL;}
+
+    void SetWindowResizeHandler(const std::function<void()> f){windowResizeHandler_ = f;}
+    void SetWindowResizeHandler(){windowResizeHandler_ = NULL;}
 
     void Blur();
 
@@ -104,6 +109,7 @@ protected:
     std::function<void()> mouseLeaveHandler_ = NULL;
     std::function<void(float delta)> mouseScrollHandler_ = NULL;
     std::function<void(bool focused)> focusChangeHandler_ = NULL;
+    std::function<void()> windowResizeHandler_ = NULL;
 
     bool mouseIn_ = false;
     bool focused_ = false;

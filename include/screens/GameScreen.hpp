@@ -13,7 +13,7 @@ class GameScreen : public Screen {
 public:
 
     /// Create a screen with an empty Game
-    GameScreen(Application& app) : Screen(app), game_(*this) {
+    /*GameScreen(Application& app) : Screen(app), game_(*this) {
         auto rce = std::make_shared<RoundIcon>(1 VH, 1 VH, 3 VH, SpriteID::ui_button_exit);
         rce->SetMouseDownHandler([this, &app](){
             this->Confirm("Do you want to quit to main menu?", [&app](bool b){
@@ -21,15 +21,13 @@ public:
             });
         });
         menu_.push_back(rce);
-    }
+    }*/
 
     /// Create a screen and start the Game with the selected level
     GameScreen(Application& app, const Level& initialLevel) : Screen(app), game_(*this, initialLevel) {
         auto rce = std::make_shared<RoundIcon>(1 VH, 1 VH, 3 VH, SpriteID::ui_button_exit);
         rce->SetMouseDownHandler([this, &app](){
-            this->Confirm("Do you want to quit to main menu?", [&app](bool b){
-                if(b) app.TransitionTo(std::make_unique<MainMenu>(app));
-            });
+            this->Exit();
         });
         menu_.push_back(rce);
     }
@@ -129,6 +127,8 @@ public:
     }    
 
     virtual ~GameScreen() = default;
+
+    void Exit();
 
     void OnGameCompleted(int score){};
 

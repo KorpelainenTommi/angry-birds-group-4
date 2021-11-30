@@ -49,6 +49,10 @@ bool Element::OnMouseScroll(float delta, float xw, float yh){
     return false;
 }
 
+void Element::OnWindowResize(){
+    if(windowResizeHandler_ != NULL) windowResizeHandler_();
+}
+
 void Element::Blur(){
     if(focused_){
         focused_ = false;
