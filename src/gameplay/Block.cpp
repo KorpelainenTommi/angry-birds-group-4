@@ -30,6 +30,7 @@ Block::Block(Game& game, gm::GameObjectType type, float x, float y, float rot) :
     mainBody_->CreateFixture(&fixture);
 
     hp_ = mainBody_->GetMass() * materialData_.hpMassRatio;
+    Record();
 
 }
 

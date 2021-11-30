@@ -106,6 +106,15 @@ namespace ph {
     /// Total height of a Teekkari or Fuksi when standing upright
     const float personHeight = 1.8F;
 
+    /// Total mass of a Teekkari or Fuksi
+    const float personMass = 120.0F;
+
+    /// HP of a Teekkari
+    const float teekkariHP = 1000;
+
+    /// HP of a Fuksi
+    const float fuksiHP = 100;
+
     /// Mathematical constant pi
     const float pi = 3.14159265F;
 

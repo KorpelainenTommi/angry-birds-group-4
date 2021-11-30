@@ -39,12 +39,9 @@ void Game::LoadLevel(Level level) {
     }
 }
 
-
-int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
-
-    std::unique_ptr<GameObject> obj = gm::IDToObject(*this, type, x, y, rot);
+int Game::AddObject(std::unique_ptr<GameObject> obj) {
     int id;
-    switch (gm::GetObjectGroup(type)) {
+    switch (gm::GetObjectGroup(obj->objectType_)) {
         case gm::GameObjectGroup::background : id = IDCounter_.backgrounds++; break;
         case gm::GameObjectGroup::block : id = IDCounter_.blocks++; break;
         case gm::GameObjectGroup::teekkari : id = IDCounter_.teekkaris++; break;
@@ -55,6 +52,11 @@ int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
     objects_[id] = std::move(obj);
 
     return id;
+}
+
+int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
+    std::unique_ptr<GameObject> obj = gm::IDToObject(*this, type, x, y, rot);
+    return AddObject(std::move(obj));
 }
 
 
@@ -76,7 +78,6 @@ void Game::BeginContact(b2Contact* contact) {
     if(contact->GetFixtureA()->IsSensor() || contact->GetFixtureB()->IsSensor()) return;
     b2Body* bodyA = contact->GetFixtureA()->GetBody();
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
-
     //Calculate relative velocity
     b2WorldManifold worldManifold;
     contact->GetWorldManifold(&worldManifold);
@@ -102,6 +103,7 @@ void Game::Update() {
     //Call update on objects. They will handle their own business
     
     auto it = objects_.begin();
+    int i = 0;
     while(it != objects_.end()) {
         (it++)->second->Update();
     }

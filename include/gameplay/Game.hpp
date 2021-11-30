@@ -110,7 +110,7 @@ public:
     b2World& GetB2World();
 
     /// Callback for Box2D contacts
-	virtual void BeginContact(b2Contact* contact);
+    virtual void BeginContact(b2Contact* contact);
 
 
     /// Get a copy of current Camera

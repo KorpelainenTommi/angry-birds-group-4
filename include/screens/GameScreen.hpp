@@ -8,6 +8,7 @@
 #include <screens/Screen.hpp>
 #include <ui/RoundIcon.hpp>
 #include <screens/MainMenu.hpp>
+#include <gameplay/Person.hpp>
 
 class GameScreen : public Screen {
 public:
@@ -52,7 +53,10 @@ public:
             float ch = cw / ui::aspectRatio;
             float xPos = cam.x  + (x * cw - 0.5F * cw ) * cam.zoom;
             float yPos = cam.y + ((1.0F - y) * ch - 0.5F * ch) * cam.zoom;
-            game_.CreateObject(gm::GameObjectType::block_wood1x1, xPos, yPos);
+
+            game_.AddObject(std::make_unique<Person>(game_, gm::GameObjectType::teekkari_teemu, xPos, yPos, 0));
+
+            //game_.CreateObject(gm::GameObjectType::block_wood1x1, xPos, yPos);
         }
         if(e == sf::Mouse::Button::Middle) {
             const Camera& cam = game_.GetCamera();

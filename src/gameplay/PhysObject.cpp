@@ -38,11 +38,11 @@ void PhysObject::Update() {
 
     //Destroy off screen objects
     bool offscreen = x_ > 0.5F * ph::fullscreenPlayArea || x_ < -0.5F * ph::fullscreenPlayArea;
-    offscreen = offscreen || (y_ < 0.0F);
+    offscreen = offscreen || (y_ < -ph::groundThickness);
 
     //Destroy zero hp objects
     bool zerohp = hp_ <= 0;
-    
+
     if(offscreen || zerohp) { game_.DestroyObject(gameID_); return; }
 }
 
@@ -72,8 +72,6 @@ void PhysObject::SetPosition(float x, float y) {
 }
 
 void PhysObject::OnCollision(b2Vec2 relativeVelocity, PhysObject& other) {
-    
     hp_ -= ph::damageScaling * relativeVelocity.Length() * 0.5F * (GetMass() + other.GetMass());
-    if(hp_ <= 0) mainBody_->GetFixtureList()->SetSensor(true);
 
 }
