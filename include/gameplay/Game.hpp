@@ -63,6 +63,20 @@ public:
     /// Update all objects in this game
     virtual void Update();
 
+    //===========================================================================
+    //TODO:
+    //In addition to implementin these methods call GameScreen::OnGameCompleted()
+    //or GameScreen::OnGameLost when the game ends.
+    //Call also GameScreen::OnScoreChange whenever the score changes.
+
+    /// UI uses this to pause the physics simulation
+    void Pause(){}; //TODO: implement this properly
+
+    /// UI uses this to continue physics simulation after pausing it
+    void Resume(){}; //TODO: implement this properly
+
+    //===========================================================================
+
 
     /// Create all objects from this level.
     void LoadLevel(Level level);

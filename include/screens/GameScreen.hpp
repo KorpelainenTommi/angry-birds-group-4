@@ -130,6 +130,12 @@ public:
 
     virtual ~GameScreen() = default;
 
+    void OnGameCompleted(int score){};
+
+    void OnGameLost(){};
+
+    void OnScoreChange(int score){};
+
 protected:
 
     //move these to game

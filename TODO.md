@@ -24,3 +24,5 @@ lever._)
 be retrieved based on GameObjectType with `gm::GetObjectScore(GameObjectType type)`
 
 8. Teekkaris and Fuksis haven't been implemented. It would make sense to store usable Teekkaris just in a vector with GameObjectTypes. A Teekkari can then be spawned on the catapult with `Game::CreateObject()`
+
+9. Game::Pause() and Game::Resume() should be implemented. Game should also start calling GameScreen::OnScoreChange(), GameScreen::OnGameCompleted(), and GameScreen::OnGameLost.
