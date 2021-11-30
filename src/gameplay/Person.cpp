@@ -3,6 +3,7 @@
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_circle_shape.h>
+#include <box2d/b2_revolute_joint.h>
 
 #include <iostream>
 
@@ -18,19 +19,19 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot)
     
     armRX_ = x;
     armRY_ = y;
-    armRRot_ = ph::rotToAng(rot - 180);
+    armRRot_ = ph::rotToAng(rot);
 
     armLX_ = x;
     armLY_ = y;
-    armLRot_ = ph::rotToAng(rot - 180);
+    armLRot_ = ph::rotToAng(rot);
 
     legRX_ = x;
     legRY_ = y;
-    legRRot_ = ph::rotToAng(rot - 180);
+    legRRot_ = ph::rotToAng(rot);
 
     legLX_ = x;
     legLY_ = y;
-    legLRot_ = ph::rotToAng(rot - 180);
+    legLRot_ = ph::rotToAng(rot);
 
 
     //Create torso
@@ -53,6 +54,7 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot)
     torsoFixture.shape = &torsoShape;
     userData.data = this;
     torsoFixture.userData = userData;
+    torsoFixture.filter.groupIndex = -5;
     
     mainBody_->CreateFixture(&torsoFixture);
 
@@ -62,7 +64,7 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot)
     armDefinition.type = b2BodyType::b2_dynamicBody;
     armDefinition.fixedRotation = false;
     armDefinition.position = {x, y};
-    armDefinition.angle = ph::rotToAng(rot + 180);
+    armDefinition.angle = ph::rotToAng(rot);
 
     armRBody_ = game_.GetB2World().CreateBody(&armDefinition);
     armLBody_ = game_.GetB2World().CreateBody(&armDefinition);
@@ -75,6 +77,7 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot)
     armFixture.restitution = restitution;
     armFixture.shape = &armShape;
     armFixture.userData = userData;
+    armFixture.filter.groupIndex = -5;
     
     armRBody_->CreateFixture(&armFixture);
     armLBody_->CreateFixture(&armFixture);
@@ -85,7 +88,7 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot)
     legDefinition.type = b2BodyType::b2_dynamicBody;
     legDefinition.fixedRotation = false;
     legDefinition.position = {x, y};
-    legDefinition.angle = ph::rotToAng(rot + 180);
+    legDefinition.angle = ph::rotToAng(rot);
 
     legRBody_ = game_.GetB2World().CreateBody(&legDefinition);
     legLBody_ = game_.GetB2World().CreateBody(&legDefinition);
@@ -98,6 +101,7 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot)
     legFixture.restitution = restitution;
     legFixture.shape = &legShape;
     legFixture.userData = userData;
+    legFixture.filter.groupIndex = -5;
     
     legRBody_->CreateFixture(&legFixture);
     legLBody_->CreateFixture(&legFixture);
@@ -120,12 +124,74 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot)
     headFixture.restitution = restitution;
     headFixture.shape = &headShape;
     headFixture.userData = userData;
+    headFixture.filter.groupIndex = -5;
 
     headBody_->CreateFixture(&headFixture);
 
+    //Connect head to torso
+
+    b2RevoluteJointDef headJoint;
+    headJoint.bodyA = mainBody_;
+    headJoint.bodyB = headBody_;
+    headJoint.localAnchorA = {0, 0.44179F * Person::torsoHeight};
+    headJoint.localAnchorB = {0.158878F * Person::headWidth, -0.383333F * Person::headHeight};
+    headJoint.enableLimit = true;
+    headJoint.referenceAngle = 0;
+    headJoint.lowerAngle = ph::rotToAng(30);
+    headJoint.upperAngle = ph::rotToAng(-10);
+    headJoint.collideConnected = false;
+
+    game_.GetB2World().CreateJoint(&headJoint);
 
 
-    hp_ = 1000;
+    //Connect arms to torso
+    b2RevoluteJointDef armLJoint;
+    armLJoint.bodyA = mainBody_;
+    armLJoint.bodyB = armLBody_;
+    armLJoint.localAnchorA = {0.32307F * Person::torsoWidth, 0.18179F * Person::torsoHeight};
+    armLJoint.localAnchorB = {0.1764705F * Person::armWidth, 0.275F * Person::armHeight};
+    armLJoint.collideConnected = false;
+
+    game_.GetB2World().CreateJoint(&armLJoint);
+
+    b2RevoluteJointDef armRJoint;
+    armRJoint.bodyA = mainBody_;
+    armRJoint.bodyB = armRBody_;
+    armRJoint.localAnchorA = {-0.32307F * Person::torsoWidth, 0.18179F * Person::torsoHeight};
+    armRJoint.localAnchorB = {0.1764705F * Person::armWidth, 0.275F * Person::armHeight};
+    armRJoint.collideConnected = false;
+
+    game_.GetB2World().CreateJoint(&armRJoint);
+
+
+    //Connect legs to torso
+    b2RevoluteJointDef legLJoint;
+    legLJoint.bodyA = mainBody_;
+    legLJoint.bodyB = legLBody_;
+    legLJoint.localAnchorA = {0.26307F * Person::torsoWidth, -0.28179F * Person::torsoHeight};
+    legLJoint.localAnchorB = {-0.1864705F * Person::legWidth, 0.335F * Person::legHeight};
+    legLJoint.enableLimit = true;
+    legLJoint.referenceAngle = 0;
+    legLJoint.lowerAngle = ph::rotToAng(45);
+    legLJoint.upperAngle = ph::rotToAng(-60);
+    legLJoint.collideConnected = false;
+
+    game_.GetB2World().CreateJoint(&legLJoint);
+
+    b2RevoluteJointDef legRJoint;
+    legRJoint.bodyA = mainBody_;
+    legRJoint.bodyB = legRBody_;
+    legRJoint.localAnchorA = {-0.26307F * Person::torsoWidth, -0.28179F * Person::torsoHeight};
+    legRJoint.localAnchorB = {-0.1864705F * Person::legWidth, 0.335F * Person::legHeight};
+    legRJoint.enableLimit = true;
+    legRJoint.referenceAngle = 0;
+    legRJoint.lowerAngle = ph::rotToAng(45);
+    legRJoint.upperAngle = ph::rotToAng(-60);    
+    legRJoint.collideConnected = false;
+
+    game_.GetB2World().CreateJoint(&legRJoint);
+
+    hp_ = ph::teekkariHP;
     Record();
 
 }
@@ -216,12 +282,19 @@ void Person::Update() {
 
 void Person::Render(const RenderSystem& r) {
 
-    r.RenderRect({0, 255, 0, 100}, armLX_, armLY_, armWidth, armHeight, armLRot_, game_.GetCamera());
-    r.RenderRect({0, 255, 0, 100}, legLX_, legLY_, legWidth, legHeight, legLRot_, game_.GetCamera());
-    r.RenderRect({0, 255, 0, 100}, x_, y_, torsoWidth, torsoHeight, rot_, game_.GetCamera());
-    r.RenderRect({0, 255, 0, 100}, legRX_, legRY_, legWidth, legHeight, legRRot_, game_.GetCamera());
-    r.RenderRect({0, 255, 0, 100}, armRX_, armRY_, armWidth, armHeight, armRRot_, game_.GetCamera());
-    r.RenderOval({0, 255, 0, 100}, headX_, headY_, headHeight, headHeight, headRot_, game_.GetCamera());
+    //r.RenderRect({0, 255, 0, 100}, armLX_, armLY_, armWidth, armHeight, armLRot_, game_.GetCamera());
+    //r.RenderRect({0, 255, 0, 100}, legLX_, legLY_, legWidth, legHeight, legLRot_, game_.GetCamera());
+    //r.RenderRect({0, 255, 0, 100}, x_, y_, torsoWidth, torsoHeight, rot_, game_.GetCamera());
+    //r.RenderRect({0, 255, 0, 100}, legRX_, legRY_, legWidth, legHeight, legRRot_, game_.GetCamera());
+    //r.RenderRect({0, 255, 0, 100}, armRX_, armRY_, armWidth, armHeight, armRRot_, game_.GetCamera());
+    //r.RenderOval({0, 255, 0, 100}, headX_, headY_, headHeight, headHeight, headRot_, game_.GetCamera());
+
+    r.RenderSprite(SpriteID::arm_lgray, armLX_, armLY_, armHeight, armLRot_, game_.GetCamera());
+    r.RenderSprite(SpriteID::leg_lgray, legLX_, legLY_, legHeight, legLRot_, game_.GetCamera());
+    r.RenderSprite(SpriteID::torso_lgray, x_, y_, torsoHeight, rot_, game_.GetCamera());
+    r.RenderSprite(SpriteID::leg_lgray, legRX_, legRY_, legHeight, legRRot_, game_.GetCamera());
+    r.RenderSprite(SpriteID::arm_lgray, armRX_, armRY_, armHeight, armRRot_, game_.GetCamera());
+    r.RenderSprite(SpriteID::teekkari_head1, headX_, headY_, headHeight, headRot_, game_.GetCamera());
 
 }
 

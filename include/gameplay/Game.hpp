@@ -93,8 +93,8 @@ public:
     /// Clear all objects
     void ClearObjects();
 
-    /// Get a reference to the GameObject with this id. Returns true if it exists, false otherwise
-    bool GetObject(int id, GameObject&);
+    /// Get a reference to the GameObject with this id
+    GameObject& GetObject(int id);
 
 
     /// Get the time in ticks

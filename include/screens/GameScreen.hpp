@@ -54,7 +54,10 @@ public:
             float xPos = cam.x  + (x * cw - 0.5F * cw ) * cam.zoom;
             float yPos = cam.y + ((1.0F - y) * ch - 0.5F * ch) * cam.zoom;
 
-            game_.AddObject(std::make_unique<Person>(game_, gm::GameObjectType::teekkari_teemu, xPos, yPos, 0));
+            int id = game_.AddObject(std::make_unique<Person>(game_, gm::GameObjectType::teekkari_teemu, xPos, yPos, 0));
+            GameObject& obj = game_.GetObject(id);
+            Person& p = (Person&)obj;
+            p.Impulse({4000, 500});
 
             //game_.CreateObject(gm::GameObjectType::block_wood1x1, xPos, yPos);
         }

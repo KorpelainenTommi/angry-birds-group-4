@@ -107,10 +107,10 @@ namespace ph {
     const float personHeight = 1.8F;
 
     /// Total mass of a Teekkari or Fuksi
-    const float personMass = 120.0F;
+    const float personMass = 200.0F;
 
     /// HP of a Teekkari
-    const float teekkariHP = 1000;
+    const float teekkariHP = 8000;
 
     /// HP of a Fuksi
     const float fuksiHP = 100;

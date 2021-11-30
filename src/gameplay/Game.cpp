@@ -39,6 +39,11 @@ void Game::LoadLevel(Level level) {
     }
 }
 
+//TODO: this isn't an actual implementation, this will crash for invalid ID values
+GameObject& Game::GetObject(int id) {
+    return *objects_[id];
+}
+
 int Game::AddObject(std::unique_ptr<GameObject> obj) {
     int id;
     switch (gm::GetObjectGroup(obj->objectType_)) {

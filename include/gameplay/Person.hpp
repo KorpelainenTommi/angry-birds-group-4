@@ -25,7 +25,7 @@ protected:
     inline static const float legHeight = 0.23913F * Person::totalHeight;
     inline static const float armHeight = 1.13207F * Person::legHeight;
     inline static const float torsoHeight = 1.47169F * Person::legHeight;
-    inline static const float headHeight = 2.264150F * Person::legHeight;
+    inline static const float headHeight = 2.064150F * Person::legHeight;
 
     inline static const float torsoWidth = 0.8333F * Person::torsoHeight;
     inline static const float legWidth = 0.6415F * Person::legHeight;
