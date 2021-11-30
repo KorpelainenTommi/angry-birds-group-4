@@ -16,6 +16,8 @@ public:
 
     void SetIcon(const SpriteID& icon){icon_ = icon;}
 
+    SpriteID GetIcon(){return icon_;}
+
 private:
     SpriteID icon_;
 };

@@ -36,7 +36,7 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::ui_button_pause, 4, {0, 0, 127, 127}},
     {SpriteID::ui_button_restart, 4, {128, 0, 127, 127}},
     {SpriteID::ui_button_exit, 4, {256, 0, 127, 127}},
-    {SpriteID::ui_button_resume, 4, {348, 0, 127, 127}},
+    {SpriteID::ui_button_resume, 4, {384, 0, 127, 127}},
     {SpriteID::ui_button_cancel, 4, {512, 0, 127, 127}},
     {SpriteID::ui_button_ok, 4, {640, 0, 127, 127}}
 

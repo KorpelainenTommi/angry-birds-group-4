@@ -138,6 +138,8 @@ public:
 
     void OnScoreChange(int score){};
 
+    std::shared_ptr<Game> GetGame(){return game_;}
+
     /**
      * button number is the number of the button from left starting from 1.
      */
@@ -160,8 +162,15 @@ private:
     /**
      * button number is the number of the button from left starting from 1.
      */
-    void addTopLeftButton(
+    std::shared_ptr<RoundIcon> addTopLeftButton(
         unsigned char buttonNumber, std::function<void()> callBack, const SpriteID& sprite
+    );
+
+    /**
+     * button number is the number of the button from left starting from 1.
+     */
+    std::shared_ptr<RoundIcon> addTopLeftButton(
+        unsigned char buttonNumber, const SpriteID& sprite
     );
 };
 
