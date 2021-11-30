@@ -53,13 +53,13 @@ std::shared_ptr<b2Shape> gm::CreateShapeTri() {
 }
 
 const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties = {
-    { gm::BlockShape::block_1x1, { gm::BlockShape::block_1x1, 1, 1, gm::CreateShape1x1(), {0, 0}}},
-    { gm::BlockShape::block_2x1, { gm::BlockShape::block_2x1, 2, 1, gm::CreateShape2x1(), {0, 0}}},
-    { gm::BlockShape::block_2x2, { gm::BlockShape::block_2x2, 4, 2, gm::CreateShape2x2(), {0, 0}}},        
-    { gm::BlockShape::block_ball, { gm::BlockShape::block_ball, 3.1415926F, 1, gm::CreateShapeBall(), {0, 0}}},
-    { gm::BlockShape::block_tri, { gm::BlockShape::block_tri, 0.435F, 0.87F, gm::CreateShapeTri(), {0, 0}}},
-    { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.6F, 0.2F, gm::CreateShapePlank(), {0, 0}}},
-    { gm::BlockShape::block_thickplanck, { gm::BlockShape::block_thickplanck, 1.2F, 0.4F, gm::CreateShapeThickPlank(), {0, 0}}}
+    { gm::BlockShape::block_1x1, { gm::BlockShape::block_1x1, 1, 1, gm::CreateShape1x1()}},
+    { gm::BlockShape::block_2x1, { gm::BlockShape::block_2x1, 2, 1, gm::CreateShape2x1()}},
+    { gm::BlockShape::block_2x2, { gm::BlockShape::block_2x2, 4, 2, gm::CreateShape2x2()}},
+    { gm::BlockShape::block_ball, { gm::BlockShape::block_ball, 3.1415926F, 1, gm::CreateShapeBall()}},
+    { gm::BlockShape::block_tri, { gm::BlockShape::block_tri, 0.435F, 0.87F, gm::CreateShapeTri()}},
+    { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.6F, 0.2F, gm::CreateShapePlank()}},
+    { gm::BlockShape::block_thickplanck, { gm::BlockShape::block_thickplanck, 1.2F, 0.4F, gm::CreateShapeThickPlank()}}
 };
 
 

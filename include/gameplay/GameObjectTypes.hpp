@@ -188,7 +188,6 @@ struct BlockShapeData {
     float volume;
     float height;
     std::shared_ptr<b2Shape> b2shape;
-    b2Vec2 spriteOffset;
 };
 
 struct BlockData {

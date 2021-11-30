@@ -31,15 +31,19 @@ void PhysObject::Update() {
     const b2Vec2& pos = mainBody_->GetPosition();
     x_ = pos.x;
     y_ = pos.y;
-    rot_ = mainBody_->GetAngle();
+    rot_ = ph::angToRot(mainBody_->GetAngle());
+
+    //Important! Immediately return after destroying the object. DestroyObject causes the destructor to be called (I think???) which is why
+    //any code that accesses member variables will crash if put after it
 
     //Destroy off screen objects
-    if(x_ > 0.5F * ph::fullscreenPlayArea || x_ < -0.5F * ph::fullscreenPlayArea) game_.DestroyObject(gameID_);
-    else if(y_ < 0.0F) game_.DestroyObject(gameID_);
+    bool offscreen = x_ > 0.5F * ph::fullscreenPlayArea || x_ < -0.5F * ph::fullscreenPlayArea;
+    offscreen = offscreen || (y_ < 0.0F);
 
     //Destroy zero hp objects
-    if(hp_ <= 0) game_.DestroyObject(gameID_);
-
+    bool zerohp = hp_ <= 0;
+    
+    if(offscreen || zerohp) { game_.DestroyObject(gameID_); return; }
 }
 
 void PhysObject::SetX(float x) {
@@ -58,7 +62,7 @@ void PhysObject::SetY(float y) {
 
 void PhysObject::SetRotation(float rot) {
     GameObject::SetRotation(rot);
-    mainBody_->SetTransform(mainBody_->GetPosition(), rot);
+    mainBody_->SetTransform(mainBody_->GetPosition(), ph::rotToAng(rot));
 }
 
 void PhysObject::SetPosition(float x, float y) {

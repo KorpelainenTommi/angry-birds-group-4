@@ -101,7 +101,6 @@ void Game::Update() {
 
     //Call update on objects. They will handle their own business
     
-    //It is important to increment iterator first, since Update might destroy the object causing the iterator to become invalid
     auto it = objects_.begin();
     while(it != objects_.end()) {
         (it++)->second->Update();

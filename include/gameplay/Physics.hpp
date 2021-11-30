@@ -75,6 +75,10 @@ namespace ph {
     /// Thickness of the ground. More ground than this will not be visible at the lowest camera position
     const float groundThickness = 20.0F;
 
+    /// Mass of the ground object to use in calculating damage
+    const float groundMass = 100.0F;
+
+    /// Color of the ground
     const sf::Color groundColor = {98, 122, 31};
 
     /// The magnitude of gravity
@@ -97,6 +101,19 @@ namespace ph {
 
     /// A scaling factor applied to velocity when determining damage
     const float damageScaling = 0.1F;
+
+
+    /// Total height of a Teekkari or Fuksi when standing upright
+    const float personHeight = 1.8F;
+
+    /// Mathematical constant pi
+    const float pi = 3.14159265F;
+
+    /// Convert from Box2D angle (radians) to SFML rotation (degrees)
+    inline float angToRot(float ang) { return -180 * ang / pi; }
+
+    /// Convert from SFML rotation (degrees) to Box2D angle (radians)
+    inline float rotToAng(float rot) { return -pi * rot / 180; }
 
 
     /* A tfloat is simply a float that keeps track of its last value

@@ -33,6 +33,8 @@ public:
         hp_ = std::numeric_limits<float>::infinity();
     }
 
+    virtual float GetMass() const { return ph::groundMass;}
+
     virtual void Render(const RenderSystem& r) {
         r.RenderRect(ph::groundColor, 0, -0.5F * ph::groundThickness, ph::fullscreenPlayArea, ph::groundThickness, 0, game_.GetCamera());
     }

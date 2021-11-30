@@ -19,7 +19,7 @@ public:
     virtual void Render(const RenderSystem& r);
 
     /// Do additional things when colliding
-    virtual void OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround);
+    virtual void OnCollision(b2Vec2 velocity, PhysObject& other);
 
 
 private:
