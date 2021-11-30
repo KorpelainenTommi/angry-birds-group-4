@@ -61,8 +61,7 @@ public:
     /// Render a single color oval in relative coordinates, but restrict drawing to a cropped portion
     void RenderOval(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const;
 
-
-
+    sf::Vector2f GetRelativeCoords(sf::Vector2f coords, const Camera& camera) const;
 private:
 
     //Allow Application to set these values

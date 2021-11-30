@@ -1,5 +1,6 @@
 #include <gameplay/GameObjectTypes.hpp>
 #include <gameplay/Block.hpp>
+#include <gameplay/Catapult.hpp>
 
 
 const std::unordered_map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
@@ -79,6 +80,7 @@ std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, 
 
     // Block
     if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) return std::make_unique<Block>(game, type, x, y, rot);
+    if(type == gm::GameObjectType::catapult) return std::make_unique<Catapult>(game, type, x, y, rot);
     else return std::unique_ptr<GameObject>(nullptr);
 
 

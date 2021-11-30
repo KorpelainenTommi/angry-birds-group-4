@@ -129,6 +129,27 @@ void Game::Render(const RenderSystem& r) {
 
 }
 
+bool Game::OnMouseMove(float xw, float yh) {
+    for(auto& obj : objects_) {
+        if(obj.second->OnMouseMove(xw, yh)) return true;
+    }
+    return false;
+}
+
+
+bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
+    for(auto& obj : objects_) {
+        if(obj.second->OnMouseDown(button, xw, yh)) return true;
+    }
+    return false;
+}
+bool Game::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
+    for(auto& obj : objects_) {
+        if(obj.second->OnMouseUp(button, xw, yh)) return true;
+    }
+    return false;
+}
+
 
 unsigned int Game::GetTicks() const { return time_; };
 float Game::GetTime() const { return time_ * ph::timestep; }

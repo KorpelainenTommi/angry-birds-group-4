@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <gameplay/Physics.hpp>
 #include <framework/RenderSystem.hpp>
+#include <utility>
 
 //relative rectangle
 
@@ -16,6 +18,21 @@ void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) c
     window_.draw(shape);
     window_.setView(view);
 }
+
+sf::Vector2f RenderSystem::GetRelativeCoords(sf::Vector2f coords, const Camera& camera) const {
+    sf::View view = window_.getView();
+    sf::View v = view;
+    float cxw = camera.x.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float cyw = camera.y.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    v.zoom(camera.zoom.Lerp(ALPHA));
+    v.rotate(camera.rot.Lerp(ALPHA));
+    v.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
+    coords.x = 0.5F * WW + (coords.x / ph::fullscreenPlayArea) * WW;
+    coords.y = 0.5F * HH - (coords.y / ph::fullscreenPlayArea) * WW;
+    sf::Vector2i pixels = window_.mapCoordsToPixel(coords,v);
+    return sf::Vector2f(((float)pixels.x)/WW,((float)pixels.y)/HH);
+}
+
 
 void RenderSystem::RenderRelative(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
     float xx = 0.01F * x * (x.p ? WW : HH);
