@@ -22,13 +22,11 @@ Catapult::Catapult(Game& game, gm::GameObjectType type, float x, float y, float 
 Catapult::~Catapult() {
 }
 bool Catapult::OnMouseMove(float xw, float yh) {
-    if(!isActive_) return false;
-    float angle = relativeCoords_.x < xw ? 
-        std::atan((xw-relativeCoords_.x)/(-yh+relativeCoords_.y))*180/M_PI : 
-        0;
+    if(!isActive_ || relativeCoords_.x >= xw) return false;
+    float angle = std::atan((xw-relativeCoords_.x)/(-yh+relativeCoords_.y))*180/M_PI;
+    if(relativeCoords_.y < yh) angle += 180;
+    if(angle < 15 || angle > 110) return true;
     rot_pipe_ = angle;
-    if(relativeCoords_.y < yh) rot_pipe_ += 180;
-    
     relativeDistance_ = std::sqrt((xw-relativeCoords_.x)*(xw-relativeCoords_.x) + (yh-relativeCoords_.y)*(yh-relativeCoords_.y));
     if(relativeDistance_ > 0.5) relativeDistance_ = 0.5;
     w_loadBar_ = h_pipe_*relativeDistance_*2;
