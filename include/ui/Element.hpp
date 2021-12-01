@@ -24,13 +24,21 @@ public:
 
     void SetTop(ui::pfloat top){y_ = top;}
 
+    ui::pfloat GetTopY() const {return y_;}
+
     void SetLeft(ui::pfloat left){x_ = left;}
+
+    ui::pfloat GetLeftX() const {return x_;}
 
     void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
 
     void SetHeight(ui::pfloat height){h_ = height;}
 
+    ui::pfloat GetHeight() const {return h_;}
+
     void SetWidth(ui::pfloat width){w_ = width;}
+
+    ui::pfloat GetWidth() const {return w_;}
 
     virtual bool isInside(float xw, float yh) const;
 
@@ -78,13 +86,15 @@ public:
     void SetOffsetY(const ui::pfloat& oy){offsetY_ = oy;}
     void SetOffsetY(){offsetY_ = 0 VH;}
 
-    const ui::pfloat& GetHeight() const {return h_;}
-
     virtual void SetCropArea(const ui::CropArea& a){
         cropArea_ = a;
         cropped_ = true;
     }
     virtual void SetCropArea(){cropped_ = false;}
+
+    bool IsCropped() const {return cropped_;}
+
+    ui::CropArea GetCropArea() const {return cropArea_;}
 
     float toVHFloat(const ui::pfloat&) const;
     float toVWFloat(const ui::pfloat&) const;

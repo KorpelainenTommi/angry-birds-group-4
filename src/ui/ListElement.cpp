@@ -2,7 +2,7 @@
 
 int ListElement::InsertElement(std::shared_ptr<Element> element){
     element->SetOffsetX(x_);
-    element->SetCropArea({y_, x_, h_, w_});
+    element->SetCropArea({GetTop(), GetLeft(), h_, w_});
     elements_[nextId_] = element;
     return nextId_++;
 }
@@ -17,13 +17,10 @@ std::shared_ptr<Element> ListElement::GetElement(int id){
 
 void ListElement::Render(const RenderSystem& r){
     ColoredElement::Render(r);
-    ui::CropArea ca;
-    if(cropped_) ca = ui::combineCropAreas(cropArea_, {y_, x_, h_, w_});
     float h = toVHFloat(GetTop());
     float s = toVHFloat(spacing_);
     for(const auto t: elements_){
         auto e = t.second;
-        if(cropped_) e->SetCropArea(ca);
         e->SetTop(h VH);
         h += toVHFloat(e->GetHeight()) + s;
     }
@@ -31,7 +28,7 @@ void ListElement::Render(const RenderSystem& r){
 
 void ListElement::SetCropArea(){
     cropped_ = false;
-    ui::CropArea ca = {y_, x_, h_, w_};
+    ui::CropArea ca = {GetTop(), GetLeft(), h_, w_};
     for(auto t: elements_) t.second->SetCropArea(ca);
 }
 

@@ -6,31 +6,7 @@
 #include <gameplay/TestLevel.hpp>
 
 MainMenu::MainMenu(Application& app): Screen(app){
-    list_ = std::make_shared<ListElement>(
-        (ui::toVHFloat(padding_) + ui::toVHFloat(listPadding_)) VH, 
-        padding_, 
-        (100 - 2 * ui::toVHFloat(listPadding_) - 2 * ui::toVHFloat(padding_)) VH, 
-        curListW_
-    );
-    curListW_ = calcListWidth();
-    curElementW_ = calcListElementWidth();
-    list_->SetWidth(curListW_);
-    list_->SetBackgroundColor(ui::backgroundColor2);
-    list_->SetSpacing(listSpacing_);
-    menu_.push_back(list_);
-
-    listTop_ = std::make_shared<ColoredElement>(padding_, padding_, listPadding_, curListW_);
-    listTop_->SetBackgroundColor(ui::backgroundColor2);
-    menu_.push_back(listTop_);
-
-    listBottom_ = std::make_shared<ColoredElement>(
-        (padding_.f + list_->toVHFloat(listPadding_) + list_->GetHeight().f) VH, 
-        padding_, 
-        listPadding_, 
-        curListW_
-    );
-    listBottom_->SetBackgroundColor(ui::backgroundColor2);
-    menu_.push_back(listBottom_);
+    addList();
 
     generateLevels();
 
@@ -50,9 +26,6 @@ void MainMenu::Render(const RenderSystem& r){
     //background
     r.RenderRect(ui::backgroundColor, 0 VW, 0 VH, 100 VW, 100 VH);
 
-    checkListWidth();
-    checkRightSideElementWidth();
-
     Screen::Render(r);
 }
 
@@ -61,10 +34,10 @@ ui::pfloat MainMenu::calcListWidth() const {
 }
 
 ui::pfloat MainMenu::calcListElementWidth() const {
-    return (ui::toVWFloat(curListW_) - 2 * ui::toVWFloat(listPadding_)) VW;
+    return (ui::toVWFloat(calcListWidth()) - 2 * ui::toVWFloat(listPadding_)) VW;
 }
 
-void MainMenu::checkListWidth(){
+/*void MainMenu::checkListWidth(){
     ui::pfloat w = calcListWidth();
     if(w.f == curListW_.f) return;
     curListW_ = w;
@@ -73,7 +46,7 @@ void MainMenu::checkListWidth(){
     listBottom_->SetWidth(w);
     curElementW_ = calcListElementWidth();
     for(auto e: list_->GetElements()) e.second->SetWidth(curElementW_);
-}
+}*/
 
 void MainMenu::generateLevels(){
     auto list = std::vector<Level>();//app_.GetFileManager().ListLevels();
@@ -82,7 +55,7 @@ void MainMenu::generateLevels(){
 }
 
 void MainMenu::addLevel(Level level){
-    auto e = std::make_shared<Button>(0 VH, listPadding_, 20 VH, curElementW_);
+    auto e = std::make_shared<Button>(0 VH, listPadding_, 20 VH, calcListElementWidth());
     auto w = std::weak_ptr<Button>(e);
     e->SetMouseDownHandler([level, w, this](){
         this->SelectLevel(level, w);
@@ -192,4 +165,76 @@ void MainMenu::addScoreboardMultiline(
     menu_.push_back(scoreboard_);
     scoreboard_->SetBackgroundColor(ui::backgroundColor2);
     scoreboard_->SetRelativeFontSize(ui::defaultFontSize * 1.3);
+}
+
+ui::pfloat MainMenu::calcListTop() const {
+    return (ui::toVHFloat(padding_) + ui::toVHFloat(listPadding_)) VH;
+}
+
+ui::pfloat MainMenu::calcListHeight() const {
+    return (100 - 2 * ui::toVHFloat(listPadding_) - 2 * ui::toVHFloat(padding_)) VH;
+}
+
+ui::pfloat MainMenu::calcListBottomTop() const {
+    return (100 - ui::toVHFloat(padding_) - ui::toVHFloat(listPadding_)) VH;
+}
+
+std::shared_ptr<ListElement> MainMenu::addList(){
+    auto li = std::weak_ptr<ListElement>(addListBody());
+    auto liTop = addListTop();
+    auto liBottom = addListBottom();
+
+    list_->SetWindowResizeHandler([this, li, liTop, liBottom](){
+        auto list = li.lock();
+        ui::pfloat w = this->calcListWidth();
+        list->SetTop(this->calcListTop());
+        list->SetSize(
+            w,
+            this->calcListHeight()
+        );
+        liTop->SetWidth(w);
+        liBottom->SetWidth(w);
+        liBottom->SetTop(this->calcListBottomTop());
+        ui::pfloat ew = this->calcListElementWidth();
+        ui::CropArea ca = {list->GetTop(), list->GetLeft(), list->GetHeight(), list->GetWidth()};
+        if(list->IsCropped()) ca = ui::combineCropAreas(ca, list->GetCropArea());
+        for(auto e: list->GetElements()){
+            e.second->SetWidth(ew);
+            e.second->SetCropArea(ca);
+        }
+    });
+    return list_;
+}
+
+std::shared_ptr<ListElement> MainMenu::addListBody(){
+    list_ = std::make_shared<ListElement>(
+        calcListTop(), 
+        padding_, 
+        calcListHeight(), 
+        calcListWidth()
+    );
+    list_->SetWidth(calcListWidth());
+    list_->SetBackgroundColor(ui::backgroundColor2);
+    list_->SetSpacing(listSpacing_);
+    menu_.push_back(list_);
+    return list_;
+}
+
+std::shared_ptr<ColoredElement> MainMenu::addListTop(){
+    listTop_ = std::make_shared<ColoredElement>(padding_, padding_, listPadding_, calcListWidth());
+    listTop_->SetBackgroundColor(ui::backgroundColor2);
+    menu_.push_back(listTop_);
+    return listTop_;
+}
+
+std::shared_ptr<ColoredElement> MainMenu::addListBottom(){
+    listBottom_ = std::make_shared<ColoredElement>(
+        (padding_.f + list_->toVHFloat(listPadding_) + list_->GetHeight().f) VH, 
+        padding_, 
+        listPadding_, 
+        calcListWidth()
+    );
+    listBottom_->SetBackgroundColor(ui::backgroundColor2);
+    menu_.push_back(listBottom_);
+    return listBottom_;
 }

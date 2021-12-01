@@ -20,6 +20,18 @@ public:
 
     Level GetSelectedLevel() const {return selectedLevel_.first;};
 
+    ui::pfloat calcListWidth() const;
+
+    ui::pfloat calcListElementWidth() const;
+
+    ui::pfloat calcRightSideElementWidth() const;
+
+    ui::pfloat calcListTop() const;
+
+    ui::pfloat calcListHeight() const;
+
+    ui::pfloat calcListBottomTop() const;
+
 private:
     const ui::pfloat padding_ = 2 VH;
     const ui::pfloat listPadding_ = 1 VH;
@@ -31,8 +43,6 @@ private:
     const sf::Color selectedLevelBackground_ = ui::highlightColor;
 
     std::shared_ptr<ListElement> list_;
-    ui::pfloat curListW_ = 0 VW;
-    ui::pfloat curElementW_ = 0 VW;
     std::shared_ptr<ColoredElement> listTop_;
     std::shared_ptr<ColoredElement> listBottom_;
     std::pair<Level, std::weak_ptr<Button>> selectedLevel_;
@@ -42,17 +52,9 @@ private:
     std::shared_ptr<MultilineText> scoreboard_;
     std::vector<std::shared_ptr<Button>> deactivatingButtons_;
 
-    ui::pfloat calcListWidth() const;
-
-    ui::pfloat calcListElementWidth() const;
-
-    void checkListWidth();
-
     void generateLevels();
 
     void addLevel(Level level);
-
-    ui::pfloat calcRightSideElementWidth() const;
 
     void checkRightSideElementWidth();
 
@@ -73,6 +75,14 @@ private:
     void addScoreboardMultiline(const ui::pfloat& top, const ui::pfloat& left, const ui::pfloat& height);
 
     std::string generateScoreboardText(const Level& level) const;
+
+    std::shared_ptr<ListElement> addList();
+
+    std::shared_ptr<ListElement> addListBody();
+
+    std::shared_ptr<ColoredElement> addListTop();
+
+    std::shared_ptr<ColoredElement> addListBottom();
 };
 
 #endif
