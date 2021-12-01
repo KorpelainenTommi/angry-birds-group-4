@@ -123,7 +123,7 @@ bool Application::Loop() {
     
     
     //Gray color
-    window_.clear({128, 128, 128, 255});
+    window_.clear({228, 228, 228, 255});
     renderSystem_.ALPHA = accumulatedTime / ph::timestep;
     activeScreen_->Render(renderSystem_);
     window_.display();

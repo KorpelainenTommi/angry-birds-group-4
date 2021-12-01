@@ -1,6 +1,6 @@
 #include <gameplay/GameObjectTypes.hpp>
 #include <gameplay/Block.hpp>
-#include <gameplay/Catapult.hpp>
+#include <gameplay/Cannon.hpp>
 #include <gameplay/Ground.hpp>
 
 
@@ -83,7 +83,7 @@ std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, 
 
     // Block
     if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) return std::make_unique<Block>(game, type, x, y, rot);
-    if(type == gm::GameObjectType::catapult) return std::make_unique<Catapult>(game, type, x, y, rot);
+    if(type == gm::GameObjectType::cannon) return std::make_unique<Cannon>(game, type, x, y, rot);
     if(type == gm::GameObjectType::ground_obj) return std::make_unique<Ground>(game);
     else return std::unique_ptr<GameObject>(nullptr);
 

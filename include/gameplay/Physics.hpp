@@ -102,6 +102,9 @@ namespace ph {
     /// A scaling factor applied to velocity when determining damage
     const float damageScaling = 0.1F;
 
+    /// Force of a cannon shot at maximum force
+    const float cannonMaxForce = 10000;
+
 
     /// Total height of a Teekkari or Fuksi when standing upright
     const float personHeight = 1.8F;
