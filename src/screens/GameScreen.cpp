@@ -1,4 +1,5 @@
 #include <screens/GameScreen.hpp>
+#include <ui/MessageBox.hpp>
 
 GameScreen::GameScreen(
     Application& app, const Level& initialLevel
@@ -6,7 +7,6 @@ GameScreen::GameScreen(
     level_ = initialLevel;
     addTopLeftButtons();
     timeLabel_ = addTopRightLabel(2, "time: ");
-    OnScoreChange(123456);
 }
 
 void GameScreen::Update(){
@@ -20,9 +20,7 @@ void GameScreen::Render(const RenderSystem& r){
 }
 
 void GameScreen::Exit(){
-    Confirm("Do you want to quit to main menu?", [this](bool b){
-        if(b) this->GetApplication().TransitionTo(std::make_unique<MainMenu>(this->GetApplication()));
-    });
+    app_.TransitionTo(std::make_unique<MainMenu>(this->GetApplication()));
 }
 
 void GameScreen::Restart(){
@@ -75,7 +73,9 @@ void GameScreen::addTopLeftButtons(){
         });
     }, SpriteID::ui_button_restart);
     addTopLeftButton(3, [this](){
-        this->Exit();
+        this->Confirm("Do you want to quit to main menu?", [this](bool b){
+            if(b) this->Exit();
+        });
     }, SpriteID::ui_button_exit);
 }
 
@@ -115,4 +115,19 @@ std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
 
 std::shared_ptr<TextLine> GameScreen::addScoreLabel(){
     return addTopRightLabel(1, "score: ");
+}
+
+void GameScreen::OnGameLost(){
+    std::vector<std::shared_ptr<Element>> v;
+    v.push_back(std::make_shared<MessageBox>(messageBoxHeight_, messageBoxWidth_));
+    v.push_back(generateMessageBoxButton(1, [this](){
+        this->DequeueMessage();
+        this->Restart();
+    }, SpriteID::ui_button_restart));
+    v.push_back(generateMessageBoxButton(2, [this](){
+        this->DequeueMessage();
+        this->Exit();
+    }, SpriteID::ui_button_exit));
+    v.push_back(generateConfirmText("Level failed!"));
+    messages_.push(v);
 }

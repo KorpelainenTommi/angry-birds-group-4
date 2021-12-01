@@ -134,7 +134,7 @@ public:
 
     void OnGameCompleted(int score){};
 
-    void OnGameLost(){};
+    void OnGameLost();
 
     void OnScoreChange(int score);
 
