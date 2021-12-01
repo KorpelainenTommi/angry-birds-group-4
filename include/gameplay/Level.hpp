@@ -19,6 +19,8 @@ struct Level {
     std::vector<gm::GameObjectData> objectData;
     std::vector<std::pair<std::string, int>> highscores;
     SpriteID backgroundImage = SpriteID::background_testroom;
+
+    std::vector<gm::GameObjectType> startingTeekkaris;
     
     //TODO: implement this. gm::GetObjectScore(GameObjectType) can be used to retrieve points for objects
     /// Calculate a max score by adding the point values for all objects

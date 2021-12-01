@@ -155,6 +155,13 @@ std::unique_ptr<GameObject> IDToObject(Game& game, GameObjectType type, float x,
 
 
 
+// All properties needed to spawn a unique Teekkari
+// A Teekkari can be spawned with GameObjectType as well, it will have a randomly generated TeekkariData
+
+
+struct TeekkariData {
+
+};
 
 
 // Block properties
@@ -204,8 +211,6 @@ extern const std::unordered_map<BlockMaterial, BlockMaterialData> materialProper
 
 /// Lookup for all block shapes
 extern const std::unordered_map<BlockShape, BlockShapeData> shapeProperties;
-
-
 
 
 }

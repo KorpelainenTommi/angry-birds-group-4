@@ -77,6 +77,8 @@ public:
 
     //===========================================================================
 
+    void ChooseTeekkari(){}; // TODO: implement
+
 
     /// Create all objects from this level.
     void LoadLevel(Level level);
@@ -154,7 +156,8 @@ protected:
     Camera camera_;
 
     /// List of teekkaris that can be spawned to the cannon
-    std::vector<gm::GameObjectType> teekkarisLeft_;
+    std::vector<gm::TeekkariData> teekkarisLeft_;
+    int chosenTeekkari_ = 0;
 
 
     int points_;
