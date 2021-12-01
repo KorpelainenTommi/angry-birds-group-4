@@ -1,6 +1,7 @@
 #include <gameplay/GameObjectTypes.hpp>
 #include <gameplay/Block.hpp>
 #include <gameplay/Catapult.hpp>
+#include <gameplay/Ground.hpp>
 
 
 const std::unordered_map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
@@ -53,23 +54,23 @@ std::shared_ptr<b2Shape> gm::CreateShapeTri() {
 }
 
 const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties = {
-    { gm::BlockShape::block_1x1, { gm::BlockShape::block_1x1, 1, 1, gm::CreateShape1x1(), {0, 0}}},
-    { gm::BlockShape::block_2x1, { gm::BlockShape::block_2x1, 2, 1, gm::CreateShape2x1(), {0, 0}}},
-    { gm::BlockShape::block_2x2, { gm::BlockShape::block_2x2, 4, 2, gm::CreateShape2x2(), {0, 0}}},        
-    { gm::BlockShape::block_ball, { gm::BlockShape::block_ball, 3.1415926F, 1, gm::CreateShapeBall(), {0, 0}}},
-    { gm::BlockShape::block_tri, { gm::BlockShape::block_tri, 0.435F, 0.87F, gm::CreateShapeTri(), {0, 0}}},
-    { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.6F, 0.2F, gm::CreateShapePlank(), {0, 0}}},
-    { gm::BlockShape::block_thickplanck, { gm::BlockShape::block_thickplanck, 1.2F, 0.4F, gm::CreateShapeThickPlank(), {0, 0}}}
+    { gm::BlockShape::block_1x1, { gm::BlockShape::block_1x1, 1, 1, gm::CreateShape1x1()}},
+    { gm::BlockShape::block_2x1, { gm::BlockShape::block_2x1, 2, 1, gm::CreateShape2x1()}},
+    { gm::BlockShape::block_2x2, { gm::BlockShape::block_2x2, 4, 2, gm::CreateShape2x2()}},
+    { gm::BlockShape::block_ball, { gm::BlockShape::block_ball, 3.1415926F, 1, gm::CreateShapeBall()}},
+    { gm::BlockShape::block_tri, { gm::BlockShape::block_tri, 0.435F, 0.87F, gm::CreateShapeTri()}},
+    { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.6F, 0.2F, gm::CreateShapePlank()}},
+    { gm::BlockShape::block_thickplanck, { gm::BlockShape::block_thickplanck, 1.2F, 0.4F, gm::CreateShapeThickPlank()}}
 };
 
 
 
 int gm::GetObjectGroup(gm::GameObjectType type) {
     if(type <= gm::GameObjectType::background_person3) return gm::GameObjectGroup::background;
-    else if(type < gm::GameObjectType::catapult) return gm::GameObjectGroup::block;
+    else if(type < gm::GameObjectType::cannon) return gm::GameObjectGroup::block;
     else if(type <= gm::GameObjectType::fuksi) return gm::GameObjectGroup::teekkari;
     else if(type <= gm::GameObjectType::ability_integral) return gm::GameObjectGroup::effect;
-    else return -1;
+    else return gm::GameObjectGroup::ground;
 }
 
 int GetObjectScore(gm::GameObjectType type) {
@@ -78,9 +79,12 @@ int GetObjectScore(gm::GameObjectType type) {
 
 std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, float x, float y, float rot) {
 
+    // TODO: make this cleaner, easier to do once all basic types are added
+
     // Block
     if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) return std::make_unique<Block>(game, type, x, y, rot);
     if(type == gm::GameObjectType::catapult) return std::make_unique<Catapult>(game, type, x, y, rot);
+    if(type == gm::GameObjectType::ground_obj) return std::make_unique<Ground>(game);
     else return std::unique_ptr<GameObject>(nullptr);
 
 
