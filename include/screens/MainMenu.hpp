@@ -37,8 +37,8 @@ private:
     const ui::pfloat listPadding_ = 1 VH;
     const ui::pfloat listSpacing_ = 1 VH;
     const ui::pfloat spacingY_ = 1 VH;
-    const ui::pfloat spacingX_ = 1 VW;
-    const ui::pfloat buttonHeight_ = 5 VH;
+    const ui::pfloat spacingX_ = 5 VH;//1 VW;
+    const ui::pfloat buttonHeight_ = 5 VW;//5 VH;
     const ui::pfloat scoreboardLeftPadding_ = 0.5 VW;
     const sf::Color selectedLevelBackground_ = ui::highlightColor;
 
@@ -48,7 +48,6 @@ private:
     std::pair<Level, std::weak_ptr<Button>> selectedLevel_;
     bool hasSelectedLevel_ = false;
     std::vector<std::shared_ptr<Element>> rightSideElements_;
-    ui::pfloat rightSideElementW_ = 0 VW;
     std::shared_ptr<MultilineText> scoreboard_;
     std::vector<std::shared_ptr<Button>> deactivatingButtons_;
 

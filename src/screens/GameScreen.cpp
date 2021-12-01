@@ -38,17 +38,18 @@ std::shared_ptr<RoundIcon> GameScreen::addTopLeftButton(
 std::shared_ptr<RoundIcon> GameScreen::addTopLeftButton(
     unsigned char buttonNumber, const SpriteID& sprite
 ){
-    auto b = std::make_shared<RoundIcon>(
+    auto bt = std::make_shared<RoundIcon>(
         topLeftButtonSpacing_, 
         calcTopLeftButtonLeft(buttonNumber), 
         topLeftButtonSize_ / 2,
         sprite
     );
-    b->SetWindowResizeHandler([this, b, buttonNumber](){
-        b->SetLeft(this->calcTopLeftButtonLeft(buttonNumber));
+    auto b = std::weak_ptr<RoundIcon>(bt);
+    bt->SetWindowResizeHandler([this, b, buttonNumber](){
+        b.lock()->SetLeft(this->calcTopLeftButtonLeft(buttonNumber));
     });
-    menu_.push_back(b);
-    return b;
+    menu_.push_back(bt);
+    return bt;
 }
 
 ui::pfloat GameScreen::calcTopLeftButtonLeft(unsigned char buttonNumber) const {
@@ -57,13 +58,14 @@ ui::pfloat GameScreen::calcTopLeftButtonLeft(unsigned char buttonNumber) const {
 }
 
 void GameScreen::addTopLeftButtons(){
-    auto pauseButton = addTopLeftButton(1, SpriteID::ui_button_pause);
-    pauseButton->SetMouseDownHandler([this, pauseButton](){
-        if(pauseButton->GetIcon() == SpriteID::ui_button_resume){
-            pauseButton->SetIcon(SpriteID::ui_button_pause);
+    auto pauseButton = std::weak_ptr<RoundIcon>(addTopLeftButton(1, SpriteID::ui_button_pause));
+    pauseButton.lock()->SetMouseDownHandler([this, pauseButton](){
+        auto pb = pauseButton.lock();
+        if(pb->GetIcon() == SpriteID::ui_button_resume){
+            pb->SetIcon(SpriteID::ui_button_pause);
             this->GetGame()->Resume();
         }else{
-            pauseButton->SetIcon(SpriteID::ui_button_resume);
+            pb->SetIcon(SpriteID::ui_button_resume);
             this->GetGame()->Pause();
         }
     });
@@ -106,8 +108,9 @@ std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
         topRightLabelLength_, 
         text
     );
-    e->SetWindowResizeHandler([this, e, labelNumber](){
-        e->SetPosition(
+    auto we = std::weak_ptr<TextLine>(e);
+    e->SetWindowResizeHandler([this, we, labelNumber](){
+        we.lock()->SetPosition(
             this->calcTopRightLabelLeft(), 
             this->calcTopRightLabelTop(labelNumber)
         );

@@ -99,8 +99,9 @@ std::shared_ptr<RoundIcon> Screen::generateMessageBoxButton(
         sprite
     );
     b->SetMouseDownHandler(callBack);
-    b->SetWindowResizeHandler([b, this, buttonNumber](){
-        b->SetPosition(
+    auto wb = std::weak_ptr<RoundIcon>(b);
+    b->SetWindowResizeHandler([wb, this, buttonNumber](){
+        wb.lock()->SetPosition(
             this->calcMessageBoxButtonLeft(buttonNumber),
             this->calcMessageBoxButtonTop()
         );
@@ -135,7 +136,9 @@ std::shared_ptr<TextElement> Screen::generateConfirmText(const std::string& text
     t->SetText(text);
     t->SetTextAlign(ui::TextAlign::center);
     t->SetRelativeFontSize(ui::defaultFontSize);
-    t->SetWindowResizeHandler([t, this](){
+    auto wt = std::weak_ptr<TextElement>(t);
+    t->SetWindowResizeHandler([wt, this](){
+        auto t = wt.lock();
         t->SetPosition(
             this->calcConfirmTextLeft(),
             this->calcConfirmTextTop()

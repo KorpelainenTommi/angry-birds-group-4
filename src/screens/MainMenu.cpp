@@ -87,12 +87,12 @@ ui::pfloat MainMenu::calcRightSideElementWidth() const {
     return (25.0F - ui::toVWFloat(spacingX_) / 2 - ui::toVWFloat(padding_)) VW;
 }
 
-void MainMenu::checkRightSideElementWidth(){
+/*void MainMenu::checkRightSideElementWidth(){
     ui::pfloat w = calcRightSideElementWidth();
     if(w.f == rightSideElementW_.f) return;
     rightSideElementW_ = w;
     for(auto e: rightSideElements_) e->SetWidth(w);
-}
+}*/
 
 void MainMenu::addRightSideButton(
     const std::string& text,
@@ -103,11 +103,13 @@ void MainMenu::addRightSideButton(
         (getRightSideButtonsVHFloatHeight() - ui::toVHFloat(buttonHeight_)) VH, 
         getRightSideLeft(), 
         buttonHeight_, 
-        rightSideElementW_, 
+        calcRightSideElementWidth(), 
         mouseDownHandler
     );
     e->SetText(text);
     e->SetRelativeFontSize(ui::defaultFontSize * 1.5);
+    
+
     rightSideElements_.push_back(e);
     if(deactivating){
         deactivatingButtons_.push_back(e);
@@ -139,7 +141,7 @@ float MainMenu::addScoreboardHeader(const ui::pfloat& left){
         padding_, 
         left,  
         1 VH,
-        rightSideElementW_
+        calcRightSideElementWidth()
     );
     rightSideElements_.push_back(header);
     menu_.push_back(header);
@@ -159,7 +161,7 @@ void MainMenu::addScoreboardMultiline(
         top,
         left,
         height,
-        rightSideElementW_
+        calcRightSideElementWidth()
     );
     rightSideElements_.push_back(scoreboard_);
     menu_.push_back(scoreboard_);
