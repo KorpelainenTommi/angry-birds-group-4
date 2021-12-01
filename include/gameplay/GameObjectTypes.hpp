@@ -25,6 +25,7 @@ enum GameObjectGroup {
     block,
     teekkari,
     effect,
+    ground
 };
 
 /// A unique identifier defining the type of GameObject. All GameObjects should be spawnable without extra info
@@ -103,8 +104,8 @@ enum GameObjectType {
     prop_tnt,
 
 
-    //Catapult
-    catapult,
+    //Cannon
+    cannon,
 
 
     //Teekkaris
@@ -127,7 +128,7 @@ enum GameObjectType {
     ability_integral,
 
 
-
+    ground_obj
 
 };
 
@@ -187,7 +188,6 @@ struct BlockShapeData {
     float volume;
     float height;
     std::shared_ptr<b2Shape> b2shape;
-    b2Vec2 spriteOffset;
 };
 
 struct BlockData {

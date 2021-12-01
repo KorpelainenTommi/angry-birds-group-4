@@ -13,7 +13,7 @@
 Level TestLevel() {
     Level level = {};
     level.levelName = "TESTLEVEL";
-    level.objectData.push_back({0,0,0,gm::catapult});
+    level.objectData.push_back({0,0,0,gm::cannon});
     return level;
 }
 

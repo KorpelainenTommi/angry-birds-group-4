@@ -10,15 +10,15 @@
 #include <SFML/System/Vector2.hpp>
 
 
-/// A Catapult consists of base that is a static rigidbody, and a lever that is a dynamic rigidbody
-class Catapult : public GameObject {
+/// A Cannon always aims at the mouse cursor. The launch force is based on cursor distance to the cannon
+class Cannon : public GameObject {
 public:
 
     /// Construct a catapult at this position facing right
-    Catapult(Game& game, gm::GameObjectType type, float x, float y, float rot);
+    Cannon(Game& game, gm::GameObjectType type, float x, float y, float rot);
 
     /// Destroy underlying rigidbodies with b2dWorld.DestroyBody()
-    virtual ~Catapult();
+    virtual ~Cannon();
 
     /// Update this GameObjects position to reflect the state in the box2d world
     virtual void Update();
@@ -33,7 +33,7 @@ public:
     
 private:
     bool isActive_;
-    const float sizeh_ = 4;
+    const float sizeh_ = 1;
     
     float x_base_;
     float y_base_;

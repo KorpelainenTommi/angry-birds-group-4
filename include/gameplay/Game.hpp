@@ -107,8 +107,8 @@ public:
     /// Clear all objects
     void ClearObjects();
 
-    /// Get a reference to the GameObject with this id. Returns true if it exists, false otherwise
-    bool GetObject(int id, GameObject&);
+    /// Get a reference to the GameObject with this id
+    GameObject& GetObject(int id);
 
 
     /// Get the time in ticks
@@ -124,7 +124,7 @@ public:
     b2World& GetB2World();
 
     /// Callback for Box2D contacts
-	virtual void BeginContact(b2Contact* contact);
+    virtual void BeginContact(b2Contact* contact);
 
 
     /// Get a copy of current Camera
@@ -161,9 +161,6 @@ protected:
     unsigned int time_ = 0; //Game ticks since starting => number of update calls
 
     b2World world_;
-
-    // The ground (b2Body* ground_ cannot be a smart pointer because box2d allocates and deallocates this on its own)
-    b2Body* ground_;
     
     IDCounter IDCounter_;
 
