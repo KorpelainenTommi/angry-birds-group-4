@@ -161,7 +161,7 @@ protected:
 
 
     int points_;
-    unsigned int time_; //Game ticks since starting => number of update calls
+    unsigned int time_ = 0; //Game ticks since starting => number of update calls
 
     b2World world_;
     
