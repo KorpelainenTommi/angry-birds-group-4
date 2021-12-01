@@ -10,11 +10,11 @@ MainMenu::MainMenu(Application& app): Screen(app){
 
     generateLevels();
 
-    addRightSideButton("Exit", [&app](){app.Exit();});
-    addRightSideButton("test level", [&app](){
+    addRightSideButton(1, "Exit", [&app](){app.Exit();});
+    addRightSideButton(2, "test level", [&app](){
         app.TransitionTo(std::make_unique<GameScreen>(app,TestLevel()));
     });
-    addRightSideButton("Play", [&app, this](){
+    addRightSideButton(3, "Play", [&app, this](){
         app.TransitionTo(std::make_unique<GameScreen>(app, this->GetSelectedLevel()));
     }, true);
 
@@ -36,17 +36,6 @@ ui::pfloat MainMenu::calcListWidth() const {
 ui::pfloat MainMenu::calcListElementWidth() const {
     return (ui::toVWFloat(calcListWidth()) - 2 * ui::toVWFloat(listPadding_)) VW;
 }
-
-/*void MainMenu::checkListWidth(){
-    ui::pfloat w = calcListWidth();
-    if(w.f == curListW_.f) return;
-    curListW_ = w;
-    list_->SetWidth(w);
-    listTop_->SetWidth(w);
-    listBottom_->SetWidth(w);
-    curElementW_ = calcListElementWidth();
-    for(auto e: list_->GetElements()) e.second->SetWidth(curElementW_);
-}*/
 
 void MainMenu::generateLevels(){
     auto list = std::vector<Level>();//app_.GetFileManager().ListLevels();
@@ -87,30 +76,36 @@ ui::pfloat MainMenu::calcRightSideElementWidth() const {
     return (25.0F - ui::toVWFloat(spacingX_) / 2 - ui::toVWFloat(padding_)) VW;
 }
 
-/*void MainMenu::checkRightSideElementWidth(){
-    ui::pfloat w = calcRightSideElementWidth();
-    if(w.f == rightSideElementW_.f) return;
-    rightSideElementW_ = w;
-    for(auto e: rightSideElements_) e->SetWidth(w);
-}*/
+ui::pfloat MainMenu::calcRightSideButtonTop(unsigned char buttonNumber) const {
+    float s = ui::toVHFloat(spacingY_);
+    return (100 - ui::toVHFloat(padding_) - (ui::toVHFloat(buttonHeight_) + s) * buttonNumber + s) VH;
+}
 
 void MainMenu::addRightSideButton(
+    unsigned char buttonNumber, 
     const std::string& text,
     const std::function<void()> mouseDownHandler,
     bool deactivating
 ){
+    if(buttonNumber > nofButtons_) nofButtons_ = buttonNumber;
     auto e = std::make_shared<Button>(
-        (getRightSideButtonsVHFloatHeight() - ui::toVHFloat(buttonHeight_)) VH, 
-        getRightSideLeft(), 
+        calcRightSideButtonTop(buttonNumber), 
+        calcRightSideLeft(), 
         buttonHeight_, 
         calcRightSideElementWidth(), 
         mouseDownHandler
     );
     e->SetText(text);
     e->SetRelativeFontSize(ui::defaultFontSize * 1.5);
-    
-
-    rightSideElements_.push_back(e);
+    auto we = std::weak_ptr<Button>(e);
+    e->SetWindowResizeHandler([this, we, buttonNumber](){
+        auto e = we.lock();
+        e->SetPosition(
+            this->calcRightSideLeft(),
+            this->calcRightSideButtonTop(buttonNumber)
+        );
+        e->SetWidth(this->calcRightSideElementWidth());
+    });
     if(deactivating){
         deactivatingButtons_.push_back(e);
         e->Deactivate();
@@ -118,55 +113,59 @@ void MainMenu::addRightSideButton(
     menu_.push_back(e);
 }
 
-ui::pfloat MainMenu::getRightSideLeft() const {
+ui::pfloat MainMenu::calcRightSideLeft() const {
     return (75.0F + ui::toVWFloat(spacingX_) / 2) VW;
 }
 
-float MainMenu::getRightSideButtonsVHFloatHeight() const {
-    return (100 - rightSideElements_.size() * (ui::toVHFloat(buttonHeight_) 
-        + ui::toVHFloat(spacingY_)) - ui::toVHFloat(padding_));
-}
-
 void MainMenu::addScoreboard(){
-    ui::pfloat left = getRightSideLeft();
-    float pf = ui::toVHFloat(padding_);
-    float hl = getRightSideButtonsVHFloatHeight() - pf;
-    float hh = addScoreboardHeader(left);
-    hl -= hh;
-    addScoreboardMultiline((pf + hh) VH, left, hl VH);
+    auto h = std::weak_ptr<TextElement>(addScoreboardHeader());
+    auto m = addScoreboardMultiline();
+    h.lock()->SetWindowResizeHandler([this, h, m](){
+        ui::pfloat w = this->calcRightSideElementWidth();
+        ui::pfloat l = this->calcRightSideLeft();
+        auto he = h.lock();
+        he->SetLeft(l);
+        he->SetWidth(w);
+        m->SetPosition(l, this->calcScoreboardMultilineTop());
+        m->SetSize(w, this->calcScoreboardMultilineHeight());
+    });
 }
 
-float MainMenu::addScoreboardHeader(const ui::pfloat& left){
+std::shared_ptr<TextElement> MainMenu::addScoreboardHeader(){
     auto header = std::make_shared<TextElement>(
         padding_, 
-        left,  
-        1 VH,
+        calcRightSideLeft(),  
+        scoreboardHeaderSize_,
         calcRightSideElementWidth()
     );
-    rightSideElements_.push_back(header);
     menu_.push_back(header);
     header->SetBackgroundColor(ui::backgroundColor2);
     header->SetText("Scoreboard");
     header->SetTextAlign(ui::TextAlign::center);
-    header->SetRelativeFontSize(ui::defaultFontSize * 2);
-    float hh = ui::toVHFloat(header->GetFontSize()) * 2;
-    header->SetHeight(hh VH);
-    return hh;
+    header->SetRelativeFontSize(scoreboardHeaderSize_ / 2);
+    return header;
 }
 
-void MainMenu::addScoreboardMultiline(
-    const ui::pfloat& top, const ui::pfloat& left, const ui::pfloat& height
-){
+ui::pfloat MainMenu::calcScoreboardMultilineTop() const {
+    return (ui::toVHFloat(padding_) + ui::toVHFloat(scoreboardHeaderSize_)) VH;
+}
+
+ui::pfloat MainMenu::calcScoreboardMultilineHeight() const {
+    return (100 - ui::toVHFloat(padding_) * 2 - ui::toVHFloat(scoreboardHeaderSize_) 
+        - (ui::toVHFloat(buttonHeight_) + ui::toVHFloat(spacingY_)) * nofButtons_) VH;
+}
+
+std::shared_ptr<MultilineText> MainMenu::addScoreboardMultiline(){
     scoreboard_ = std::make_shared<MultilineText>(
-        top,
-        left,
-        height,
+        calcScoreboardMultilineTop(),
+        calcRightSideLeft(),
+        calcScoreboardMultilineHeight(),
         calcRightSideElementWidth()
     );
-    rightSideElements_.push_back(scoreboard_);
     menu_.push_back(scoreboard_);
     scoreboard_->SetBackgroundColor(ui::backgroundColor2);
     scoreboard_->SetRelativeFontSize(ui::defaultFontSize * 1.3);
+    return scoreboard_;
 }
 
 ui::pfloat MainMenu::calcListTop() const {

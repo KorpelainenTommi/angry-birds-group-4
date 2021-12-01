@@ -32,15 +32,24 @@ public:
 
     ui::pfloat calcListBottomTop() const;
 
+    ui::pfloat calcRightSideButtonTop(unsigned char buttonNumber) const;
+
+    ui::pfloat calcRightSideLeft() const;
+
+    ui::pfloat calcScoreboardMultilineTop() const;
+
+    ui::pfloat calcScoreboardMultilineHeight() const;
+
 private:
     const ui::pfloat padding_ = 2 VH;
     const ui::pfloat listPadding_ = 1 VH;
     const ui::pfloat listSpacing_ = 1 VH;
     const ui::pfloat spacingY_ = 1 VH;
-    const ui::pfloat spacingX_ = 5 VH;//1 VW;
-    const ui::pfloat buttonHeight_ = 5 VW;//5 VH;
+    const ui::pfloat spacingX_ = 1 VW;
+    const ui::pfloat buttonHeight_ = 5 VH;
     const ui::pfloat scoreboardLeftPadding_ = 0.5 VW;
     const sf::Color selectedLevelBackground_ = ui::highlightColor;
+    const ui::pfloat scoreboardHeaderSize_ = ui::defaultFontSize * 4;
 
     std::shared_ptr<ListElement> list_;
     std::shared_ptr<ColoredElement> listTop_;
@@ -50,6 +59,7 @@ private:
     std::vector<std::shared_ptr<Element>> rightSideElements_;
     std::shared_ptr<MultilineText> scoreboard_;
     std::vector<std::shared_ptr<Button>> deactivatingButtons_;
+    unsigned char nofButtons_ = 0;
 
     void generateLevels();
 
@@ -58,20 +68,17 @@ private:
     void checkRightSideElementWidth();
 
     void addRightSideButton(
+        unsigned char buttonNumber, 
         const std::string& text, 
         const std::function<void()> mouseDownHandler,
         bool deactivating = false
     );
 
-    ui::pfloat getRightSideLeft() const;
-
-    float getRightSideButtonsVHFloatHeight() const;
-
     void addScoreboard();
 
-    float addScoreboardHeader(const ui::pfloat&);
+    std::shared_ptr<TextElement> addScoreboardHeader();
 
-    void addScoreboardMultiline(const ui::pfloat& top, const ui::pfloat& left, const ui::pfloat& height);
+    std::shared_ptr<MultilineText> addScoreboardMultiline();
 
     std::string generateScoreboardText(const Level& level) const;
 
