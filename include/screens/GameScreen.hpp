@@ -7,12 +7,9 @@
 #include <gameplay/Physics.hpp>
 #include <screens/Screen.hpp>
 #include <screens/MainMenu.hpp>
-<<<<<<< HEAD
 #include <ui/TextLine.hpp>
 #include <sstream>
-=======
 #include <gameplay/Person.hpp>
->>>>>>> origin
 
 class GameScreen : public Screen {
 public:
