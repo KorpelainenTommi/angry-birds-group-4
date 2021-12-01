@@ -26,14 +26,13 @@ bool Cannon::OnMouseMove(float xw, float yh) {
     if(!isActive_ || relativeCoords_.x >= xw) return false;
     float angle = std::atan((xw-relativeCoords_.x)/(-yh+relativeCoords_.y))*180/ph::pi;
     if(relativeCoords_.y < yh) angle += 180;
-    if(angle < 15 || angle > 110) return true;
-    rot_pipe_ = angle;
+    if(angle > 15 && angle < 110) rot_pipe_ = angle;
     relativeDistance_ = std::sqrt((xw-relativeCoords_.x)*(xw-relativeCoords_.x) + (yh-relativeCoords_.y)*(yh-relativeCoords_.y));
     if(relativeDistance_ > 0.5F) relativeDistance_ = 0.5F;
-    w_loadBar_ = h_pipe_*relativeDistance_*2;
+    w_loadBar_ = h_pipe_*relativeDistance_;
     float angleRad = rot_pipe_*ph::pi/180;
-    x_loadBar_ = x_pipe_ - std::cos(angleRad)*sizeh_*0.4F - std::sin(angleRad)*(0.5F-relativeDistance_)*h_pipe_;
-    y_loadBar_ = y_pipe_ + std::sin(angleRad)*sizeh_*0.4F - std::cos(angleRad)*(0.5F-relativeDistance_)*h_pipe_;
+    x_loadBar_ = x_pipe_ - std::cos(angleRad)*sizeh_*0.6F - std::sin(angleRad)*(0.1F-relativeDistance_*0.5F)*h_pipe_;
+    y_loadBar_ = y_pipe_ + std::sin(angleRad)*sizeh_*0.6F - std::cos(angleRad)*(0.1F-relativeDistance_*0.5F)*h_pipe_;
     return true;
 }
 
