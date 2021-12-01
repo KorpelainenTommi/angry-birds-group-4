@@ -27,6 +27,8 @@ public:
     virtual void Render(const RenderSystem& r);
     
     virtual bool OnMouseMove(float xw, float yh);
+    virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y);
+    virtual bool OnMouseUp(const sf::Mouse::Button& e, float x, float y);
     
     
 private:
@@ -43,8 +45,14 @@ private:
     float h_pipe_;
     float rot_pipe_;
     
-    sf::Vector2f relativeCoords_;
+    float x_loadBar_;
+    float y_loadBar_;
+    float h_loadBar_;
+    float w_loadBar_;
+    const sf::Color barColor_ = {255, 0, 0};
     
+    sf::Vector2f relativeCoords_;
+    float relativeDistance_;
 };
 
 
