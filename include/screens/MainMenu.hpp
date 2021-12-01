@@ -71,6 +71,8 @@ private:
     float addScoreboardHeader(const ui::pfloat&);
 
     void addScoreboardMultiline(const ui::pfloat& top, const ui::pfloat& left, const ui::pfloat& height);
+
+    std::string generateScoreboardText(const Level& level) const;
 };
 
 #endif

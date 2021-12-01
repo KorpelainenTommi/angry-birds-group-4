@@ -8,7 +8,6 @@
 #include <screens/Screen.hpp>
 #include <screens/MainMenu.hpp>
 #include <ui/TextLine.hpp>
-#include <sstream>
 #include <gameplay/Person.hpp>
 
 class GameScreen : public Screen {
@@ -177,13 +176,6 @@ private:
     Level level_;
     std::shared_ptr<TextLine> scoreLabel_;
     std::shared_ptr<TextLine> timeLabel_;
-
-    template <typename T>
-    std::string getString(T v) const {
-        std::stringstream ss;
-        ss << v;
-        return ss.str();
-    }
 
     /**
      * button number is the number of the button from left starting from 1.

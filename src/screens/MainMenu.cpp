@@ -101,6 +101,13 @@ void MainMenu::SelectLevel(const Level& level, std::weak_ptr<Button> button){
     }
     selectedLevel_ = {level, button};
     button.lock()->SetBackgroundColor(selectedLevelBackground_);
+    scoreboard_->SetText(generateScoreboardText(level));
+}
+
+std::string MainMenu::generateScoreboardText(const Level& level) const {
+    std::string s = "";
+    for(auto e: level.highscores) s += "  " + e.first + ' ' + getString(e.second) + '\n';
+    return s;
 }
 
 ui::pfloat MainMenu::calcRightSideElementWidth() const {

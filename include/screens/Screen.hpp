@@ -9,6 +9,7 @@
 #include <queue>
 #include <ui/RoundIcon.hpp>
 #include <ui/TextElement.hpp>
+#include <sstream>
 
 #include <iostream>
 
@@ -69,6 +70,13 @@ protected:
     std::queue<std::vector<std::shared_ptr<Element>>> messages_;
     float windowWidth_ = 0.0F;
     float windowHeight_ = 0.0F;
+
+    template <typename T>
+    std::string getString(T v) const {
+        std::stringstream ss;
+        ss << v;
+        return ss.str();
+    }
 
     /**
      * button number is the number of the button from right starting from 1.
