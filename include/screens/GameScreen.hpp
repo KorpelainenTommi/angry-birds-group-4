@@ -7,6 +7,8 @@
 #include <gameplay/Physics.hpp>
 #include <screens/Screen.hpp>
 #include <screens/MainMenu.hpp>
+#include <ui/TextLine.hpp>
+#include <sstream>
 
 class GameScreen : public Screen {
 public:
@@ -32,11 +34,9 @@ public:
         menu_.push_back(rce);
     }*/
     
-    virtual void Update() { game_->Update(); }
-    virtual void Render(const RenderSystem& r){
-        game_->Render(r);
-        Screen::Render(r);
-    }
+    virtual void Update();
+
+    virtual void Render(const RenderSystem& r);
 
     virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
         if(Screen::OnMouseDown(e, x, y)) return true;
@@ -136,18 +136,28 @@ public:
 
     void OnGameLost(){};
 
-    void OnScoreChange(int score){};
+    void OnScoreChange(int score);
 
     std::shared_ptr<Game> GetGame(){return game_;}
 
     /**
      * button number is the number of the button from left starting from 1.
      */
-    ui::pfloat calcTopLeftButtonLeft(unsigned char buttonNumber);
+    ui::pfloat calcTopLeftButtonLeft(unsigned char buttonNumber) const;
+
+    /**
+     * labelNumber is the number of the label from top starting from 1.
+     */
+    ui::pfloat calcTopRightLabelTop(unsigned char labelNumber) const;
+
+    ui::pfloat calcTopRightLabelLeft() const;
 
 private:
     const ui::pfloat topLeftButtonSpacing_ = 1 VH;
     const ui::pfloat topLeftButtonSize_ = 4 VH;
+    const ui::pfloat topRightLabelLength_ = ui::defaultFontSize * 9;
+    const ui::pfloat topRightLabelHeigth_ = ui::defaultFontSize;
+    const ui::pfloat topRightLabelSpacing_ = 1 VH;
 
     //move these to game
     //=====================================================================
@@ -158,6 +168,15 @@ private:
 
     std::shared_ptr<Game> game_;
     Level level_;
+    std::shared_ptr<TextLine> scoreLabel_;
+    std::shared_ptr<TextLine> timeLabel_;
+
+    template <typename T>
+    std::string getString(T v) const {
+        std::stringstream ss;
+        ss << v;
+        return ss.str();
+    }
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -172,6 +191,12 @@ private:
     std::shared_ptr<RoundIcon> addTopLeftButton(
         unsigned char buttonNumber, const SpriteID& sprite
     );
+
+    void addTopLeftButtons();
+
+    std::shared_ptr<TextLine> addTopRightLabel(unsigned char labelNumber, const std::string& text);
+
+    std::shared_ptr<TextLine> addScoreLabel();
 };
 
 
