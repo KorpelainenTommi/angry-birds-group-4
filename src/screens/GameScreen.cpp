@@ -68,13 +68,17 @@ void GameScreen::addTopLeftButtons(){
         }
     });
     addTopLeftButton(2, [this](){
+        this->GetGame()->Pause();
         this->Confirm("Do you want to restart the level?", [this](bool b){
             if(b) this->Restart();
+            else this->GetGame()->Resume();
         });
     }, SpriteID::ui_button_restart);
     addTopLeftButton(3, [this](){
+        this->GetGame()->Pause();
         this->Confirm("Do you want to quit to main menu?", [this](bool b){
             if(b) this->Exit();
+            else this->GetGame()->Resume();
         });
     }, SpriteID::ui_button_exit);
 }
