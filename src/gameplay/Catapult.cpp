@@ -37,6 +37,7 @@ bool Catapult::OnMouseMove(float xw, float yh) {
 }
 
 bool Catapult::OnMouseDown(const sf::Mouse::Button& e, float x, float y){
+    if(e != sf::Mouse::Button::Left) return false;
     isActive_ = true;
     OnMouseMove(x,y);
     return true;
@@ -44,7 +45,7 @@ bool Catapult::OnMouseDown(const sf::Mouse::Button& e, float x, float y){
 
 // This function will summon a teekkari when called
 bool Catapult::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
-    if(!isActive_) return false;
+    if(!isActive_ || e != sf::Mouse::Button::Left) return false;
     isActive_ = false;
     return true;
 }
