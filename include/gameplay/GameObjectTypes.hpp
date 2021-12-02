@@ -167,7 +167,7 @@ struct TeekkariData {
 // Block properties
 
 enum BlockMaterial { wood, metal, glass, plastic, rubber, concrete };
-enum BlockShape { block_1x1, block_2x1, block_2x2, block_ball, block_tri, block_plank, block_thickplanck };
+enum BlockShape { block_1x1, block_2x1, block_2x2, block_ball, block_tri, block_plank, block_thickplank };
 
 
 // Allocate and create shared base shapes for BlockShapeData to use
