@@ -52,7 +52,7 @@ private:
     const sf::Color barColor_ = {255, 0, 0};
     
     sf::Vector2f relativeCoords_;
-    float relativeDistance_;
+    float relativeDistance_ = 0;
 };
 
 

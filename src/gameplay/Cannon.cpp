@@ -15,6 +15,9 @@ Cannon::Cannon(Game& game, gm::GameObjectType type, float x, float y, float rot)
         rot_pipe_ = 45;
         h_pipe_ = sizeh_*2.5F;
         
+        float angleRad = rot_pipe_*ph::pi/180;
+        x_loadBar_ = x_pipe_ - std::cos(angleRad)*sizeh_*0.6F - std::sin(angleRad)*(0.1F-relativeDistance_*0.5F)*h_pipe_;
+        y_loadBar_ = y_pipe_ + std::sin(angleRad)*sizeh_*0.6F - std::cos(angleRad)*(0.1F-relativeDistance_*0.5F)*h_pipe_;
         w_loadBar_ = h_pipe_*0.5F;
         h_loadBar_ = sizeh_*0.1F;
         
