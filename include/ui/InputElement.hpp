@@ -74,7 +74,7 @@ private:
     sf::Color textColor_ = ui::textColor;
     ui::CropArea inputArea_;
     sf::Color caretColor_ = ui::inputCaretColor;
-    ui::pfloat caretWidth_ = ui::defaultFontSize / 8;
+    ui::pfloat caretWidth_ = ui::defaultFontSize / 4;
 
     void write(char);
 

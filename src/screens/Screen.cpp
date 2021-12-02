@@ -30,6 +30,12 @@ void Screen::setFocusedElement(const std::shared_ptr<Element>& p){
 }
 
 bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
+    if(hasFocusedElement_ && !focusedElement_.expired()){
+        auto e = focusedElement_.lock();
+        if(e->OnMouseDown(button, xw, yh)) return true;
+        e->Blur();
+        hasFocusedElement_ = false;
+    }
     if(messages_.size() > 0){
         auto m = messages_.front();
         for(std::size_t i = m.size(); i > 0;){

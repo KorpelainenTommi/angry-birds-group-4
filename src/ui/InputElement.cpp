@@ -86,7 +86,7 @@ void InputElement::updateInputRenderingValues(const RenderSystem& r){
 void InputElement::Render(const RenderSystem& r){
     if(modified_) updateInputRenderingValues(r);
     ColoredElement::Render(r);
-    float l = GetLeft();
+    float l = ui::toVHFloat(GetLeft());
     ui::pfloat t = (ui::toVHFloat(GetTop()) + (ui::toVHFloat(h_) - ui::toVHFloat(fontSize_)) / 2) VH;
     r.RenderText(
         value_, 
