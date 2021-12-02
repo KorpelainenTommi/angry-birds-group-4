@@ -14,16 +14,10 @@
 
 /// A camera can be moved and zoomed, and can be used to translate object positions
 struct Camera {
-    ph::tfloat x = 0;
-    ph::tfloat y = 0;
-    ph::tfloat rot = 0;
-    ph::tfloat zoom = 1;
-    void Record() {
-        x.Record();
-        y.Record();
-        rot.Record();
-        zoom.Record();
-    }
+    float x = 0;
+    float y = 0;
+    float rot = 0;
+    float zoom = 1;
 
     /// Set camera at fullscreen zoom, and at the center of the world
     void SetFullscreen() {
@@ -31,7 +25,6 @@ struct Camera {
         y = 0.5F * ph::fullscreenPlayArea / ui::aspectRatio - ph::groundThickness;
         rot = 0;
         zoom = 1;
-        Record();
     }
 };
 

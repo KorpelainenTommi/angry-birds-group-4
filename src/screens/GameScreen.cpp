@@ -29,8 +29,7 @@ void GameScreen::Exit(){
 }
 
 void GameScreen::Restart(){
-    //TODO:
-    //game_.Restart();
+    game_.Restart();
 }
 
 std::shared_ptr<RoundIcon> GameScreen::addTopLeftButton(

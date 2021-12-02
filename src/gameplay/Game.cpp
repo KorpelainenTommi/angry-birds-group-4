@@ -8,30 +8,22 @@
 #include <iostream>
 
 Game::Game(GameScreen& gameScreen) : screen_(gameScreen), world_({0, -ph::gravity}) {
-
-    //Create the ground
-    CreateObject(gm::GameObjectType::ground_obj);
-
     //Listen to contacts
     world_.SetContactListener(this);
 
-    //Reset camera to fullscreen
-    camera_.SetFullscreen();
-    camera_.zoom = 0.6F;
-    camera_.Record();
+    Restart();
 
 }
 
 Game::Game(GameScreen& gameScreen, Level level) : Game(gameScreen) {
-    LoadLevel(level);
+    level_ = level;
+    Restart();
 }
 
 
 void Game::LoadLevel(Level level) {
     level_  = level;
     ClearObjects();
-    if(level.levelMode != LevelMode::endless) teekkarisLeft_.clear();
-    ResetCamera();
     IDCounter_ = {};
     CreateObject(gm::GameObjectType::ground_obj);
     for(const auto& objectdata : level.objectData) {
@@ -97,12 +89,10 @@ void Game::BeginContact(b2Contact* contact) {
 }
 
 void Game::Update() {
-
+    if(isPaused_) return;
     //Increment tick count
     time_++;
 
-    //Record previous camera pos
-    camera_.Record();
     world_.Step(ph::timestep, ph::velocityIters, ph::positionIters);
 
     //Call update on objects. They will handle their own business
@@ -151,7 +141,12 @@ float Game::GetTime() const { return time_ * ph::timestep; }
 
 const Camera& Game::GetCamera() const { return camera_; }
 
-void Game::ResetCamera() { camera_.SetFullscreen(); }
+void Game::ResetCamera() { 
+    camera_.SetFullscreen();
+    camera_.zoom = 0.6F;
+    camera_.y = 5;
+}
+
 void Game::SetCameraPos(float x, float y) { camera_.x = x; camera_.y = y; }
 void Game::SetCameraZoom(float zoom) { camera_.zoom = zoom; }
 void Game::SetCameraRot(float rot) { camera_.rot = rot; }
@@ -160,5 +155,24 @@ void Game::SetCameraRot(float rot) { camera_.rot = rot; }
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
 
+bool Game::IsPaused() const { return isPaused_; }
 
+void Game::Pause() {
 
+    for(const auto& obj : objects_) obj.second->Record();
+    isPaused_ = true;
+}
+
+void Game::Resume() {
+    isPaused_ = false;
+}
+
+void Game::Restart() {
+    ResetCamera();
+    teekkarisLeft_.clear();
+    isPaused_ = false;
+    time_ = 0;
+    points_ = 0;
+    chosenTeekkari_ = 0;
+    LoadLevel(level_);
+}

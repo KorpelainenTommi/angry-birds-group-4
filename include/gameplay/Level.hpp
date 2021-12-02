@@ -13,7 +13,7 @@ enum LevelMode { normal, time_trial, endless };
 /// A struct defining the initial state of all objects at the start of a game
 struct Level {
 
-    std::string levelName;
+    std::string levelName = "";
     std::string levelPath = "";
     LevelMode levelMode = LevelMode::normal;
     std::vector<gm::GameObjectData> objectData;

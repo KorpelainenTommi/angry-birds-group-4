@@ -9,10 +9,10 @@
 void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) const {
     sf::View view = window_.getView();
     sf::View v = view;
-    float cxw = camera.x.Lerp(ALPHA) / ph::fullscreenPlayArea;
-    float cyw = camera.y.Lerp(ALPHA) / ph::fullscreenPlayArea;
-    v.zoom(camera.zoom.Lerp(ALPHA));
-    v.rotate(camera.rot.Lerp(ALPHA));
+    float cxw = camera.x / ph::fullscreenPlayArea;
+    float cyw = camera.y / ph::fullscreenPlayArea;
+    v.zoom(camera.zoom);
+    v.rotate(camera.rot);
     v.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
     window_.setView(v);
     window_.draw(shape);
@@ -22,10 +22,10 @@ void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) c
 sf::Vector2f RenderSystem::GetRelativeCoords(sf::Vector2f coords, const Camera& camera) const {
     sf::View view = window_.getView();
     sf::View v = view;
-    float cxw = camera.x.Lerp(ALPHA) / ph::fullscreenPlayArea;
-    float cyw = camera.y.Lerp(ALPHA) / ph::fullscreenPlayArea;
-    v.zoom(camera.zoom.Lerp(ALPHA));
-    v.rotate(camera.rot.Lerp(ALPHA));
+    float cxw = camera.x / ph::fullscreenPlayArea;
+    float cyw = camera.y / ph::fullscreenPlayArea;
+    v.zoom(camera.zoom);
+    v.rotate(camera.rot);
     v.setCenter(0.5F * WW + cxw * WW, 0.5F * HH - cyw * WW);
     coords.x = 0.5F * WW + (coords.x / ph::fullscreenPlayArea) * WW;
     coords.y = 0.5F * HH - (coords.y / ph::fullscreenPlayArea) * WW;

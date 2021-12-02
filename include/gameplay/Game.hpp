@@ -70,10 +70,12 @@ public:
     //Call also GameScreen::OnScoreChange whenever the score changes.
 
     /// UI uses this to pause the physics simulation
-    void Pause(){}; //TODO: implement this properly
+    void Pause();
 
     /// UI uses this to continue physics simulation after pausing it
-    void Resume(){}; //TODO: implement this properly
+    void Resume();
+
+    void Restart();
 
     //===========================================================================
 
@@ -119,6 +121,9 @@ public:
     /// Get the time in seconds
     float GetTime() const;
 
+    /// Is the game paused?
+    bool IsPaused() const;
+
     /// Get a reference to an AudioSystem to play sounds
     AudioSystem& GetAudioSystem() const;
 
@@ -159,7 +164,7 @@ protected:
     std::vector<gm::TeekkariData> teekkarisLeft_;
     int chosenTeekkari_ = 0;
 
-
+    bool isPaused_ = false;
     int points_;
     unsigned int time_ = 0; //Game ticks since starting => number of update calls
 
