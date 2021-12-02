@@ -20,9 +20,47 @@ const std::unordered_map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
     { gm::GameObjectType::block_glass2x1, { SpriteID::glass_block2x1, gm::BlockMaterial::glass, gm::BlockShape::block_2x1 } },
     { gm::GameObjectType::block_plastic2x1, { SpriteID::plastic_block2x1, gm::BlockMaterial::plastic, gm::BlockShape::block_2x1 } },
     { gm::GameObjectType::block_rubber2x1, { SpriteID::rubber_block2x1, gm::BlockMaterial::rubber, gm::BlockShape::block_2x1 } },
-    { gm::GameObjectType::block_concrete2x1, { SpriteID::concrete_block2x1, gm::BlockMaterial::concrete, gm::BlockShape::block_2x1 } }
+    { gm::GameObjectType::block_concrete2x1, { SpriteID::concrete_block2x1, gm::BlockMaterial::concrete, gm::BlockShape::block_2x1 } },
 
-    //More to come
+    //2x2
+    { gm::GameObjectType::block_wood2x2, { SpriteID::wood_block2x2, gm::BlockMaterial::wood, gm::BlockShape::block_2x2 } },
+    { gm::GameObjectType::block_metal2x2, { SpriteID::metal_block2x2, gm::BlockMaterial::metal, gm::BlockShape::block_2x2 } },
+    { gm::GameObjectType::block_glass2x2, { SpriteID::glass_block2x2, gm::BlockMaterial::glass, gm::BlockShape::block_2x2 } },
+    { gm::GameObjectType::block_plastic2x2, { SpriteID::plastic_block2x2, gm::BlockMaterial::plastic, gm::BlockShape::block_2x2 } },
+    { gm::GameObjectType::block_rubber2x2, { SpriteID::rubber_block2x2, gm::BlockMaterial::rubber, gm::BlockShape::block_2x2 } },
+    { gm::GameObjectType::block_concrete2x2, { SpriteID::concrete_block2x2, gm::BlockMaterial::concrete, gm::BlockShape::block_2x2 } },
+
+    //Ball
+    { gm::GameObjectType::ball_wood, { SpriteID::wood_ball, gm::BlockMaterial::wood, gm::BlockShape::block_ball } },
+    { gm::GameObjectType::ball_metal, { SpriteID::metal_ball, gm::BlockMaterial::metal, gm::BlockShape::block_ball } },
+    { gm::GameObjectType::ball_glass, { SpriteID::glass_ball, gm::BlockMaterial::glass, gm::BlockShape::block_ball } },
+    { gm::GameObjectType::ball_plastic, { SpriteID::plastic_ball, gm::BlockMaterial::plastic, gm::BlockShape::block_ball } },
+    { gm::GameObjectType::ball_rubber, { SpriteID::rubber_ball, gm::BlockMaterial::rubber, gm::BlockShape::block_ball } },
+    { gm::GameObjectType::ball_concrete, { SpriteID::concrete_ball, gm::BlockMaterial::concrete, gm::BlockShape::block_ball } },
+
+    //Tri
+    { gm::GameObjectType::block_woodTri, { SpriteID::wood_blockTri, gm::BlockMaterial::wood, gm::BlockShape::block_tri } },
+    { gm::GameObjectType::block_metalTri, { SpriteID::metal_blockTri, gm::BlockMaterial::metal, gm::BlockShape::block_tri } },
+    { gm::GameObjectType::block_glassTri, { SpriteID::glass_blockTri, gm::BlockMaterial::glass, gm::BlockShape::block_tri } },
+    { gm::GameObjectType::block_plasticTri, { SpriteID::plastic_blockTri, gm::BlockMaterial::plastic, gm::BlockShape::block_tri } },
+    { gm::GameObjectType::block_rubberTri, { SpriteID::rubber_blockTri, gm::BlockMaterial::rubber, gm::BlockShape::block_tri } },
+    { gm::GameObjectType::block_concreteTri, { SpriteID::concrete_blockTri, gm::BlockMaterial::concrete, gm::BlockShape::block_tri } },
+
+    //Plank
+    { gm::GameObjectType::plank_wood, { SpriteID::wood_plank, gm::BlockMaterial::wood, gm::BlockShape::block_plank } },
+    { gm::GameObjectType::plank_metal, { SpriteID::metal_plank, gm::BlockMaterial::metal, gm::BlockShape::block_plank } },
+    { gm::GameObjectType::plank_glass, { SpriteID::glass_plank, gm::BlockMaterial::glass, gm::BlockShape::block_plank } },
+    { gm::GameObjectType::plank_plastic, { SpriteID::plastic_plank, gm::BlockMaterial::plastic, gm::BlockShape::block_plank } },
+    { gm::GameObjectType::plank_rubber, { SpriteID::rubber_plank, gm::BlockMaterial::rubber, gm::BlockShape::block_plank } },
+    { gm::GameObjectType::plank_concrete, { SpriteID::concrete_plank, gm::BlockMaterial::concrete, gm::BlockShape::block_plank } },
+
+    //ThickPlank
+    { gm::GameObjectType::thickplank_wood, { SpriteID::wood_thickplank, gm::BlockMaterial::wood, gm::BlockShape::block_thickplank } },
+    { gm::GameObjectType::thickplank_metal, { SpriteID::metal_thickplank, gm::BlockMaterial::metal, gm::BlockShape::block_thickplank } },
+    { gm::GameObjectType::thickplank_glass, { SpriteID::glass_thickplank, gm::BlockMaterial::glass, gm::BlockShape::block_thickplank } },
+    { gm::GameObjectType::thickplank_plastic, { SpriteID::plastic_thickplank, gm::BlockMaterial::plastic, gm::BlockShape::block_thickplank } },
+    { gm::GameObjectType::thickplank_rubber, { SpriteID::rubber_thickplank, gm::BlockMaterial::rubber, gm::BlockShape::block_thickplank } },
+    { gm::GameObjectType::thickplank_concrete, { SpriteID::concrete_thickplank, gm::BlockMaterial::concrete, gm::BlockShape::block_thickplank } }
 
 };
 
@@ -60,7 +98,7 @@ const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties
     { gm::BlockShape::block_ball, { gm::BlockShape::block_ball, 3.1415926F, 1, gm::CreateShapeBall()}},
     { gm::BlockShape::block_tri, { gm::BlockShape::block_tri, 0.435F, 0.87F, gm::CreateShapeTri()}},
     { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.6F, 0.2F, gm::CreateShapePlank()}},
-    { gm::BlockShape::block_thickplanck, { gm::BlockShape::block_thickplanck, 1.2F, 0.4F, gm::CreateShapeThickPlank()}}
+    { gm::BlockShape::block_thickplank, { gm::BlockShape::block_thickplank, 1.2F, 0.4F, gm::CreateShapeThickPlank()}}
 };
 
 

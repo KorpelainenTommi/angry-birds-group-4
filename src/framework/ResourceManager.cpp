@@ -22,6 +22,9 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::wood_block1x1, 0, {0, 0, 128, 128}},
     {SpriteID::metal_block1x1, 0, {128, 0, 128, 128}},
     {SpriteID::glass_block1x1, 0, {256, 0, 128, 128}},
+    {SpriteID::plastic_block1x1, 0, {384, 0, 128, 128}},
+    {SpriteID::rubber_block1x1, 0, {512, 0, 128, 128}},
+    {SpriteID::concrete_block1x1, 0, {640, 0, 128, 128}},
 
 
     {SpriteID::arm_lgray, 1, {0, 396, 68, 120}},
