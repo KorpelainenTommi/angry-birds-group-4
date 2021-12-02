@@ -76,7 +76,7 @@ protected:
     std::queue<std::vector<std::shared_ptr<Element>>> messages_;
     float windowWidth_ = 0.0F;
     float windowHeight_ = 0.0F;
-    std::weak_ptr<Element> focusedElement_;
+    std::shared_ptr<Element> focusedElement_;
     bool hasFocusedElement_ = false;
 
     template <typename T>

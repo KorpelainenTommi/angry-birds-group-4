@@ -11,11 +11,12 @@ bool Element::isInside(float xw, float yh) const {
 };
 
 bool Element::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    if((mouseDownHandler_ != NULL || canBeFocused_) && isInside(xw, yh)){
-        if(mouseDownHandler_ != NULL) mouseDownHandler_();
-        return true;
-    }
+    if((mouseDownHandler_ != NULL || canBeFocused_) && isInside(xw, yh)) return true;
     return false;
+}
+
+void Element::ExecuteOnMouseDown(){
+    if(mouseDownHandler_ != NULL) mouseDownHandler_();
 }
 
 bool Element::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh){
@@ -61,7 +62,7 @@ void Element::Blur(){
 }
 
 void Element::Focus(){
-    if(!focused_){
+    if(canBeFocused_ && !focused_){
         focused_ = true;
         if(focusChangeHandler_ != NULL) focusChangeHandler_(true);
     }

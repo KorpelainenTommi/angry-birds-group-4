@@ -6,7 +6,6 @@ void MessageBox::Render(const RenderSystem& r){
 }
 
 bool MessageBox::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    Element::OnMouseDown(button, xw, yh);
     return true;
 }
 

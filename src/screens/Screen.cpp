@@ -23,33 +23,30 @@ void Screen::Render(const RenderSystem& r){
 }
 
 void Screen::setFocusedElement(const std::shared_ptr<Element>& p){
-    if(hasFocusedElement_ && !focusedElement_.expired()) focusedElement_.lock()->Blur();
-    else hasFocusedElement_ = true;
+    hasFocusedElement_ = true;
     p->Focus();
-    focusedElement_ = std::weak_ptr<Element>(p);
+    focusedElement_ = p;
 }
 
 bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    if(hasFocusedElement_ && !focusedElement_.expired()){
-        auto e = focusedElement_.lock();
-        if(e->OnMouseDown(button, xw, yh)) return true;
-        e->Blur();
+    if(hasFocusedElement_){
         hasFocusedElement_ = false;
+        focusedElement_->Blur();
     }
     if(messages_.size() > 0){
         auto m = messages_.front();
         for(std::size_t i = m.size(); i > 0;){
-            auto e = std::weak_ptr<Element>(m[--i]);
-            if(m[i]->OnMouseDown(button, xw, yh)){
-                if(!e.expired()) setFocusedElement(e.lock());
+            if(m[--i]->OnMouseDown(button, xw, yh)){
+                setFocusedElement(m[i]);
+                m[i]->ExecuteOnMouseDown();
                 return true;
             }
         }
     }
     for(std::size_t i = menu_.size(); i > 0;){
-        auto e = std::weak_ptr<Element>(menu_[--i]);
-        if(menu_[i]->OnMouseDown(button, xw, yh)){
-            if(!e.expired()) setFocusedElement(e.lock());
+        if(menu_[--i]->OnMouseDown(button, xw, yh)){
+            setFocusedElement(menu_[i]);
+            menu_[i]->ExecuteOnMouseDown();
             return true;
         }
     }
@@ -84,18 +81,18 @@ bool Screen::OnMouseScroll(float delta, float xw, float yh){
 }
 
 bool Screen::OnTextEntered(const sf::Event::TextEvent& e){
-    if(!hasFocusedElement_ || focusedElement_.expired()) return false;
-    return focusedElement_.lock()->OnTextEntered(e);
+    if(!hasFocusedElement_) return false;
+    return focusedElement_->OnTextEntered(e);
 }
 
 bool Screen::OnKeyDown(const sf::Event::KeyEvent& e){
-    if(!hasFocusedElement_ || focusedElement_.expired()) return false;
-    return focusedElement_.lock()->OnKeyDown(e);
+    if(!hasFocusedElement_) return false;
+    return focusedElement_->OnKeyDown(e);
 }
 
 bool Screen::OnKeyUp(const sf::Event::KeyEvent& e){
-    if(!hasFocusedElement_ || focusedElement_.expired()) return false;
-    return focusedElement_.lock()->OnKeyUp(e);
+    if(!hasFocusedElement_) return false;
+    return focusedElement_->OnKeyUp(e);
 }
 
 void Screen::Confirm(std::string text, const std::function<void(bool)> callBack){
