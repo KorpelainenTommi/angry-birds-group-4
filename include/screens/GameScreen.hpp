@@ -40,7 +40,7 @@ public:
 
     virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
         if(Screen::OnMouseDown(e, x, y)) return true;
-        if(game_->OnMouseDown(e, x, y)) return true;
+        if(game_.OnMouseDown(e, x, y)) return true;
 
         //move this code to game
         //=====================================================================
@@ -53,7 +53,7 @@ public:
             return true;
         }
         if(e == sf::Mouse::Button::Left) {
-            const Camera& cam = game_->GetCamera();
+            const Camera& cam = game_.GetCamera();
             float cw = ph::fullscreenPlayArea;
             float ch = cw / ui::aspectRatio;
             float xPos = cam.x  + (x * cw - 0.5F * cw ) * cam.zoom;
@@ -67,12 +67,12 @@ public:
             //game_.CreateObject(gm::GameObjectType::block_wood1x1, xPos, yPos);
         }
         if(e == sf::Mouse::Button::Middle) {
-            const Camera& cam = game_->GetCamera();
+            const Camera& cam = game_.GetCamera();
             float cw = ph::fullscreenPlayArea;
             float ch = cw / ui::aspectRatio;
             float xPos = cam.x  + (x * cw - 0.5F * cw ) * cam.zoom;
             float yPos = cam.y + ((1.0F - y) * ch - 0.5F * ch) * cam.zoom;
-            game_->CreateObject(gm::GameObjectType::block_metal1x1, xPos, yPos);
+            game_.CreateObject(gm::GameObjectType::block_metal1x1, xPos, yPos);
         }
         //=====================================================================
 
@@ -81,7 +81,7 @@ public:
 
     virtual bool OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
         if(Screen::OnMouseUp(e, x, y)) return true;
-        if(game_->OnMouseUp(e, x, y)) return true;
+        if(game_.OnMouseUp(e, x, y)) return true;
 
         //move this code to game
         //=====================================================================
@@ -95,15 +95,15 @@ public:
 
     virtual bool OnMouseScroll(float delta, float xw, float yh) {
         if(Screen::OnMouseScroll(delta, xw, yh)) return true;
-        if(game_->OnMouseScroll(delta, xw, yh)) return true;
+        if(game_.OnMouseScroll(delta, xw, yh)) return true;
 
         //move this code to game
         //=====================================================================
-        float zoom = game_->GetCamera().zoom;
+        float zoom = game_.GetCamera().zoom;
         zoom -= delta * 0.1F;
-        if(zoom <= 0.1F) game_->SetCameraZoom(0.1F);
-        else if(zoom > 1.0F) game_->SetCameraZoom(1.0F);
-        else game_->SetCameraZoom(zoom);
+        if(zoom <= 0.1F) game_.SetCameraZoom(0.1F);
+        else if(zoom > 1.0F) game_.SetCameraZoom(1.0F);
+        else game_.SetCameraZoom(zoom);
         //=====================================================================
 
         return true;
@@ -113,17 +113,17 @@ public:
 
     virtual bool OnMouseMove(float x, float y) {
         bool b = Screen::OnMouseMove(x, y);
-        b = game_->OnMouseMove(x, y) || b;
+        b = game_.OnMouseMove(x, y) || b;
 
         //move this code to game
         //=====================================================================
         if(mDown) {
             mouseX = x;
             mouseY = y;
-            Camera c = game_->GetCamera();
+            Camera c = game_.GetCamera();
             c.x -= ph::fullscreenPlayArea * c.zoom * (mouseX.f1 - mouseX.f0);
             c.y += ph::fullscreenPlayArea * c.zoom * (mouseY.f1 - mouseY.f0);
-            game_->SetCameraPos(c.x, c.y);
+            game_.SetCameraPos(c.x, c.y);
             mouseX.Record();
             mouseY.Record();
         }
@@ -144,7 +144,7 @@ public:
 
     void OnScoreChange(int score);
 
-    std::shared_ptr<Game> GetGame(){return game_;}
+    Game& GetGame(){return game_;}
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -172,7 +172,7 @@ private:
     ph::tfloat mouseY;
     //=====================================================================
 
-    std::shared_ptr<Game> game_;
+    Game game_;
     Level level_;
     std::shared_ptr<TextLine> scoreLabel_;
     std::shared_ptr<TextLine> timeLabel_;

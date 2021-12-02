@@ -5,7 +5,7 @@
 
 GameScreen::GameScreen(
     Application& app, const Level& initialLevel
-): Screen(app), scoreLabel_(addScoreLabel()), game_(std::make_shared<Game>(*this, initialLevel)){
+): Screen(app), scoreLabel_(addScoreLabel()), game_(Game(*this, initialLevel)){
     level_ = initialLevel;
     addTopLeftButtons();
     timeLabel_ = addTopRightLabel(2, "time: ");
@@ -15,12 +15,12 @@ GameScreen::GameScreen(
 }
 
 void GameScreen::Update(){
-    game_->Update();
-    timeLabel_->SetText("time: " + getString((int)(game_->GetTime())));
+    game_.Update();
+    timeLabel_->SetText("time: " + getString((int)(game_.GetTime())));
 }
 
 void GameScreen::Render(const RenderSystem& r){
-    game_->Render(r);
+    game_.Render(r);
     Screen::Render(r);
 }
 
@@ -29,7 +29,8 @@ void GameScreen::Exit(){
 }
 
 void GameScreen::Restart(){
-    game_ = std::make_shared<Game>(*this, level_);
+    //TODO:
+    //game_.Restart();
 }
 
 std::shared_ptr<RoundIcon> GameScreen::addTopLeftButton(
@@ -68,24 +69,24 @@ void GameScreen::addTopLeftButtons(){
         auto pb = pauseButton.lock();
         if(pb->GetIcon() == SpriteID::ui_button_resume){
             pb->SetIcon(SpriteID::ui_button_pause);
-            this->GetGame()->Resume();
+            this->GetGame().Resume();
         }else{
             pb->SetIcon(SpriteID::ui_button_resume);
-            this->GetGame()->Pause();
+            this->GetGame().Pause();
         }
     });
     addTopLeftButton(2, [this](){
-        this->GetGame()->Pause();
+        this->GetGame().Pause();
         this->Confirm("Do you want to restart the level?", [this](bool b){
             if(b) this->Restart();
-            else this->GetGame()->Resume();
+            else this->GetGame().Resume();
         });
     }, SpriteID::ui_button_restart);
     addTopLeftButton(3, [this](){
-        this->GetGame()->Pause();
+        this->GetGame().Pause();
         this->Confirm("Do you want to quit to main menu?", [this](bool b){
             if(b) this->Exit();
-            else this->GetGame()->Resume();
+            else this->GetGame().Resume();
         });
     }, SpriteID::ui_button_exit);
 }
