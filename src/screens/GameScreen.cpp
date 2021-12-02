@@ -1,12 +1,17 @@
 #include <screens/GameScreen.hpp>
 #include <ui/MessageBox.hpp>
 
+#include <ui/InputElement.hpp>
+
 GameScreen::GameScreen(
     Application& app, const Level& initialLevel
 ): Screen(app), scoreLabel_(addScoreLabel()), game_(std::make_shared<Game>(*this, initialLevel)){
     level_ = initialLevel;
     addTopLeftButtons();
     timeLabel_ = addTopRightLabel(2, "time: ");
+    auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
+    input->SetFontSize(ui::defaultFontSize * 4);
+    menu_.push_back(input);
 }
 
 void GameScreen::Update(){

@@ -20,23 +20,23 @@ public:
 
     virtual void Render(const RenderSystem&) = 0;
 
-    void SetPosition(ui::pfloat x, ui::pfloat y) { x_ = x; y_ = y; }
+    virtual void SetPosition(ui::pfloat x, ui::pfloat y) { x_ = x; y_ = y; }
 
-    void SetTop(ui::pfloat top){y_ = top;}
+    virtual void SetTop(ui::pfloat top){y_ = top;}
 
     ui::pfloat GetTopY() const {return y_;}
 
-    void SetLeft(ui::pfloat left){x_ = left;}
+    virtual void SetLeft(ui::pfloat left){x_ = left;}
 
     ui::pfloat GetLeftX() const {return x_;}
 
-    void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
+    virtual void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
 
-    void SetHeight(ui::pfloat height){h_ = height;}
+    virtual void SetHeight(ui::pfloat height){h_ = height;}
 
     ui::pfloat GetHeight() const {return h_;}
 
-    void SetWidth(ui::pfloat width){w_ = width;}
+    virtual void SetWidth(ui::pfloat width){w_ = width;}
 
     ui::pfloat GetWidth() const {return w_;}
 
@@ -50,7 +50,13 @@ public:
 
     virtual bool OnMouseScroll(float delta, float xw, float yh);
 
-    void OnWindowResize();
+    virtual bool OnKeyDown(const sf::Event::KeyEvent&){return false;}
+
+    virtual bool OnKeyUp(const sf::Event::KeyEvent&){return false;}
+
+    virtual bool OnTextEntered(const sf::Event::TextEvent&){return false;}
+
+    virtual void OnWindowResize();
 
     void SetMouseDownHandler(const std::function<void()> f){mouseDownHandler_ = f;}
     void SetMouseDownHandler(){mouseDownHandler_ = NULL;}
@@ -76,15 +82,15 @@ public:
     void SetWindowResizeHandler(const std::function<void()> f){windowResizeHandler_ = f;}
     void SetWindowResizeHandler(){windowResizeHandler_ = NULL;}
 
-    void Blur();
+    virtual void Blur();
 
-    void Focus();
+    virtual void Focus();
 
-    void SetOffsetX(const ui::pfloat& ox){offsetX_ = ox;}
-    void SetOffsetX(){offsetX_ = 0 VW;}
+    virtual void SetOffsetX(const ui::pfloat& ox){offsetX_ = ox;}
+    virtual void SetOffsetX(){offsetX_ = 0 VW;}
 
-    void SetOffsetY(const ui::pfloat& oy){offsetY_ = oy;}
-    void SetOffsetY(){offsetY_ = 0 VH;}
+    virtual void SetOffsetY(const ui::pfloat& oy){offsetY_ = oy;}
+    virtual void SetOffsetY(){offsetY_ = 0 VH;}
 
     virtual void SetCropArea(const ui::CropArea& a){
         cropArea_ = a;
@@ -112,6 +118,7 @@ protected:
     ui::pfloat h_;
     ui::pfloat offsetX_ = 0 VW;
     ui::pfloat offsetY_ = 0 VH;
+    bool canBeFocused_ = false;
 
     std::function<void()> mouseDownHandler_ = NULL;
     std::function<void()> mouseUpHandler_ = NULL;
