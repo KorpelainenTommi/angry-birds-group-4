@@ -189,3 +189,50 @@ All basic systems are finished, now it's time to start creating game features an
 3. Ilari Tulkki: Creating GameScreen UI, and level loading
 4. Joonas Palmulaakso: Loading and saving level files
 
+
+
+
+# Meeting 2.12.2021 15::00
+
+**Participants**: 
+Tommi Korpelainen
+Aleksi Rintanen
+Ilari Tulkki
+Joonas Palmulaakso
+
+## Summary of works
+1. Tommi Korpelainen
+   
+   Implemented basic teekkari ragdoll, which will be inherited by fuksis and special teekkaris
+
+2. Aleksi Rintanen
+
+   Created the cannon
+
+3. Ilari Tulkki
+ 
+   Created even more fancy UI elements
+   
+4. Joonas Palmulaakso
+
+   Implemented loading and saving levels
+
+
+## Challenges
+
+Minor bugs here and there. Also deadline for the project is just round the corner.
+
+## Actions
+1. Tommi Korpelainen is going to start creating special teekkaris and fuksis
+2. Aleksi Rintanen is going to focus on level editor and test levels
+3. Ilari Tulkki is going to continue work on UI.
+4. Joonas Palmulaakso is going to work with effects and explosions
+
+## Project status 
+All the objects needed for the game to work are implemented in some way. Now they need to be perfected and more special objects added.
+
+### TODOs
+1. Tommi Korpelainen: Teekkaris, fuksis and abilities for teekkaris
+2. Aleksi Rintanen: LevelEditor and testlevels
+3. Ilari Tulkki: Continuing work on UI
+4. Joonas Palmulaakso: Effects and explosions
