@@ -192,7 +192,7 @@ All basic systems are finished, now it's time to start creating game features an
 
 
 
-# Meeting 2.12.2021 15::00
+# Meeting 02.12.2021 15::00
 
 **Participants**: 
 Tommi Korpelainen
