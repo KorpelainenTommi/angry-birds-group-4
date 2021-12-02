@@ -42,7 +42,16 @@ public:
 
     virtual bool isInside(float xw, float yh) const;
 
+    /**
+     * Should only check if the element captures the event and execute no other code.
+     * Ideally this should be a pure function.
+     */
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
+
+    /**
+     * This will be called if OnMouseDown returned true.
+     */
+    virtual void ExecuteOnMouseDown();
 
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
 

@@ -16,12 +16,8 @@ void Button::Render(const RenderSystem& r){
     }
 }
 
-bool Button::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    if(mouseDownHandler_ != NULL && isInside(xw, yh)){
-        if(active_) mouseDownHandler_();
-        return true;
-    }
-    return false;
+void Button::ExecuteOnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
+    if(mouseDownHandler_ != NULL && active_) mouseDownHandler_();
 }
 
 bool Button::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh){
