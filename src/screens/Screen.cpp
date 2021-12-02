@@ -22,12 +22,37 @@ void Screen::Render(const RenderSystem& r){
     }
 }
 
+void Screen::setFocusedElement(const std::shared_ptr<Element>& p){
+    if(hasFocusedElement_ && !focusedElement_.expired()) focusedElement_.lock()->Blur();
+    else hasFocusedElement_ = true;
+    p->Focus();
+    focusedElement_ = std::weak_ptr<Element>(p);
+}
+
 bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
+    if(hasFocusedElement_ && !focusedElement_.expired()){
+        auto e = focusedElement_.lock();
+        if(e->OnMouseDown(button, xw, yh)) return true;
+        e->Blur();
+        hasFocusedElement_ = false;
+    }
     if(messages_.size() > 0){
         auto m = messages_.front();
-        for(std::size_t i = m.size(); i > 0;) if(m[--i]->OnMouseDown(button, xw, yh)) return true;
+        for(std::size_t i = m.size(); i > 0;){
+            auto e = std::weak_ptr<Element>(m[--i]);
+            if(m[i]->OnMouseDown(button, xw, yh)){
+                if(!e.expired()) setFocusedElement(e.lock());
+                return true;
+            }
+        }
     }
-    for(std::size_t i = menu_.size(); i > 0;) if(menu_[--i]->OnMouseDown(button, xw, yh)) return true;
+    for(std::size_t i = menu_.size(); i > 0;){
+        auto e = std::weak_ptr<Element>(menu_[--i]);
+        if(menu_[i]->OnMouseDown(button, xw, yh)){
+            if(!e.expired()) setFocusedElement(e.lock());
+            return true;
+        }
+    }
     return false;
 }
 
@@ -56,6 +81,21 @@ bool Screen::OnMouseScroll(float delta, float xw, float yh){
     }
     for(std::size_t i = menu_.size(); i > 0;) if(menu_[--i]->OnMouseScroll(delta, xw, yh)) return true;
     return false;
+}
+
+bool Screen::OnTextEntered(const sf::Event::TextEvent& e){
+    if(!hasFocusedElement_ || focusedElement_.expired()) return false;
+    return focusedElement_.lock()->OnTextEntered(e);
+}
+
+bool Screen::OnKeyDown(const sf::Event::KeyEvent& e){
+    if(!hasFocusedElement_ || focusedElement_.expired()) return false;
+    return focusedElement_.lock()->OnKeyDown(e);
+}
+
+bool Screen::OnKeyUp(const sf::Event::KeyEvent& e){
+    if(!hasFocusedElement_ || focusedElement_.expired()) return false;
+    return focusedElement_.lock()->OnKeyUp(e);
 }
 
 void Screen::Confirm(std::string text, const std::function<void(bool)> callBack){
@@ -99,8 +139,9 @@ std::shared_ptr<RoundIcon> Screen::generateMessageBoxButton(
         sprite
     );
     b->SetMouseDownHandler(callBack);
-    b->SetWindowResizeHandler([b, this, buttonNumber](){
-        b->SetPosition(
+    auto wb = std::weak_ptr<RoundIcon>(b);
+    b->SetWindowResizeHandler([wb, this, buttonNumber](){
+        wb.lock()->SetPosition(
             this->calcMessageBoxButtonLeft(buttonNumber),
             this->calcMessageBoxButtonTop()
         );
@@ -135,7 +176,9 @@ std::shared_ptr<TextElement> Screen::generateConfirmText(const std::string& text
     t->SetText(text);
     t->SetTextAlign(ui::TextAlign::center);
     t->SetRelativeFontSize(ui::defaultFontSize);
-    t->SetWindowResizeHandler([t, this](){
+    auto wt = std::weak_ptr<TextElement>(t);
+    t->SetWindowResizeHandler([wt, this](){
+        auto t = wt.lock();
         t->SetPosition(
             this->calcConfirmTextLeft(),
             this->calcConfirmTextTop()

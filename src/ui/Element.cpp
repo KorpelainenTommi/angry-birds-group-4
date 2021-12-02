@@ -11,8 +11,8 @@ bool Element::isInside(float xw, float yh) const {
 };
 
 bool Element::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    if(mouseDownHandler_ != NULL && isInside(xw, yh)){
-        mouseDownHandler_();
+    if((mouseDownHandler_ != NULL || canBeFocused_) && isInside(xw, yh)){
+        if(mouseDownHandler_ != NULL) mouseDownHandler_();
         return true;
     }
     return false;

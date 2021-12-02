@@ -117,6 +117,8 @@ namespace ui {
     const sf::Color messageBoxColor = {255, 255, 255};
     const sf::Color highlightColor = {200, 200, 255};
     const sf::Color deactivatedButtonBackgroundColor = {150, 150, 150};
+    const sf::Color inputBackgroundColor = {204, 204, 204};
+    const sf::Color inputCaretColor = {0, 0, 0};
 
     const FontID defaultFont = FontID::source_serif;
 

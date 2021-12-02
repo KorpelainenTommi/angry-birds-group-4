@@ -9,6 +9,7 @@
 #include <queue>
 #include <ui/RoundIcon.hpp>
 #include <ui/TextElement.hpp>
+#include <sstream>
 
 #include <iostream>
 
@@ -38,6 +39,12 @@ public:
     virtual bool OnMouseMove(float xw, float yh);
 
     virtual bool OnMouseScroll(float delta, float xw, float yh);
+
+    virtual bool OnTextEntered(const sf::Event::TextEvent&);
+
+    virtual bool OnKeyDown(const sf::Event::KeyEvent&);
+
+    virtual bool OnKeyUp(const sf::Event::KeyEvent&);
 
     void Confirm(std::string text, const std::function<void(bool)> callBack);
 
@@ -69,6 +76,15 @@ protected:
     std::queue<std::vector<std::shared_ptr<Element>>> messages_;
     float windowWidth_ = 0.0F;
     float windowHeight_ = 0.0F;
+    std::weak_ptr<Element> focusedElement_;
+    bool hasFocusedElement_ = false;
+
+    template <typename T>
+    std::string getString(T v) const {
+        std::stringstream ss;
+        ss << v;
+        return ss.str();
+    }
 
     /**
      * button number is the number of the button from right starting from 1.
@@ -80,6 +96,8 @@ protected:
     );
 
     std::shared_ptr<TextElement> generateConfirmText(const std::string& text);
+
+    void setFocusedElement(const std::shared_ptr<Element>&);
 };
 
 

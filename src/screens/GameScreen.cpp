@@ -1,12 +1,17 @@
 #include <screens/GameScreen.hpp>
 #include <ui/MessageBox.hpp>
 
+#include <ui/InputElement.hpp>
+
 GameScreen::GameScreen(
     Application& app, const Level& initialLevel
 ): Screen(app), scoreLabel_(addScoreLabel()), game_(std::make_shared<Game>(*this, initialLevel)){
     level_ = initialLevel;
     addTopLeftButtons();
     timeLabel_ = addTopRightLabel(2, "time: ");
+    /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
+    input->SetFontSize(ui::defaultFontSize * 4);
+    menu_.push_back(input);*/
 }
 
 void GameScreen::Update(){
@@ -38,17 +43,18 @@ std::shared_ptr<RoundIcon> GameScreen::addTopLeftButton(
 std::shared_ptr<RoundIcon> GameScreen::addTopLeftButton(
     unsigned char buttonNumber, const SpriteID& sprite
 ){
-    auto b = std::make_shared<RoundIcon>(
+    auto bt = std::make_shared<RoundIcon>(
         topLeftButtonSpacing_, 
         calcTopLeftButtonLeft(buttonNumber), 
         topLeftButtonSize_ / 2,
         sprite
     );
-    b->SetWindowResizeHandler([this, b, buttonNumber](){
-        b->SetLeft(this->calcTopLeftButtonLeft(buttonNumber));
+    auto b = std::weak_ptr<RoundIcon>(bt);
+    bt->SetWindowResizeHandler([this, b, buttonNumber](){
+        b.lock()->SetLeft(this->calcTopLeftButtonLeft(buttonNumber));
     });
-    menu_.push_back(b);
-    return b;
+    menu_.push_back(bt);
+    return bt;
 }
 
 ui::pfloat GameScreen::calcTopLeftButtonLeft(unsigned char buttonNumber) const {
@@ -57,24 +63,29 @@ ui::pfloat GameScreen::calcTopLeftButtonLeft(unsigned char buttonNumber) const {
 }
 
 void GameScreen::addTopLeftButtons(){
-    auto pauseButton = addTopLeftButton(1, SpriteID::ui_button_pause);
-    pauseButton->SetMouseDownHandler([this, pauseButton](){
-        if(pauseButton->GetIcon() == SpriteID::ui_button_resume){
-            pauseButton->SetIcon(SpriteID::ui_button_pause);
+    auto pauseButton = std::weak_ptr<RoundIcon>(addTopLeftButton(1, SpriteID::ui_button_pause));
+    pauseButton.lock()->SetMouseDownHandler([this, pauseButton](){
+        auto pb = pauseButton.lock();
+        if(pb->GetIcon() == SpriteID::ui_button_resume){
+            pb->SetIcon(SpriteID::ui_button_pause);
             this->GetGame()->Resume();
         }else{
-            pauseButton->SetIcon(SpriteID::ui_button_resume);
+            pb->SetIcon(SpriteID::ui_button_resume);
             this->GetGame()->Pause();
         }
     });
     addTopLeftButton(2, [this](){
+        this->GetGame()->Pause();
         this->Confirm("Do you want to restart the level?", [this](bool b){
             if(b) this->Restart();
+            else this->GetGame()->Resume();
         });
     }, SpriteID::ui_button_restart);
     addTopLeftButton(3, [this](){
+        this->GetGame()->Pause();
         this->Confirm("Do you want to quit to main menu?", [this](bool b){
             if(b) this->Exit();
+            else this->GetGame()->Resume();
         });
     }, SpriteID::ui_button_exit);
 }
@@ -102,8 +113,9 @@ std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
         topRightLabelLength_, 
         text
     );
-    e->SetWindowResizeHandler([this, e, labelNumber](){
-        e->SetPosition(
+    auto we = std::weak_ptr<TextLine>(e);
+    e->SetWindowResizeHandler([this, we, labelNumber](){
+        we.lock()->SetPosition(
             this->calcTopRightLabelLeft(), 
             this->calcTopRightLabelTop(labelNumber)
         );
