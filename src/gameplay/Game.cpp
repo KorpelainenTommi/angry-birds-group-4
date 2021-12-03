@@ -191,7 +191,7 @@ const Camera& Game::GetCamera() const { return camera_; }
 
 void Game::ResetCamera() { 
     camera_.SetFullscreen();
-    camera_.zoom = 0.6F;
+    camera_.zoom = 1.0F;
     camera_.y = 5;
 }
 
