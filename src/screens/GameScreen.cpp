@@ -143,3 +143,25 @@ void GameScreen::OnGameLost(){
     v.push_back(generateConfirmText("Level failed!"));
     messages_.push(v);
 }
+
+bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {
+    if(Screen::OnMouseScroll(delta, xw, yh)) return true;
+    if(game_.OnMouseScroll(delta, xw, yh)) return true;
+    return false;
+}
+bool GameScreen::OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
+    if(Screen::OnMouseDown(e, x, y)) return true;
+    if(game_.OnMouseDown(e, x, y)) return true;
+    return false;
+}
+
+bool GameScreen::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
+    if(Screen::OnMouseUp(e, x, y)) return true;
+    if(game_.OnMouseUp(e, x, y)) return true;
+    return false;
+}
+
+bool GameScreen::OnMouseMove(float x, float y) {
+    bool b = Screen::OnMouseMove(x, y);
+    return game_.OnMouseMove(x, y) || b;
+}

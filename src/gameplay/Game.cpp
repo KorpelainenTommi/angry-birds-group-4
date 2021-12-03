@@ -114,6 +114,17 @@ void Game::Render(const RenderSystem& r) {
 }
 
 bool Game::OnMouseMove(float xw, float yh) {
+    if(mDown) {
+        mouseX = xw;
+        mouseY = yh;
+        Camera c = GetCamera();
+        c.x -= ph::fullscreenPlayArea * c.zoom * (mouseX.f1 - mouseX.f0);
+        c.y += ph::fullscreenPlayArea * c.zoom * (mouseY.f1 - mouseY.f0);
+        SetCameraPos(c.x, c.y);
+        mouseX.Record();
+        mouseY.Record();
+        return true;
+    }
     for(auto& obj : objects_) {
         if(obj.second->OnMouseMove(xw, yh)) return true;
     }
@@ -125,15 +136,42 @@ bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
     for(auto& obj : objects_) {
         if(obj.second->OnMouseDown(button, xw, yh)) return true;
     }
+    
+    if(button == sf::Mouse::Button::Right) {
+        mDown = true;
+        mouseX = xw;
+        mouseY = yh;
+        mouseX.Record();
+        mouseY.Record();
+        return true;
+    }
+    
     return false;
 }
+
+
 bool Game::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
+    if(button == sf::Mouse::Button::Right && mDown) {
+        mDown = false;
+        return true;
+    }
     for(auto& obj : objects_) {
         if(obj.second->OnMouseUp(button, xw, yh)) return true;
     }
     return false;
 }
 
+bool Game::OnMouseScroll(float delta, float xw, float yh) {
+
+    float zoom = GetCamera().zoom;
+    zoom -= delta * 0.1F;
+    if(zoom <= 0.1F) SetCameraZoom(0.1F);
+    else if(zoom > 1.0F) SetCameraZoom(1.0F);
+    else SetCameraZoom(zoom);
+
+
+    return true;
+}
 
 unsigned int Game::GetTicks() const { return time_; };
 float Game::GetTime() const { return time_ * ph::timestep; }
