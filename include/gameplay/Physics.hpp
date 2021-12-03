@@ -72,8 +72,12 @@ namespace ph {
     /// Width of the area seen by a camera at zoom = 1.0F
     const float fullscreenPlayArea = 50.0F;
 
+
     /// Thickness of the ground. More ground than this will not be visible at the lowest camera position
     const float groundThickness = 20.0F;
+
+    /// Bounds for camera
+    const float cameraBounds[4] = {-fullscreenPlayArea/2.0F,fullscreenPlayArea/2.0F, -groundThickness, groundThickness};
 
     /// Mass of the ground object to use in calculating damage
     const float groundMass = 100.0F;

@@ -106,6 +106,15 @@ void Game::Update() {
 
 void Game::Render(const RenderSystem& r) {
 
+
+    if(camera_.x-ph::fullscreenPlayArea/2.0F*camera_.zoom < -ph::fullscreenPlayArea/2.0F){
+        camera_.x = -ph::fullscreenPlayArea/2.0F*(1-camera_.zoom);
+    }
+    else if(camera_.x+ph::fullscreenPlayArea/2.0F*camera_.zoom > ph::fullscreenPlayArea/2.0F){
+        camera_.x = ph::fullscreenPlayArea/2.0F*(1-camera_.zoom);
+    }
+    
+    
     //Render all objects in render order
     for(auto& obj : objects_) {
         obj.second->Render(r);
@@ -114,15 +123,16 @@ void Game::Render(const RenderSystem& r) {
 }
 
 bool Game::OnMouseMove(float xw, float yh) {
-    if(mDown) {
-        mouseX = xw;
-        mouseY = yh;
+    
+    if(mDown_) {
+        mouseX_ = xw;
+        mouseY_ = yh;
         Camera c = GetCamera();
-        c.x -= ph::fullscreenPlayArea * c.zoom * (mouseX.f1 - mouseX.f0);
-        c.y += ph::fullscreenPlayArea * c.zoom * (mouseY.f1 - mouseY.f0);
+        c.x -= ph::fullscreenPlayArea * c.zoom * (mouseX_.f1 - mouseX_.f0);
+        c.y += ph::fullscreenPlayArea * c.zoom * (mouseY_.f1 - mouseY_.f0);
         SetCameraPos(c.x, c.y);
-        mouseX.Record();
-        mouseY.Record();
+        mouseX_.Record();
+        mouseY_.Record();
         return true;
     }
     for(auto& obj : objects_) {
@@ -138,11 +148,11 @@ bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
     }
     
     if(button == sf::Mouse::Button::Right) {
-        mDown = true;
-        mouseX = xw;
-        mouseY = yh;
-        mouseX.Record();
-        mouseY.Record();
+        mDown_ = true;
+        mouseX_ = xw;
+        mouseY_ = yh;
+        mouseX_.Record();
+        mouseY_.Record();
         return true;
     }
     
@@ -151,8 +161,8 @@ bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
 
 
 bool Game::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
-    if(button == sf::Mouse::Button::Right && mDown) {
-        mDown = false;
+    if(button == sf::Mouse::Button::Right && mDown_) {
+        mDown_ = false;
         return true;
     }
     for(auto& obj : objects_) {

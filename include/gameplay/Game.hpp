@@ -14,6 +14,7 @@
 #include <box2d/b2_world_callbacks.h>
 #include <box2d/b2_body.h>
 #include <box2d/b2_contact.h>
+#include <SFML/System/Vector2.hpp>
 
 /** 
  * Game owns and manages all GameObjects. It also manages the box2d world, 
@@ -173,9 +174,10 @@ protected:
     
     IDCounter IDCounter_;
     
-    bool mDown = false;
-    ph::tfloat mouseX;
-    ph::tfloat mouseY;
+    bool mDown_ = false;
+    ph::tfloat mouseX_;
+    ph::tfloat mouseY_;
+    
 
 };
 
