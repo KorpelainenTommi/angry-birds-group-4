@@ -149,6 +149,9 @@ public:
 
     /// Set the camera rotation
     void SetCameraRot(float rot);
+    
+    // Set the camera inside world's bounds
+    void checkCameraBounds();
 
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);

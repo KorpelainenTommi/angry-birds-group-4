@@ -104,16 +104,23 @@ void Game::Update() {
     }
 }
 
-void Game::Render(const RenderSystem& r) {
-
-
+void Game::checkCameraBounds() {
     if(camera_.x-ph::fullscreenPlayArea/2.0F*camera_.zoom < -ph::fullscreenPlayArea/2.0F){
         camera_.x = -ph::fullscreenPlayArea/2.0F*(1-camera_.zoom);
     }
     else if(camera_.x+ph::fullscreenPlayArea/2.0F*camera_.zoom > ph::fullscreenPlayArea/2.0F){
         camera_.x = ph::fullscreenPlayArea/2.0F*(1-camera_.zoom);
     }
-    
+    if(camera_.y-ph::fullscreenPlayArea/2.0F*camera_.zoom < -ph::groundThickness){
+        camera_.y = -ph::groundThickness + camera_.zoom*ph::fullscreenPlayArea/2.0F;
+    }
+    else if(camera_.y+ph::fullscreenPlayArea/2.0F*camera_.zoom > ph::cameraUpperBound){
+        camera_.y = ph::cameraUpperBound-ph::fullscreenPlayArea/2.0F*camera_.zoom;
+    }
+}
+
+
+void Game::Render(const RenderSystem& r) {
     
     //Render all objects in render order
     for(auto& obj : objects_) {
@@ -133,6 +140,7 @@ bool Game::OnMouseMove(float xw, float yh) {
         SetCameraPos(c.x, c.y);
         mouseX_.Record();
         mouseY_.Record();
+        checkCameraBounds();
         return true;
     }
     for(auto& obj : objects_) {
@@ -178,7 +186,7 @@ bool Game::OnMouseScroll(float delta, float xw, float yh) {
     if(zoom <= 0.1F) SetCameraZoom(0.1F);
     else if(zoom > 1.0F) SetCameraZoom(1.0F);
     else SetCameraZoom(zoom);
-
+    checkCameraBounds();
 
     return true;
 }
@@ -191,8 +199,8 @@ const Camera& Game::GetCamera() const { return camera_; }
 
 void Game::ResetCamera() { 
     camera_.SetFullscreen();
-    camera_.zoom = 1.0F;
-    camera_.y = 5;
+    camera_.zoom = 0.8F;
+    camera_.y = 10;
 }
 
 void Game::SetCameraPos(float x, float y) { camera_.x = x; camera_.y = y; }

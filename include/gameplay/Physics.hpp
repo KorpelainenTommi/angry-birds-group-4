@@ -76,6 +76,9 @@ namespace ph {
     /// Thickness of the ground. More ground than this will not be visible at the lowest camera position
     const float groundThickness = 20.0F;
 
+    /// Highest coordinate visible.
+    const float cameraUpperBound = 50.0F;
+
     /// Mass of the ground object to use in calculating damage
     const float groundMass = 100.0F;
 
