@@ -25,4 +25,10 @@ be retrieved based on GameObjectType with `gm::GetObjectScore(GameObjectType typ
 
 8. Teekkaris and Fuksis haven't been implemented. It would make sense to store usable Teekkaris just in a vector with GameObjectTypes. A Teekkari can then be spawned on the catapult with `Game::CreateObject()`
 
-9. Game::Pause() and Game::Resume() should be implemented. Game should also start calling GameScreen::OnScoreChange(), GameScreen::OnGameCompleted(), and GameScreen::OnGameLost.
+9. Game should start calling GameScreen::OnScoreChange(), GameScreen::OnGameCompleted(), and GameScreen::OnGameLost().
+
+10. Modify Game::GetTimeForUI() to give decreasing time in time trial gamemode. The time should start from the number of seconds the player has to complete the level and reach 0 when the time is up.
+
+11. Implement Game::SelectProjectile() which is used by UI to report Game when the user selects a projectile to use. Notify that at the begining no projectile is selected. Both in Game::SelectProjectile() and GameScreen::UpdateProjectileList() the SpriteID can be changed to something else as long as UI can somehow get the SpriteID from it.
+
+12. GameScreen::UpdateProjectileList() should be called by Game when the list of projectiles should be updated (the player consumes a projectiles or collects a new one). This should also be called once in the begining. Both in Game::SelectProjectile() and GameScreen::UpdateProjectileList() the SpriteID can be changed to something else as long as UI can somehow get the SpriteID from it.

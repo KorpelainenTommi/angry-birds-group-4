@@ -122,6 +122,9 @@ public:
     /// Get the time in seconds
     float GetTime() const;
 
+    /// Get the time in secods for UI purposes
+    float GetTimeForUI() const;
+
     /// Is the game paused?
     bool IsPaused() const;
 
@@ -152,6 +155,9 @@ public:
     
     // Set the camera inside world's bounds
     void checkCameraBounds();
+
+    /// UI calls this to report Game that the user has selected a projectile.
+    void SelectProjectile(SpriteID /*this can be changed*/){}
 
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);

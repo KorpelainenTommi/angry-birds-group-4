@@ -9,14 +9,14 @@ GameScreen::GameScreen(
     level_ = initialLevel;
     addTopLeftButtons();
     timeLabel_ = addTopRightLabel(2, "time: ");
-    auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
+    /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
     input->SetFontSize(ui::defaultFontSize * 4);
-    menu_.push_back(input);
+    menu_.push_back(input);*/
 }
 
 void GameScreen::Update(){
     game_.Update();
-    timeLabel_->SetText("time: " + getString((int)(game_.GetTime())));
+    timeLabel_->SetText("time: " + getString((int)(game_.GetTimeForUI())));
 }
 
 void GameScreen::Render(const RenderSystem& r){
@@ -142,6 +142,10 @@ void GameScreen::OnGameLost(){
     }, SpriteID::ui_button_exit));
     v.push_back(generateConfirmText("Level failed!"));
     messages_.push(v);
+}
+
+void GameScreen::OnGameCompleted(int score){
+
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {

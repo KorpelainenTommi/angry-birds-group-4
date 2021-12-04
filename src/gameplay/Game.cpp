@@ -193,6 +193,10 @@ bool Game::OnMouseScroll(float delta, float xw, float yh) {
 
 unsigned int Game::GetTicks() const { return time_; };
 float Game::GetTime() const { return time_ * ph::timestep; }
+float Game::GetTimeForUI() const {
+    //TODO: modify this to give decreasing time in time trial game mode
+    return GetTime();
+}
 
 
 const Camera& Game::GetCamera() const { return camera_; }

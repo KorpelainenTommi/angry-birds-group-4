@@ -34,13 +34,18 @@ public:
 
     void Restart();
 
-    void OnGameCompleted(int score){};
+    void OnGameCompleted(int score);
 
     void OnGameLost();
 
     void OnScoreChange(int score);
 
-    Game& GetGame(){ return game_; }
+    /**
+     * Game should call this whenever the the list of projectiles should be updated.
+     */
+    void UpdateProjectileList(std::vector<SpriteID /*this can be changed*/>){}
+
+    Game& GetGame(){return game_;}
 
     /**
      * button number is the number of the button from left starting from 1.
