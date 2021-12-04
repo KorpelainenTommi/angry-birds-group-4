@@ -9,6 +9,7 @@
 #include <screens/MainMenu.hpp>
 #include <ui/TextLine.hpp>
 #include <gameplay/Person.hpp>
+#include <ui/InputElement.hpp>
 
 class GameScreen : public Screen {
 public:
@@ -34,7 +35,10 @@ public:
 
     void Restart();
 
-    void OnGameCompleted(int score);
+    /**
+     * requiredMaxScore is not the absolute max score but the one that is required for max points.
+     */
+    void OnGameCompleted(int score, int requiredMaxScore);
 
     void OnGameLost();
 
@@ -59,13 +63,32 @@ public:
 
     ui::pfloat calcTopRightLabelLeft() const;
 
+    ui::pfloat calcVictoryMessageStarTop() const;
+
+    ui::pfloat calcVictoryMessageStarLeft(char starNumber) const;
+
+    ui::pfloat calcVictoryMessageScoreTop() const;
+
+    ui::pfloat calcVictoryMessageContentLeft() const;
+
+    ui::pfloat calcVictoryMessageContentWidth() const;
+
+    ui::pfloat calcVictoryMessageNicknamePromptTop() const;
+
+    ui::pfloat calcVictoryMessageInputTop() const;
+
+    void saveScore(const std::string& name, int score);
+
 private:
     const ui::pfloat topLeftButtonSpacing_ = 1 VH;
     const ui::pfloat topLeftButtonSize_ = 4 VH;
     const ui::pfloat topRightLabelLength_ = ui::defaultFontSize * 9;
     const ui::pfloat topRightLabelHeigth_ = ui::defaultFontSize;
     const ui::pfloat topRightLabelSpacing_ = 1 VH;
-
+    const ui::pfloat victoryMessageHeight_ = 20 VH;
+    const ui::pfloat victoryMessageWidth_ = 30 VW;
+    const ui::pfloat victoryMessageStarSize_ = 5 VH;
+    const ui::pfloat victoryMessageFontSize_ = ui::defaultFontSize;
 
     Game game_;
     Level level_;
@@ -91,6 +114,16 @@ private:
     std::shared_ptr<TextLine> addTopRightLabel(unsigned char labelNumber, const std::string& text);
 
     std::shared_ptr<TextLine> addScoreLabel();
+
+    void addVictoryMessageStars(int score, int maxScore, std::vector<std::shared_ptr<Element>>& v);
+
+    std::shared_ptr<RoundIcon> generateVictoryMessageStar(char starNumber, bool achieved);
+
+    void addVictoryMessageScore(int score, std::vector<std::shared_ptr<Element>>& v);
+
+    void addVictoryMessageNicknamePrompt(std::vector<std::shared_ptr<Element>>& v);
+
+    std::shared_ptr<InputElement> generateVictoryMessageInput();
 };
 
 

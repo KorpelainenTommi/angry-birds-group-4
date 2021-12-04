@@ -101,11 +101,11 @@ void Screen::Confirm(std::string text, const std::function<void(bool)> callBack)
     v.push_back(generateMessageBoxButton(1, [this, callBack](){
         this->DequeueMessage();
         callBack(true);
-    }, SpriteID::ui_button_ok));
+    }, SpriteID::ui_button_ok, messageBoxHeight_, messageBoxWidth_));
     v.push_back(generateMessageBoxButton(2, [this, callBack](){
         this->DequeueMessage();
         callBack(false);
-    }, SpriteID::ui_button_cancel));
+    }, SpriteID::ui_button_cancel, messageBoxHeight_, messageBoxWidth_));
     v.push_back(generateConfirmText(text));
     messages_.push(v);
 }
@@ -114,33 +114,38 @@ void Screen::DequeueMessage(){
     messages_.pop();
 }
 
-ui::pfloat Screen::calcMessageBoxButtonTop() const {
-    return (50 + ui::toVHFloat(messageBoxHeight_) / 2 - ui::toVHFloat(messageBoxButtonSize_) 
+ui::pfloat Screen::calcMessageBoxButtonTop(const ui::pfloat& messageHeight) const {
+    return (50 + ui::toVHFloat(messageHeight) / 2 - ui::toVHFloat(messageBoxButtonSize_) 
         - ui::toVHFloat(messageBoxSpacing_)) VH;
 }
 
-ui::pfloat Screen::calcMessageBoxButtonLeft(unsigned char buttonNumber) const {
-    return (50 + ui::toVWFloat(messageBoxWidth_) / 2 
+ui::pfloat Screen::calcMessageBoxButtonLeft(
+    unsigned char buttonNumber, 
+    const ui::pfloat& messageWidth
+) const {
+    return (50 + ui::toVWFloat(messageWidth) / 2 
         - (ui::toVWFloat(messageBoxButtonSize_) + ui::toVWFloat(messageBoxSpacing_)) * buttonNumber) VW;
 }
 
 std::shared_ptr<RoundIcon> Screen::generateMessageBoxButton(
     unsigned char buttonNumber, 
     const std::function<void()> callBack, 
-    const SpriteID& sprite
+    const SpriteID& sprite,
+    const ui::pfloat& messageHeight, 
+    const ui::pfloat& messageWidth
 ){
     auto b = std::make_shared<RoundIcon>(
-        calcMessageBoxButtonTop(), 
-        calcMessageBoxButtonLeft(buttonNumber), 
+        calcMessageBoxButtonTop(messageHeight), 
+        calcMessageBoxButtonLeft(buttonNumber, messageWidth), 
         messageBoxButtonSize_ / 2, 
         sprite
     );
     b->SetMouseDownHandler(callBack);
     auto wb = std::weak_ptr<RoundIcon>(b);
-    b->SetWindowResizeHandler([wb, this, buttonNumber](){
+    b->SetWindowResizeHandler([wb, this, buttonNumber, messageHeight, messageWidth](){
         wb.lock()->SetPosition(
-            this->calcMessageBoxButtonLeft(buttonNumber),
-            this->calcMessageBoxButtonTop()
+            this->calcMessageBoxButtonLeft(buttonNumber, messageWidth),
+            this->calcMessageBoxButtonTop(messageHeight)
         );
     });
     return b;

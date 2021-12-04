@@ -38,7 +38,7 @@ ui::pfloat MainMenu::calcListElementWidth() const {
 }
 
 void MainMenu::generateLevels(){
-    auto list = std::vector<Level>();//app_.GetFileManager().ListLevels();
+    auto list = app_.GetFileManager().ListLevels();
     list.push_back(TestLevel());
     for(auto e: list) addLevel(e);
 }

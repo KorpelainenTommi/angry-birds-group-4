@@ -12,6 +12,7 @@ GameScreen::GameScreen(
     /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
     input->SetFontSize(ui::defaultFontSize * 4);
     menu_.push_back(input);*/
+    //OnGameCompleted(8000, 10000);
 }
 
 void GameScreen::Update(){
@@ -135,17 +136,169 @@ void GameScreen::OnGameLost(){
     v.push_back(generateMessageBoxButton(1, [this](){
         this->DequeueMessage();
         this->Restart();
-    }, SpriteID::ui_button_restart));
+    }, SpriteID::ui_button_restart, messageBoxHeight_, messageBoxWidth_));
     v.push_back(generateMessageBoxButton(2, [this](){
         this->DequeueMessage();
         this->Exit();
-    }, SpriteID::ui_button_exit));
+    }, SpriteID::ui_button_exit, messageBoxHeight_, messageBoxWidth_));
     v.push_back(generateConfirmText("Level failed!"));
     messages_.push(v);
 }
 
-void GameScreen::OnGameCompleted(int score){
+void GameScreen::OnGameCompleted(int score, int requiredMaxScore){
+    std::vector<std::shared_ptr<Element>> v;
+    v.push_back(std::make_shared<MessageBox>(victoryMessageHeight_, victoryMessageWidth_));
+    addVictoryMessageStars(score, requiredMaxScore, v);
+    addVictoryMessageScore(score, v);
+    addVictoryMessageNicknamePrompt(v);
+    auto i = generateVictoryMessageInput();
+    v.push_back(i);
+    v.push_back(generateMessageBoxButton(1, [this, i, score](){
+        this->DequeueMessage();
+        std::string name = i->GetText();
+        if(name.size() > 0) this->saveScore(name, score);
+        this->Exit();
+    }, SpriteID::ui_button_ok, victoryMessageHeight_, victoryMessageWidth_));
+    v.push_back(generateMessageBoxButton(2, [this, i, score](){
+        this->DequeueMessage();
+        std::string name = i->GetText();
+        if(name.size() > 0) this->saveScore(name, score);
+        this->Restart();
+    }, SpriteID::ui_button_restart, victoryMessageHeight_, victoryMessageWidth_));
+    messages_.push(v);
+}
 
+void GameScreen::addVictoryMessageStars(int score, int maxScore, std::vector<std::shared_ptr<Element>>& v){
+    v.push_back(generateVictoryMessageStar(1, true));
+    v.push_back(generateVictoryMessageStar(2, score >= maxScore / 2));
+    v.push_back(generateVictoryMessageStar(3, score >= maxScore));
+}
+
+std::shared_ptr<RoundIcon> GameScreen::generateVictoryMessageStar(char starNumber, bool achieved){
+    auto s = std::make_shared<RoundIcon>(
+        calcVictoryMessageStarTop(), 
+        calcVictoryMessageStarLeft(starNumber), 
+        victoryMessageStarSize_ / 2,
+        achieved ? SpriteID::ui_star : SpriteID::ui_missing_star
+    );
+    auto ws = std::weak_ptr<RoundIcon>(s);
+    s->SetWindowResizeHandler([this, ws, starNumber](){
+        ws.lock()->SetPosition(
+            this->calcVictoryMessageStarLeft(starNumber), 
+            this->calcVictoryMessageStarTop()
+        );
+    });
+    return s;
+}
+
+ui::pfloat GameScreen::calcVictoryMessageStarTop() const {
+    return (50 - ui::toVHFloat(victoryMessageHeight_) / 2 + ui::toVHFloat(messageBoxSpacing_)) VH;
+}
+
+ui::pfloat GameScreen::calcVictoryMessageStarLeft(char starNumber) const {
+    return (50 + ui::toVWFloat(victoryMessageStarSize_) * (starNumber - 2.5)) VW;
+}
+
+void GameScreen::addVictoryMessageScore(int score, std::vector<std::shared_ptr<Element>>& v){
+    auto s = std::make_shared<TextLine>(
+        calcVictoryMessageScoreTop(), 
+        calcVictoryMessageContentLeft(), 
+        victoryMessageFontSize_, 
+        calcVictoryMessageContentWidth(), 
+        "score: " + getString(score)
+    );
+    s->SetRelativeFontSize(victoryMessageFontSize_);
+    s->SetTextAlign(ui::TextAlign::center);
+    auto ws = std::weak_ptr<TextLine>(s);
+    s->SetWindowResizeHandler([this, ws](){
+        auto s = ws.lock();
+        s->SetPosition(
+            this->calcVictoryMessageContentLeft(), 
+            this->calcVictoryMessageScoreTop()
+        );
+        s->SetWidth(this->calcVictoryMessageContentWidth());
+    });
+    v.push_back(s);
+}
+
+ui::pfloat GameScreen::calcVictoryMessageScoreTop() const {
+    return (ui::toVHFloat(calcVictoryMessageStarTop()) 
+        + ui::toVHFloat(victoryMessageStarSize_) + ui::toVHFloat(messageBoxSpacing_)) VH;
+}
+
+ui::pfloat GameScreen::calcVictoryMessageContentLeft() const {
+    return (50 - ui::toVWFloat(victoryMessageWidth_) / 2 + ui::toVWFloat(messageBoxSpacing_)) VW;
+}
+
+ui::pfloat GameScreen::calcVictoryMessageContentWidth() const {
+    return (ui::toVWFloat(victoryMessageWidth_) - ui::toVWFloat(messageBoxSpacing_) * 2) VW;
+}
+
+void GameScreen::addVictoryMessageNicknamePrompt(std::vector<std::shared_ptr<Element>>& v){
+    auto t = std::make_shared<TextLine>(
+        calcVictoryMessageNicknamePromptTop(), 
+        calcVictoryMessageContentLeft(), 
+        victoryMessageFontSize_, 
+        calcVictoryMessageContentLeft(), 
+        "Please give a nickname to save your score:"
+    );
+    t->SetRelativeFontSize(victoryMessageFontSize_);
+    t->SetTextAlign(ui::TextAlign::center);
+    auto wt = std::weak_ptr<TextLine>(t);
+    t->SetWindowResizeHandler([this, wt](){
+        auto t = wt.lock();
+        t->SetPosition(
+            this->calcVictoryMessageContentLeft(), 
+            this->calcVictoryMessageNicknamePromptTop()
+        );
+        t->SetWidth(this->calcVictoryMessageContentWidth());
+    });
+    v.push_back(t);
+}
+
+ui::pfloat GameScreen::calcVictoryMessageNicknamePromptTop() const {
+    return (ui::toVHFloat(calcVictoryMessageScoreTop()) 
+        + ui::toVHFloat(victoryMessageFontSize_) + ui::toVHFloat(messageBoxSpacing_)) VH;
+}
+
+std::shared_ptr<InputElement> GameScreen::generateVictoryMessageInput(){
+    auto i = std::make_shared<InputElement>(
+        calcVictoryMessageInputTop(), 
+        calcVictoryMessageContentLeft(), 
+        victoryMessageFontSize_ * 2, 
+        calcVictoryMessageContentWidth()
+    );
+    auto wi = std::weak_ptr<InputElement>(i);
+    i->SetWindowResizeHandler([this, wi](){
+        auto i = wi.lock();
+        i->SetPosition(
+            calcVictoryMessageContentLeft(), 
+            calcVictoryMessageInputTop()
+        );
+        i->SetWidth(this->calcVictoryMessageContentWidth());
+    });
+    return i;
+}
+
+ui::pfloat GameScreen::calcVictoryMessageInputTop() const {
+    return (ui::toVHFloat(calcVictoryMessageNicknamePromptTop()) 
+        + ui::toVHFloat(victoryMessageFontSize_)) VH;
+}
+
+void GameScreen::saveScore(const std::string& name, int score){
+    std::size_t len = level_.highscores.size();
+    if(len == 0){
+        level_.highscores.push_back({name, score});
+    }else{
+        //This naive algorithm could be replaced with binary search if I have time and will power.
+        for(std::size_t i = 0; i < len; i++){
+            if(level_.highscores[i].second < score){
+                level_.highscores.insert(level_.highscores.begin() + i, {name, score});
+                break;
+            }
+        }
+    }
+    app_.GetFileManager().SaveLevel(level_);
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {

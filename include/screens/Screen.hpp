@@ -50,12 +50,15 @@ public:
 
     void DequeueMessage();
 
-    ui::pfloat calcMessageBoxButtonTop() const;
+    ui::pfloat calcMessageBoxButtonTop(const ui::pfloat& messageHeight) const;
 
     /**
      * button number is the number of the button from right starting from 1.
      */
-    ui::pfloat calcMessageBoxButtonLeft(unsigned char buttonNumber) const;
+    ui::pfloat calcMessageBoxButtonLeft(
+        unsigned char buttonNumber, 
+        const ui::pfloat& messageWidth
+    ) const;
 
     ui::pfloat calcConfirmTextTop() const;
 
@@ -92,7 +95,9 @@ protected:
     std::shared_ptr<RoundIcon> generateMessageBoxButton(
         unsigned char buttonNumber, 
         const std::function<void()> callBack, 
-        const SpriteID& sprite
+        const SpriteID& sprite, 
+        const ui::pfloat& messageHeight, 
+        const ui::pfloat& messageWidth
     );
 
     std::shared_ptr<TextElement> generateConfirmText(const std::string& text);

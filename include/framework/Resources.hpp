@@ -8,14 +8,14 @@ enum SpriteID {
 
     //UI sprites
     ui_button,
-    ui_star_empty,
-    ui_star,
     ui_button_pause,
     ui_button_restart,
     ui_button_exit,
     ui_button_resume,
     ui_button_cancel,
     ui_button_ok,
+    ui_star,
+    ui_missing_star,
 
 
     //Level backgrounds

@@ -15,7 +15,8 @@ const std::pair<int, std::string> ResourceManager::texturePaths_[] = {
     {1, "data/textures/teekkari.png"},
     {2, "data/textures/nice.png"},
     {3, "data/textures/background0.jpg"},
-    {4, "data/textures/buttons.png"}
+    {4, "data/textures/buttons.png"},
+    {5, "data/textures/stars.png"}
 };
 
 const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
@@ -42,6 +43,9 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::ui_button_resume, 4, {384, 0, 127, 127}},
     {SpriteID::ui_button_cancel, 4, {512, 0, 127, 127}},
     {SpriteID::ui_button_ok, 4, {640, 0, 127, 127}},
+
+    {SpriteID::ui_star, 5, {0, 0, 256, 256}},
+    {SpriteID::ui_missing_star, 5, {257, 0, 256, 256}},
     
     {SpriteID::cannon_base, 0, {0, 654, 214, 114}},
     {SpriteID::cannon_head, 0, {214, 501, 137, 267}}
