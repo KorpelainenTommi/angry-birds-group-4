@@ -55,6 +55,9 @@ private:
     /// Write a highscore to output stream
     void PrintHighScores(std::ofstream& file, const std::pair<std::string, int>& score) const;
 
+    /// Write a starting teekkari to output stream
+    void PrintStartingTeekkaris(std::ofstream& file, const gm::GameObjectType& object) const;
+
     /// List all level paths from this folder
     std::vector<std::string> ListLevelPaths(std::string folder) const;
 

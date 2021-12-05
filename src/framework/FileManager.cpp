@@ -83,6 +83,10 @@ void FileManager::PrintHighScores(std::ofstream& file, const std::pair<std::stri
     file << "HIGH " << score.first << " " << score.second << "\n";
 }
 
+void FileManager::PrintStartingTeekkaris(std::ofstream& file, const gm::GameObjectType& object) const {
+    file << "START" << object << "\n";
+}
+
 bool FileManager::SaveLevel(const Level& level, const std::string& path) const{
     std::ofstream file;
     file.open(path, std::ios::out);
@@ -99,6 +103,10 @@ bool FileManager::SaveLevel(const Level& level, const std::string& path) const{
 
     for(const auto& i : level.highscores){
         PrintHighScores(file, i);
+    }
+
+    for(const auto& i : level.startingTeekkaris){
+        PrintStartingTeekkaris(file, i);
     }
 
     file << "BACKGROUND " << level.backgroundImage << "\n";
@@ -152,6 +160,9 @@ bool FileManager::LoadLevel(Level& level, const std::string& path) const {
             level.levelPath = path;
             file.close();
             return true;
+
+        }   else if (lineData[0] == "START"){
+            level.startingTeekkaris.push_back(static_cast<gm::GameObjectType>(std::stoi(lineData[1])));
         }
     }
     file.close();
