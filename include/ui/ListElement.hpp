@@ -54,6 +54,11 @@ public:
      */
     const std::map<int, std::shared_ptr<Element>>& GetElements() const;
 
+    /**
+     * Removes all elements from the element list.
+     */
+    void ClearElements();
+
 private:
     int nextId_ = INT_MIN;
     std::map<int, std::shared_ptr<Element>> elements_;

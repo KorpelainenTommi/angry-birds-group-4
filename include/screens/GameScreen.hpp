@@ -47,7 +47,7 @@ public:
     /**
      * Game should call this whenever the the list of projectiles should be updated.
      */
-    void UpdateProjectileList(std::vector<SpriteID /*this can be changed*/>){}
+    void UpdateProjectileList(std::vector<SpriteID /*this can be changed*/>);
 
     Game& GetGame(){return game_;}
 
@@ -79,6 +79,16 @@ public:
 
     void saveScore(const std::string& name, int score);
 
+    ui::pfloat calcProjectileBarWidth() const;
+
+    ui::pfloat calcProjectileBarTop() const;
+
+    ui::pfloat calcProjectileBarBottomTop() const;
+
+    ui::pfloat calcProjectileBarBodyTop() const;
+
+    ui::pfloat calcProjectileBarBodyHeight() const;
+
 private:
     const ui::pfloat topLeftButtonSpacing_ = 1 VH;
     const ui::pfloat topLeftButtonSize_ = 4 VH;
@@ -89,11 +99,16 @@ private:
     const ui::pfloat victoryMessageWidth_ = 30 VW;
     const ui::pfloat victoryMessageStarSize_ = 5 VH;
     const ui::pfloat victoryMessageFontSize_ = ui::defaultFontSize;
+    const ui::pfloat projectileBarHeight = 50 VH;
+    const ui::pfloat projectileBarIconSize = 4 VH;
+    const ui::pfloat projectileBarSpacing = 1 VH;
 
     Game game_;
     Level level_;
     std::shared_ptr<TextLine> scoreLabel_;
     std::shared_ptr<TextLine> timeLabel_;
+    std::shared_ptr<ListElement> projectileList_;
+    std::vector<std::size_t> iconIndexes_;
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -124,6 +139,18 @@ private:
     void addVictoryMessageNicknamePrompt(std::vector<std::shared_ptr<Element>>& v);
 
     std::shared_ptr<InputElement> generateVictoryMessageInput();
+
+    void addProjectileBar();
+
+    std::shared_ptr<ColoredElement> addListTop();
+
+    std::shared_ptr<ColoredElement> addListBottom();
+
+    void addList();
+
+    void addProjectileIcon(SpriteID icon);
+
+    void clearIcons();
 };
 
 

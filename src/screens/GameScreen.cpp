@@ -9,6 +9,21 @@ GameScreen::GameScreen(
     level_ = initialLevel;
     addTopLeftButtons();
     timeLabel_ = addTopRightLabel(2, "time: ");
+    addProjectileBar();
+    UpdateProjectileList({
+        SpriteID::ui_button_restart,
+        SpriteID::ui_button_resume,
+        SpriteID::ui_button_ok,
+        SpriteID::ui_button_exit,
+        SpriteID::ui_button_cancel,
+        SpriteID::ui_button_pause,
+        SpriteID::ui_button_restart,
+        SpriteID::ui_button_resume,
+        SpriteID::ui_button_ok,
+        SpriteID::ui_button_exit,
+        SpriteID::ui_button_cancel,
+        SpriteID::ui_button_pause
+    });
     /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
     input->SetFontSize(ui::defaultFontSize * 4);
     menu_.push_back(input);*/
@@ -299,6 +314,111 @@ void GameScreen::saveScore(const std::string& name, int score){
         }
     }
     app_.GetFileManager().SaveLevel(level_);
+}
+
+void GameScreen::addProjectileBar(){
+    addList();
+    auto listTop = addListTop();
+    auto listBottom = addListBottom();
+    auto wp = std::weak_ptr<ListElement>(projectileList_);
+    projectileList_->SetWindowResizeHandler([this, wp, listTop, listBottom](){
+        ui::pfloat w = this->calcProjectileBarWidth();
+        listTop->SetTop(this->calcProjectileBarTop());
+        listTop->SetWidth(w);
+        listBottom->SetTop(this->calcProjectileBarBottomTop());
+        listBottom->SetWidth(w);
+        auto p = wp.lock();
+        p->SetTop(this->calcProjectileBarBodyTop());
+        p->SetSize(
+            w, 
+            this->calcProjectileBarBodyHeight()
+        );
+    });
+}
+
+std::shared_ptr<ColoredElement> GameScreen::addListTop(){
+    auto e = std::make_shared<ColoredElement>(
+        calcProjectileBarTop(), 
+        0 VW, 
+        projectileBarSpacing, 
+        calcProjectileBarWidth()
+    );
+    e->SetBackgroundColor(ui::backgroundColor2);
+    menu_.push_back(e);
+    return e;
+}
+
+ui::pfloat GameScreen::calcProjectileBarWidth() const {
+    return (ui::toVHFloat(projectileBarIconSize) + ui::toVHFloat(projectileBarSpacing) * 2) VH;
+}
+
+ui::pfloat GameScreen::calcProjectileBarTop() const {
+    return (50 - ui::toVHFloat(projectileBarHeight) / 2) VH;
+}
+
+std::shared_ptr<ColoredElement> GameScreen::addListBottom(){
+    auto e = std::make_shared<ColoredElement>(
+        calcProjectileBarBottomTop(), 
+        0 VW, 
+        projectileBarSpacing, 
+        calcProjectileBarWidth()
+    );
+    e->SetBackgroundColor(ui::backgroundColor2);
+    menu_.push_back(e);
+    return e;
+}
+
+ui::pfloat GameScreen::calcProjectileBarBottomTop() const {
+    return (50 + ui::toVHFloat(projectileBarHeight) / 2 - ui::toVHFloat(projectileBarSpacing)) VH;
+}
+
+void GameScreen::addList(){
+    projectileList_ = std::make_shared<ListElement>(
+        calcProjectileBarBodyTop(), 
+        0 VW, 
+        calcProjectileBarBodyHeight(), 
+        calcProjectileBarWidth()
+    );
+    projectileList_->SetBackgroundColor(ui::backgroundColor2);
+    menu_.push_back(projectileList_);
+}
+
+ui::pfloat GameScreen::calcProjectileBarBodyTop() const {
+    return (50 - ui::toVHFloat(projectileBarHeight) / 2 + ui::toVHFloat(projectileBarSpacing)) VH;
+}
+
+ui::pfloat GameScreen::calcProjectileBarBodyHeight() const {
+    return (ui::toVHFloat(projectileBarHeight) - ui::toVHFloat(projectileBarSpacing) * 2) VH;
+}
+
+void GameScreen::UpdateProjectileList(std::vector<SpriteID> projectiles){
+    clearIcons();
+    for(auto e: projectiles){
+        addProjectileIcon(e);
+    }
+}
+
+void GameScreen::clearIcons(){
+    projectileList_->ClearElements();
+    for(std::size_t i = iconIndexes_.size(); i > 0;){
+        menu_.erase(menu_.begin() + iconIndexes_[--i]);
+    }
+    iconIndexes_.clear();
+}
+
+void GameScreen::addProjectileIcon(SpriteID icon){
+    auto i = std::make_shared<RoundIcon>(
+        0 VH, 
+        projectileBarSpacing, 
+        projectileBarIconSize / 2, 
+        icon
+    );
+    i->SetMouseDownHandler([this, icon](){
+        this->GetGame().SelectProjectile(icon);
+    });
+    projectileList_->InsertElement(i);
+    iconIndexes_.push_back(menu_.size());
+    menu_.push_back(i);
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {

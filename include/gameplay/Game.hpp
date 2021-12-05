@@ -16,6 +16,8 @@
 #include <box2d/b2_contact.h>
 #include <SFML/System/Vector2.hpp>
 
+#include <iostream>
+
 /** 
  * Game owns and manages all GameObjects. It also manages the box2d world, 
  * and counts ticks (Update calls) for keeping track of time.
@@ -157,7 +159,7 @@ public:
     void checkCameraBounds();
 
     /// UI calls this to report Game that the user has selected a projectile.
-    void SelectProjectile(SpriteID /*this can be changed*/){}
+    void SelectProjectile(SpriteID s/*this can be changed*/){std::cout << s << std::endl;}
 
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);

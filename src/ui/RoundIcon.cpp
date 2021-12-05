@@ -2,7 +2,8 @@
 
 void RoundIcon::Render(const RenderSystem& r){
     ui::pfloat d = r_ * 2;
-    r.RenderSprite(icon_, x_, y_, d, d);
+    if(cropped_) r.RenderSprite(icon_, x_, y_, d, d, cropArea_);
+    else r.RenderSprite(icon_, x_, y_, d, d);
 }
 
 /*
