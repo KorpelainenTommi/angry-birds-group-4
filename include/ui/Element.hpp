@@ -28,7 +28,11 @@ public:
 
     void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
 
-    bool isInside(float xw, float yh) const;
+    void SetHeight(ui::pfloat height){h_ = height;}
+
+    void SetWidth(ui::pfloat width){w_ = width;}
+
+    virtual bool isInside(float xw, float yh) const;
 
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
 
@@ -37,6 +41,8 @@ public:
     virtual bool OnMouseMove(float xw, float yh);
 
     virtual bool OnMouseScroll(float delta, float xw, float yh);
+
+    void OnWindowResize();
 
     void SetMouseDownHandler(const std::function<void()> f){mouseDownHandler_ = f;}
     void SetMouseDownHandler(){mouseDownHandler_ = NULL;}
@@ -59,6 +65,9 @@ public:
     void SetFocusChangeHandler(const std::function<void(bool focused)> f){focusChangeHandler_ = f;}
     void SetFocusChangeHandler(){focusChangeHandler_ = NULL;}
 
+    void SetWindowResizeHandler(const std::function<void()> f){windowResizeHandler_ = f;}
+    void SetWindowResizeHandler(){windowResizeHandler_ = NULL;}
+
     void Blur();
 
     void Focus();
@@ -71,13 +80,12 @@ public:
 
     const ui::pfloat& GetHeight() const {return h_;}
 
-    void SetCropArea(const ui::CropArea& a){
+    virtual void SetCropArea(const ui::CropArea& a){
         cropArea_ = a;
         cropped_ = true;
     }
-    void SetCropArea(){cropped_ = false;}
+    virtual void SetCropArea(){cropped_ = false;}
 
-protected:
     float toVHFloat(const ui::pfloat&) const;
     float toVWFloat(const ui::pfloat&) const;
     ui::pfloat toVH(const ui::pfloat&) const;
@@ -86,12 +94,14 @@ protected:
     ui::pfloat GetTop() const;
     ui::pfloat GetLeft() const;
 
+protected:
+
     ui::pfloat x_;
     ui::pfloat y_;
     ui::pfloat w_;
     ui::pfloat h_;
-    ui::pfloat offsetX_;
-    ui::pfloat offsetY_;
+    ui::pfloat offsetX_ = 0 VW;
+    ui::pfloat offsetY_ = 0 VH;
 
     std::function<void()> mouseDownHandler_ = NULL;
     std::function<void()> mouseUpHandler_ = NULL;
@@ -99,6 +109,7 @@ protected:
     std::function<void()> mouseLeaveHandler_ = NULL;
     std::function<void(float delta)> mouseScrollHandler_ = NULL;
     std::function<void(bool focused)> focusChangeHandler_ = NULL;
+    std::function<void()> windowResizeHandler_ = NULL;
 
     bool mouseIn_ = false;
     bool focused_ = false;

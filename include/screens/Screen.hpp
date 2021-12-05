@@ -6,6 +6,9 @@
 #include <ui/Element.hpp>
 #include <UpdateListener.hpp>
 #include <Application.hpp>
+#include <queue>
+#include <ui/RoundIcon.hpp>
+#include <ui/TextElement.hpp>
 
 #include <iostream>
 
@@ -20,51 +23,63 @@ public:
 
     virtual void Update() {
         //Update all elements
-        for(const auto& e : menu_) e->Update();
+        //for(const auto& e : menu_) e->Update();
+        //GameScreen overrides this
     }
 
-    virtual void Render(const RenderSystem& r) {
-        //Render all elements
-        for(const auto& e : menu_) e->Render(r);
-    }
+    virtual void Render(const RenderSystem& r);
 
     Application& GetApplication() const { return app_; }
 
-    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-        std::size_t len = menu_.size();
-        for(std::size_t i = 0; i < len; i++){
-            if(menu_[i].get()->OnMouseDown(button, xw, yh)) return true;
-        }
-        return false;
-    }
+    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
 
-    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh){
-        std::size_t len = menu_.size();
-        for(std::size_t i = 0; i < len; i++){
-            if(menu_[i].get()->OnMouseUp(button, xw, yh)) return true;
-        }
-        return false;
-    }
+    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
 
-    virtual bool OnMouseMove(float xw, float yh){
-        std::size_t len = menu_.size();
-        for(std::size_t i = 0; i < len; i++){
-            if(menu_[i].get()->OnMouseMove(xw, yh)) return true;
-        }
-        return false;
-    }
+    virtual bool OnMouseMove(float xw, float yh);
 
-    virtual bool OnMouseScroll(float delta, float xw, float yh){
-        std::size_t len = menu_.size();
-        for(std::size_t i = 0; i < len; i++){
-            if(menu_[i].get()->OnMouseScroll(delta, xw, yh)) return true;
-        }
-        return false;
-    }
+    virtual bool OnMouseScroll(float delta, float xw, float yh);
+
+    void Confirm(std::string text, const std::function<void(bool)> callBack);
+
+    void DequeueMessage();
+
+    ui::pfloat calcMessageBoxButtonTop() const;
+
+    /**
+     * button number is the number of the button from right starting from 1.
+     */
+    ui::pfloat calcMessageBoxButtonLeft(unsigned char buttonNumber) const;
+
+    ui::pfloat calcConfirmTextTop() const;
+
+    ui::pfloat calcConfirmTextLeft() const;
+
+    ui::pfloat calcConfirmTextHeight() const;
+
+    ui::pfloat calcConfirmTextWidth() const;
 
 protected:
+    const ui::pfloat messageBoxHeight_ = 15 VH;
+    const ui::pfloat messageBoxWidth_ = 30 VW;
+    const ui::pfloat messageBoxButtonSize_ = 4 VH;
+    const ui::pfloat messageBoxSpacing_ = 1 VH;
+
     Application& app_;
     std::vector<std::shared_ptr<Element>> menu_;
+    std::queue<std::vector<std::shared_ptr<Element>>> messages_;
+    float windowWidth_ = 0.0F;
+    float windowHeight_ = 0.0F;
+
+    /**
+     * button number is the number of the button from right starting from 1.
+     */
+    std::shared_ptr<RoundIcon> generateMessageBoxButton(
+        unsigned char buttonNumber, 
+        const std::function<void()> callBack, 
+        const SpriteID& sprite
+    );
+
+    std::shared_ptr<TextElement> generateConfirmText(const std::string& text);
 };
 
 

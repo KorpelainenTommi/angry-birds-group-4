@@ -4,21 +4,13 @@
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_body.h>
 #include <gameplay/PhysObject.hpp>
-
+#include <gameplay/GameObjectTypes.hpp>
 #include <iostream>
 
 Game::Game(GameScreen& gameScreen) : screen_(gameScreen), world_({0, -ph::gravity}) {
 
     //Create the ground
-    b2BodyDef groundDef;
-    b2PolygonShape groundShape;
-    groundDef.position = {0, -0.5F * ph::groundThickness};
-    groundShape.SetAsBox(ph::fullscreenPlayArea * 0.5F, 0.5F * ph::groundThickness);
-
-    //Box2D clones the data so it doesn't matter that groundDef and groundShape go out of scope
-    ground_ = world_.CreateBody(&groundDef);
-    ground_->CreateFixture(&groundShape, 0.0F);
-
+    CreateObject(gm::GameObjectType::ground_obj);
 
     //Listen to contacts
     world_.SetContactListener(this);
@@ -30,15 +22,46 @@ Game::Game(GameScreen& gameScreen) : screen_(gameScreen), world_({0, -ph::gravit
 
 }
 
-//TODO: should use gm::GetObjectGroup(GameObjectType) give object ids from groups
-int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
+Game::Game(GameScreen& gameScreen, Level level) : Game(gameScreen) {
+    LoadLevel(level);
+}
 
-    std::unique_ptr<GameObject> obj = gm::IDToObject(*this, type, x, y, rot);
-    int id = simpleIDCounter++;
+
+void Game::LoadLevel(Level level) {
+    level_  = level;
+    ClearObjects();
+    if(level.levelMode != LevelMode::endless) teekkarisLeft_.clear();
+    ResetCamera();
+    IDCounter_ = {};
+    CreateObject(gm::GameObjectType::ground_obj);
+    for(const auto& objectdata : level.objectData) {
+        CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
+    }
+}
+
+//TODO: this isn't an actual implementation, this will crash for invalid ID values
+GameObject& Game::GetObject(int id) {
+    return *objects_[id];
+}
+
+int Game::AddObject(std::unique_ptr<GameObject> obj) {
+    int id;
+    switch (gm::GetObjectGroup(obj->objectType_)) {
+        case gm::GameObjectGroup::background : id = IDCounter_.backgrounds++; break;
+        case gm::GameObjectGroup::block : id = IDCounter_.blocks++; break;
+        case gm::GameObjectGroup::teekkari : id = IDCounter_.teekkaris++; break;
+        case gm::GameObjectGroup::effect : id = IDCounter_.effects++; break;
+        case gm::GameObjectGroup::ground : id = 4 * gm::objectGroupSize; break;
+    }
     obj->gameID_ = id;
-    objects_[obj->gameID_] = std::move(obj);
+    objects_[id] = std::move(obj);
 
     return id;
+}
+
+int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
+    std::unique_ptr<GameObject> obj = gm::IDToObject(*this, type, x, y, rot);
+    return AddObject(std::move(obj));
 }
 
 
@@ -52,28 +75,25 @@ void Game::ClearObjects() {
 
 
 Game::~Game() {
-    world_.DestroyBody(ground_);
     ClearObjects();
 }
 
 
 void Game::BeginContact(b2Contact* contact) {
-    
     if(contact->GetFixtureA()->IsSensor() || contact->GetFixtureB()->IsSensor()) return;
-    b2Body* bodyA = contact->GetFixtureA()->GetBody();  
+    b2Body* bodyA = contact->GetFixtureA()->GetBody();
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
-    b2WorldManifold worldManifold;   
+    //Calculate relative velocity
+    b2WorldManifold worldManifold;
     contact->GetWorldManifold(&worldManifold);
-
     b2Vec2 velocity = bodyA->GetLinearVelocityFromWorldPoint(worldManifold.points[0]) - bodyB->GetLinearVelocityFromWorldPoint(worldManifold.points[0]);
     if(velocity.LengthSquared() < ph::collisionTreshold) return;
-    PhysObject* objA = nullptr;
-    PhysObject* objB = nullptr;
-
-    if(bodyA != ground_) objA = ((PhysObject*)contact->GetFixtureA()->GetUserData().data);
-    if(bodyB != ground_) objB = ((PhysObject*)contact->GetFixtureB()->GetUserData().data);
-    if(objA) objA->OnCollision(-velocity, *objB, bodyB == ground_);
-    if(objB) objB->OnCollision(velocity, *objA, bodyA == ground_);
+    
+    //Call OnCollision
+    PhysObject* objA = ((PhysObject*)contact->GetFixtureA()->GetUserData().data);
+    PhysObject* objB = ((PhysObject*)contact->GetFixtureB()->GetUserData().data);
+    if(objA) objA->OnCollision(-velocity, *objB);
+    if(objB) objB->OnCollision(velocity, *objA);
 }
 
 void Game::Update() {
@@ -86,10 +106,12 @@ void Game::Update() {
     world_.Step(ph::timestep, ph::velocityIters, ph::positionIters);
 
     //Call update on objects. They will handle their own business
-    for(auto& obj : objects_) {
-        obj.second->Update();
+    
+    auto it = objects_.begin();
+    int i = 0;
+    while(it != objects_.end()) {
+        (it++)->second->Update();
     }
-
 }
 
 void Game::Render(const RenderSystem& r) {
@@ -99,15 +121,32 @@ void Game::Render(const RenderSystem& r) {
         obj.second->Render(r);
     }
 
+}
 
-    //Render the ground last
-    r.RenderRect(ph::groundColor, 0, -0.5F * ph::groundThickness, ph::fullscreenPlayArea, ph::groundThickness, 0, camera_);
-
+bool Game::OnMouseMove(float xw, float yh) {
+    for(auto& obj : objects_) {
+        if(obj.second->OnMouseMove(xw, yh)) return true;
+    }
+    return false;
 }
 
 
-unsigned int Game::GetTicks() const { time_; };
-float Game::GetTime() const { time_ * ph::timestep; }
+bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
+    for(auto& obj : objects_) {
+        if(obj.second->OnMouseDown(button, xw, yh)) return true;
+    }
+    return false;
+}
+bool Game::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
+    for(auto& obj : objects_) {
+        if(obj.second->OnMouseUp(button, xw, yh)) return true;
+    }
+    return false;
+}
+
+
+unsigned int Game::GetTicks() const { return time_; };
+float Game::GetTime() const { return time_ * ph::timestep; }
 
 
 const Camera& Game::GetCamera() const { return camera_; }
@@ -120,5 +159,6 @@ void Game::SetCameraRot(float rot) { camera_.rot = rot; }
 
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
+
 
 

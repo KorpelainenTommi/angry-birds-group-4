@@ -13,7 +13,7 @@ public:
     ): Element(top, left, height, width){}
 
     void SetBackgroundColor(const sf::Color& c){backgroundColor_ = c;}
-    void SetBackgroundColor(){backgroundColor_ = ui::backgroundColor;}
+    void SetBackgroundColor(){backgroundColor_ = defaultBackgroundColor_;}
 
     virtual void Render(const RenderSystem& r){
         if(cropped_) r.RenderRect(backgroundColor_, GetLeft(), GetTop(), w_, h_, cropArea_);
@@ -22,6 +22,7 @@ public:
 
 protected:
     sf::Color backgroundColor_ = ui::backgroundColor;
+    sf::Color defaultBackgroundColor_ = ui::backgroundColor;
 };
 
 #endif

@@ -141,3 +141,51 @@ Implementing game's basic functionality is now on the go. Framework is nearly co
 3. Ilari Tulkki: continue with the UI.
 4. Joonas Palmulaakso: writing gameobject classes further.
 
+
+
+
+# Meeting 25.11.2021 18::00
+
+**Participants**: 
+Tommi Korpelainen
+Aleksi Rintanen
+Ilari Tulkki
+Joonas Palmulaakso
+
+## Summary of works
+1. Tommi Korpelainen
+   
+   Implemented simple box2d physics (breakable boxes that fall)
+
+2. Aleksi Rintanen
+
+   Created test level, object id grouping and Game methods
+
+3. Ilari Tulkki
+ 
+   Created menu and more UI elements
+   
+4. Joonas Palmulaakso
+
+   Implemented GameObject methods, but had problems with git and the work was unfortunately lost
+
+
+## Challenges
+
+Some work was lost, but hopefully this won't happen again
+
+## Actions
+1. Tommi Korpelainen is going to start creating the assets and artwork for the game
+2. Aleksi Rintanen is going to develop and test game features now that all systems and physics are implemented
+3. Ilari Tulkki is going to add UI elements to the GameScreen, and load levels for the MainMenu.
+4. Joonas Palmulaakso is going to work with level files and IO
+
+## Project status 
+All basic systems are finished, now it's time to start creating game features and add artwork and sound effects
+
+### TODOs
+1. Tommi Korpelainen: Creating textures and implementing the teekkari ragdoll
+2. Aleksi Rintanen: Working on game logic (cannon, points and teekkaris, animated effects)
+3. Ilari Tulkki: Creating GameScreen UI, and level loading
+4. Joonas Palmulaakso: Loading and saving level files
+

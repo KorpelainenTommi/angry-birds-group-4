@@ -34,16 +34,15 @@
  *  int GetObjectGroup(GameObjectType) that returns an integer 0, 1, 2, 3 etc.
  *
  */
+struct IDCounter {
+    int backgrounds = 0;
+    int blocks = 1 * gm::objectGroupSize;
+    int teekkaris = 2 * gm::objectGroupSize;
+    int effects = 3 * gm::objectGroupSize;
+};
 
 //Forward declaration
 class GameScreen;
-
-
-//TODO:
-//Methods marked with <!> have not been implemented in the cpp file
-
-
-
 
 
 /// A Game encapsulates a single game session that starts when entering a GameScreen, and ends when exiting it
@@ -54,7 +53,7 @@ public:
     Game(GameScreen&);
 
     /// Construct a game, and load the provided level into it
-    Game(GameScreen &s, Level level);                                       //<!>
+    Game(GameScreen &s, Level level);           
 
     virtual ~Game();
 
@@ -64,9 +63,25 @@ public:
     /// Update all objects in this game
     virtual void Update();
 
+    //===========================================================================
+    //TODO:
+    //In addition to implementin these methods call GameScreen::OnGameCompleted()
+    //or GameScreen::OnGameLost when the game ends.
+    //Call also GameScreen::OnScoreChange whenever the score changes.
+
+    /// UI uses this to pause the physics simulation
+    void Pause(){}; //TODO: implement this properly
+
+    /// UI uses this to continue physics simulation after pausing it
+    void Resume(){}; //TODO: implement this properly
+
+    //===========================================================================
+
+    void ChooseTeekkari(){}; // TODO: implement
+
 
     /// Create all objects from this level.
-    void LoadLevel(Level level);                                            //<!>
+    void LoadLevel(Level level);
 
 
     /* Note about object creation:
@@ -94,8 +109,8 @@ public:
     /// Clear all objects
     void ClearObjects();
 
-    /// Get a reference to the GameObject with this id. Returns true if it exists, false otherwise
-    bool GetObject(int id, GameObject&);
+    /// Get a reference to the GameObject with this id
+    GameObject& GetObject(int id);
 
 
     /// Get the time in ticks
@@ -111,7 +126,7 @@ public:
     b2World& GetB2World();
 
     /// Callback for Box2D contacts
-	virtual void BeginContact(b2Contact* contact);
+    virtual void BeginContact(b2Contact* contact);
 
 
     /// Get a copy of current Camera
@@ -129,7 +144,9 @@ public:
     /// Set the camera rotation
     void SetCameraRot(float rot);
 
-
+    virtual bool OnMouseMove(float xw, float yh);
+    virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
+    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
     
 protected:
     GameScreen& screen_;
@@ -138,21 +155,17 @@ protected:
     Level level_;
     Camera camera_;
 
-    /// List of teekkaris that can be spawned to the catapult
-    std::vector<gm::GameObjectType> teekkarisLeft_;
+    /// List of teekkaris that can be spawned to the cannon
+    std::vector<gm::TeekkariData> teekkarisLeft_;
+    int chosenTeekkari_ = 0;
 
 
     int points_;
-    unsigned int time_; //Game ticks since starting => number of update calls
+    unsigned int time_ = 0; //Game ticks since starting => number of update calls
 
     b2World world_;
-
-    // The ground (b2Body* ground_ cannot be a smart pointer because box2d allocates and deallocates this on its own)
-    b2Body* ground_;
     
-
-    //Gives new gameIDs without grouping. This should be removed when proper grouping is implemented
-    int simpleIDCounter = 0;
+    IDCounter IDCounter_;
 
 };
 

@@ -13,7 +13,7 @@ Block::Block(Game& game, gm::GameObjectType type, float x, float y, float rot) :
     definition.type = b2BodyType::b2_dynamicBody;
     definition.fixedRotation = false;
     definition.position = {x, y};
-    definition.angle = rot;
+    definition.angle = ph::rotToAng(rot);
 
     mainBody_ = game.GetB2World().CreateBody(&definition);
 
@@ -30,23 +30,18 @@ Block::Block(Game& game, gm::GameObjectType type, float x, float y, float rot) :
     mainBody_->CreateFixture(&fixture);
 
     hp_ = mainBody_->GetMass() * materialData_.hpMassRatio;
+    Record();
 
 }
 
 void Block::Render(const RenderSystem& r) {
-
-    float xOfs = shapeData_.spriteOffset.x;
-    float yOfs = shapeData_.spriteOffset.y;
-    b2Vec2 offset0 = { cosf(rot_.f0) * xOfs - sinf(rot_.f0) * yOfs, sinf(rot_.f0) * xOfs + cosf(rot_.f0) * yOfs };
-    b2Vec2 offset1 = { cosf(rot_) * xOfs - sinf(rot_) * yOfs, sinf(rot_) * xOfs + cosf(rot_) * yOfs };
-    ph::tfloat x; x.f0 = x_.f0 + offset0.x; x.f1 = x_.f1 + offset1.x;
-    ph::tfloat y; y.f0 = y_.f0 + offset0.y; y.f1 = y_.f1 + offset1.y;
-    r.RenderSprite(blockData_.sprite, x, y, shapeData_.height, -180 * rot_ / 3.14159265F, game_.GetCamera());
-
+    r.RenderSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_, game_.GetCamera());
 }
 
-void Block::OnCollision(b2Vec2 velocity, PhysObject& other, bool isGround) {
+void Block::OnCollision(b2Vec2 velocity, PhysObject& other) {
     
-    PhysObject::OnCollision(velocity, other, isGround);
+    PhysObject::OnCollision(velocity, other);
+
+    //Play sounds and stuff
 
 }

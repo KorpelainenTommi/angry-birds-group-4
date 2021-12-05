@@ -19,6 +19,15 @@ namespace gm {
 //List of all game object types
 //Defined in the cpp file
 
+
+enum GameObjectGroup {
+    background,
+    block,
+    teekkari,
+    effect,
+    ground
+};
+
 /// A unique identifier defining the type of GameObject. All GameObjects should be spawnable without extra info
 enum GameObjectType {
 
@@ -95,8 +104,8 @@ enum GameObjectType {
     prop_tnt,
 
 
-    //Catapult
-    catapult,
+    //Cannon
+    cannon,
 
 
     //Teekkaris
@@ -119,7 +128,7 @@ enum GameObjectType {
     ability_integral,
 
 
-
+    ground_obj
 
 };
 
@@ -146,6 +155,13 @@ std::unique_ptr<GameObject> IDToObject(Game& game, GameObjectType type, float x,
 
 
 
+// All properties needed to spawn a unique Teekkari
+// A Teekkari can be spawned with GameObjectType as well, it will have a randomly generated TeekkariData
+
+
+struct TeekkariData {
+
+};
 
 
 // Block properties
@@ -179,7 +195,6 @@ struct BlockShapeData {
     float volume;
     float height;
     std::shared_ptr<b2Shape> b2shape;
-    b2Vec2 spriteOffset;
 };
 
 struct BlockData {
@@ -196,8 +211,6 @@ extern const std::unordered_map<BlockMaterial, BlockMaterialData> materialProper
 
 /// Lookup for all block shapes
 extern const std::unordered_map<BlockShape, BlockShapeData> shapeProperties;
-
-
 
 
 }

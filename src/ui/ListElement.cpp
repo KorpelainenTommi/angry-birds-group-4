@@ -17,16 +17,25 @@ std::shared_ptr<Element> ListElement::GetElement(int id){
 
 void ListElement::Render(const RenderSystem& r){
     ColoredElement::Render(r);
-    float h = GetTop();
+    ui::CropArea ca;
+    if(cropped_) ca = ui::combineCropAreas(cropArea_, {y_, x_, h_, w_});
+    float h = toVHFloat(GetTop());
     float s = toVHFloat(spacing_);
     for(const auto t: elements_){
         auto e = t.second;
+        if(cropped_) e->SetCropArea(ca);
         e->SetTop(h VH);
         h += toVHFloat(e->GetHeight()) + s;
     }
 }
 
-bool ListElement::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
+void ListElement::SetCropArea(){
+    cropped_ = false;
+    ui::CropArea ca = {y_, x_, h_, w_};
+    for(auto t: elements_) t.second->SetCropArea(ca);
+}
+
+/*bool ListElement::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
     if(isInside(xw, yh)){
         for(auto t: elements_){
             if(t.second->OnMouseDown(button, xw, yh)) return true;
@@ -69,7 +78,7 @@ bool ListElement::OnMouseMove(float xw, float yh){
         }
     }
     return b;
-}
+}*/
 
 bool ListElement::OnMouseScroll(float delta, float xw, float yh){
     if(isInside(xw, yh)){
@@ -79,6 +88,7 @@ bool ListElement::OnMouseScroll(float delta, float xw, float yh){
             if(t.second->OnMouseScroll(delta, xw, yh)) return true;
             h -= toVHFloat(t.second->GetHeight()) + s;
         }
+        h += s;
         if(scrollOffset_.f >= 0 && delta * scrollMultiplier_ >= 0) return false;
         scrollOffset_ += (delta * scrollMultiplier_ / ui::windowHeight) VH;
 
@@ -86,8 +96,19 @@ bool ListElement::OnMouseScroll(float delta, float xw, float yh){
         if(scrollOffset_.f > 0) scrollOffset_ = 0 VH;
         if(scrollOffset_.f < h && h < 0) scrollOffset_ = h VH;
 
-        for(auto t: elements_) t.second->SetOffsetY(scrollOffset_);
+        for(auto t: elements_){
+            t.second->SetOffsetY(scrollOffset_);
+            t.second->OnMouseMove(xw, yh);
+        }
         return true;
     }
     return false;
+}
+
+void ListElement::SetSpacing(const ui::pfloat& s){
+    spacing_ = s;
+}
+
+const std::map<int, std::shared_ptr<Element>>& ListElement::GetElements() const {
+    return elements_;
 }

@@ -30,6 +30,26 @@ namespace ui {
         P p;
     };
     inline ui::pfloat operator%(const float& ff, const ui::pfloat& pp) { return { ff, pp.p }; }
+    // This for clang
+    inline ui::pfloat operator%(const int& ff, const ui::pfloat& pp) { return { (float) ff, pp.p }; }
+    inline ui::pfloat operator%(const double& ff, const ui::pfloat& pp) { return { (float) ff, pp.p }; }
+
+    inline ui::pfloat operator*(const float& ff, const ui::pfloat& pp){return {pp.f * ff, pp.p};}
+    inline ui::pfloat operator*(const int& ff, const ui::pfloat& pp){return {pp.f * (float)ff, pp.p};}
+    inline ui::pfloat operator*(const double& ff, const ui::pfloat& pp){return {pp.f * (float)ff, pp.p};}
+
+    inline ui::pfloat operator/(const float& ff, const ui::pfloat& pp){return {pp.f / ff, pp.p};}
+    inline ui::pfloat operator/(const int& ff, const ui::pfloat& pp){return {pp.f / (float)ff, pp.p};}
+    inline ui::pfloat operator/(const double& ff, const ui::pfloat& pp){return {pp.f / (float)ff, pp.p};}
+
+    inline ui::pfloat operator*(const ui::pfloat& pp, const float& ff){return {pp.f * ff, pp.p};}
+    inline ui::pfloat operator*(const ui::pfloat& pp, const int& ff){return {pp.f * (float)ff, pp.p};}
+    inline ui::pfloat operator*(const ui::pfloat& pp, const double& ff){return {pp.f * (float)ff, pp.p};}
+
+    inline ui::pfloat operator/(const ui::pfloat& pp, const float& ff){return {pp.f / ff, pp.p};}
+    inline ui::pfloat operator/(const ui::pfloat& pp, const int& ff){return {pp.f / (float)ff, pp.p};}
+    inline ui::pfloat operator/(const ui::pfloat& pp, const double& ff){return {pp.f / (float)ff, pp.p};}
+
 /* VW and VH should be used like this:
  *
  * auto x = 50 VW;
@@ -93,6 +113,10 @@ namespace ui {
     const sf::Color backgroundColor = {255, 255, 255};
     const sf::Color backgroundColor2 = {221, 221, 221};
     const sf::Color buttonBackgroundColor = {204, 204, 204};
+    const sf::Color messageBoxBackgroundColor = {0, 0, 0, 100};
+    const sf::Color messageBoxColor = {255, 255, 255};
+    const sf::Color highlightColor = {200, 200, 255};
+    const sf::Color deactivatedButtonBackgroundColor = {150, 150, 150};
 
     const FontID defaultFont = FontID::source_serif;
 
@@ -105,6 +129,12 @@ namespace ui {
     extern float windowWidth;
     extern float windowHeight;
     extern float aspectRatio;
+
+
+    float toVHFloat(const pfloat& p);
+    float toVWFloat(const pfloat& p);
+
+    CropArea combineCropAreas(const CropArea& a, const CropArea& b);
 
 }
 

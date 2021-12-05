@@ -49,6 +49,10 @@ bool Element::OnMouseScroll(float delta, float xw, float yh){
     return false;
 }
 
+void Element::OnWindowResize(){
+    if(windowResizeHandler_ != NULL) windowResizeHandler_();
+}
+
 void Element::Blur(){
     if(focused_){
         focused_ = false;
@@ -64,11 +68,11 @@ void Element::Focus(){
 }
 
 float Element::toVHFloat(const ui::pfloat& p) const {
-    return p.p ? p.f * ui::aspectRatio : p.f;
+    return ui::toVHFloat(p);
 }
 
 float Element::toVWFloat(const ui::pfloat& p) const {
-    return p.p ? p.f : p.f / ui::aspectRatio;
+    return ui::toVWFloat(p);
 }
 
 ui::pfloat Element::toVH(const ui::pfloat& p) const {

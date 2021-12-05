@@ -12,9 +12,10 @@ Pick something from this list and implement it:
 
 RenderSystem will have a method similar to `RenderSprite()` called `RenderAnimation()` that accepts an `AnimationID`, an int frame (and position, rotation etc. probably)
 
-5. The catapult for the game has not been started. However, it would make most sense for it to be a PhysObject that simply has a B2Body attached to
+5. The main launching device for Teekkaris could be a cannon that is aimed with the mouse, and shoots out a Teekkari with force depending on the distance to the cannon. (Old text: _The catapult for the game has not been started. However, it would make most sense for it to be a PhysObject that simply has a B2Body attached to
 its `mainBody_` via a joint. After this, Physics functions like Impulse, Force etc. can be overriden to add forces and torque to the catapult
-lever.
+lever._)
+
 
 6. PhysObject method `Explosion` has not been implemented. It should calculate an Impulse that is away from the given center of explosion, and a magnitude that decays with distance. This method will be used for implementing tnt and metal blocks exploding when hit with lightning.
 
@@ -23,3 +24,5 @@ lever.
 be retrieved based on GameObjectType with `gm::GetObjectScore(GameObjectType type)`
 
 8. Teekkaris and Fuksis haven't been implemented. It would make sense to store usable Teekkaris just in a vector with GameObjectTypes. A Teekkari can then be spawned on the catapult with `Game::CreateObject()`
+
+9. Game::Pause() and Game::Resume() should be implemented. Game should also start calling GameScreen::OnScoreChange(), GameScreen::OnGameCompleted(), and GameScreen::OnGameLost.
