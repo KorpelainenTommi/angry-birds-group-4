@@ -10,7 +10,7 @@ GameScreen::GameScreen(
     addTopLeftButtons();
     timeLabel_ = addTopRightLabel(2, "time: ");
     addProjectileBar();
-    UpdateProjectileList({
+    /*UpdateProjectileList({
         SpriteID::ui_button_restart,
         SpriteID::ui_button_resume,
         SpriteID::ui_button_ok,
@@ -23,7 +23,7 @@ GameScreen::GameScreen(
         SpriteID::ui_button_exit,
         SpriteID::ui_button_cancel,
         SpriteID::ui_button_pause
-    });
+    });*/
     /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
     input->SetFontSize(ui::defaultFontSize * 4);
     menu_.push_back(input);*/
@@ -137,6 +137,7 @@ std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
         );
     });
     e->SetRelativeFontSize(topRightLabelHeigth_);
+    e->SetTextColor({0, 0, 0});
     menu_.push_back(e);
     return e;
 }
