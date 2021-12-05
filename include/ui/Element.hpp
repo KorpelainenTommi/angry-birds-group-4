@@ -111,8 +111,6 @@ public:
 
     ui::CropArea GetCropArea() const {return cropArea_;}
 
-    float toVHFloat(const ui::pfloat&) const;
-    float toVWFloat(const ui::pfloat&) const;
     ui::pfloat toVH(const ui::pfloat&) const;
     ui::pfloat toVW(const ui::pfloat&) const;
 
@@ -142,6 +140,8 @@ protected:
 
     bool cropped_ = false;
     ui::CropArea cropArea_;
+
+    bool isInsideCropArea(float xvw, float yvh) const;
 };
 
 

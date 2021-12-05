@@ -2,5 +2,6 @@
 
 void RoundColoredElement::Render(const RenderSystem& r){
     ui::pfloat d = r_ * 2;
-    r.RenderOval(backgroundColor_, x_, y_, d, d);
+    if(cropped_) r.RenderOval(backgroundColor_, GetLeft(), GetTop(), d, d, cropArea_);
+    else r.RenderOval(backgroundColor_, GetLeft(), GetTop(), d, d);
 }

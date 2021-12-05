@@ -2,12 +2,13 @@
 #include <math.h>
 
 bool RoundElement::isInside(float xw, float yh) const {
-    float xvh = xw * 100 * ui::aspectRatio;
+    float xvw = xw * 100;
+    float xvh = xvw * ui::aspectRatio;
     float yvh = yh * 100;
     float rvh = ui::toVHFloat(r_);
     float cxvh = getCenterVHFloatX(rvh);
     float cyvh = getCenterVHFloatY(rvh);
-    if(distance(cxvh, cyvh, xvh, yvh) <= rvh) return true;
+    if(distance(cxvh, cyvh, xvh, yvh) <= rvh && isInsideCropArea(xvw, yvh)) return true;
     return false;
 }
 

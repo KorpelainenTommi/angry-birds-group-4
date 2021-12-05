@@ -230,7 +230,7 @@ std::shared_ptr<ColoredElement> MainMenu::addListTop(){
 
 std::shared_ptr<ColoredElement> MainMenu::addListBottom(){
     listBottom_ = std::make_shared<ColoredElement>(
-        (padding_.f + list_->toVHFloat(listPadding_) + list_->GetHeight().f) VH, 
+        (padding_.f + ui::toVHFloat(listPadding_) + list_->GetHeight().f) VH, 
         padding_, 
         listPadding_, 
         calcListWidth()

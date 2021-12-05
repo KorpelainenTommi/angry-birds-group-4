@@ -36,7 +36,6 @@ void ListElement::SetCropArea(){
 
 bool ListElement::OnMouseScroll(float delta, float xw, float yh){
     if(isInside(xw, yh)){
-        std::cout << "scroll list" << std::endl;
         float h = toVHFloat(h_);
         float s = toVHFloat(spacing_);
         for(auto t: elements_){
@@ -44,14 +43,13 @@ bool ListElement::OnMouseScroll(float delta, float xw, float yh){
             h -= toVHFloat(t.second->GetHeight()) + s;
         }
         h += s;
-        std::cout << h << std::endl;
-        if(scrollOffset_.f >= 0 && delta * scrollMultiplier_ >= 0) return false;
-        std::cout << "jee" << std::endl;
+        if(scrollOffset_.f >= 0 && delta * scrollMultiplier_ >= 0) return true;
         scrollOffset_ += (delta * scrollMultiplier_ / ui::windowHeight) VH;
 
         //set scroll limits
         if(scrollOffset_.f > 0) scrollOffset_ = 0 VH;
-        if(scrollOffset_.f < h && h < 0) scrollOffset_ = h VH;
+        else if(scrollOffset_.f < h && h < 0) scrollOffset_ = h VH;
+        else if(scrollOffset_.f < h) scrollOffset_ = 0 VH;
 
         for(auto t: elements_){
             t.second->SetOffsetY(scrollOffset_);

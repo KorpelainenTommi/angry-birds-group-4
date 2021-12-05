@@ -3,12 +3,22 @@
 bool Element::isInside(float xw, float yh) const {
     float xvw = xw * 100;
     float yvh = yh * 100;
-    float left = toVWFloat(GetLeft());
-    float top = toVHFloat(GetTop());
-    float right = toVWFloat(w_) + left;
-    float bottom = toVHFloat(h_) + top;
-    return xvw > left && xvw < right && yvh > top && yvh < bottom;
+    float left = ui::toVWFloat(GetLeft());
+    float top = ui::toVHFloat(GetTop());
+    float right = ui::toVWFloat(w_) + left;
+    float bottom = ui::toVHFloat(h_) + top;
+    return xvw > left && xvw < right && yvh > top && yvh < bottom 
+        && isInsideCropArea(xvw, yvh);
 };
+
+bool Element::isInsideCropArea(float xvw, float yvh) const {
+    if(!cropped_) return true;
+    float left = ui::toVWFloat(cropArea_.left);
+    float top = ui::toVHFloat(cropArea_.top);
+    float right = ui::toVWFloat(cropArea_.width) + left;
+    float bottom = ui::toVHFloat(cropArea_.height) + top;
+    return xvw > left && xvw < right && yvh > top && yvh < bottom;
+}
 
 bool Element::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
     if((mouseDownHandler_ != NULL || canBeFocused_) && isInside(xw, yh)) return true;
@@ -66,14 +76,6 @@ void Element::Focus(){
         focused_ = true;
         if(focusChangeHandler_ != NULL) focusChangeHandler_(true);
     }
-}
-
-float Element::toVHFloat(const ui::pfloat& p) const {
-    return ui::toVHFloat(p);
-}
-
-float Element::toVWFloat(const ui::pfloat& p) const {
-    return ui::toVWFloat(p);
 }
 
 ui::pfloat Element::toVH(const ui::pfloat& p) const {
