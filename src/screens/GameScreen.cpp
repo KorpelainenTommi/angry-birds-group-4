@@ -413,12 +413,21 @@ void GameScreen::addProjectileIcon(SpriteID icon){
         projectileBarIconSize / 2, 
         icon
     );
-    i->SetMouseDownHandler([this, icon](){
+    auto wi = std::weak_ptr<RoundIcon>(i);
+    i->SetMouseDownHandler([this, icon, wi](){
         this->GetGame().SelectProjectile(icon);
+        this->selectProjectileIcon(wi.lock());
     });
     projectileList_->InsertElement(i);
     iconIndexes_.push_back(menu_.size());
     menu_.push_back(i);
+}
+
+void GameScreen::selectProjectileIcon(std::shared_ptr<RoundIcon> i){
+    if(hasSelectedIcon_) selectedIcon_->Unselect();
+    else hasSelectedIcon_ = true;
+    i->Select();
+    selectedIcon_ = i;
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {

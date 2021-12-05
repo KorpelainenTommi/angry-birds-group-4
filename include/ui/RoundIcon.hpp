@@ -18,8 +18,16 @@ public:
 
     SpriteID GetIcon(){return icon_;}
 
+    void Select();
+
+    void Unselect();
+
+    void SetBorderThickness(const ui::pfloat&);
+
 private:
     SpriteID icon_;
+    bool selected_ = false;
+    ui::pfloat borderThickness_ = 0.5 VH;
 };
 
 #endif

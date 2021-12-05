@@ -89,6 +89,8 @@ public:
 
     ui::pfloat calcProjectileBarBodyHeight() const;
 
+    void selectProjectileIcon(std::shared_ptr<RoundIcon> i);
+
 private:
     const ui::pfloat topLeftButtonSpacing_ = 1 VH;
     const ui::pfloat topLeftButtonSize_ = 4 VH;
@@ -109,6 +111,8 @@ private:
     std::shared_ptr<TextLine> timeLabel_;
     std::shared_ptr<ListElement> projectileList_;
     std::vector<std::size_t> iconIndexes_;
+    std::shared_ptr<RoundIcon> selectedIcon_;
+    bool hasSelectedIcon_ = false;
 
     /**
      * button number is the number of the button from left starting from 1.
