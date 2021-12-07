@@ -110,6 +110,21 @@ void Screen::Confirm(std::string text, const std::function<void(bool)> callBack)
     messages_.push(v);
 }
 
+void Screen::Alert(std::string text, const std::function<void()> callBack){
+    std::vector<std::shared_ptr<Element>> v;
+    v.push_back(std::make_shared<MessageBox>(messageBoxHeight_, messageBoxWidth_));
+    v.push_back(generateMessageBoxButton(1, [this, callBack](){
+        this->DequeueMessage();
+        if(callBack != NULL) callBack();
+    }, SpriteID::ui_button_ok, messageBoxHeight_, messageBoxWidth_));
+    v.push_back(generateConfirmText(text));
+    messages_.push(v);
+}
+
+void Screen::Alert(std::string text){
+    Alert(text, NULL);
+}
+
 void Screen::DequeueMessage(){
     messages_.pop();
 }

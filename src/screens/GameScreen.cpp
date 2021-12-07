@@ -5,13 +5,15 @@
 
 GameScreen::GameScreen(
     Application& app, const Level& initialLevel, bool editorMode
-): Screen(app), /*scoreLabel_(addScoreLabel()), */game_(Game(*this, initialLevel)){
+): Screen(app), game_(Game(*this, initialLevel)){
     level_ = initialLevel;
     editorMode_ = editorMode;
-    addTopLeftButtons();
-    if(!editorMode_){
-        timeLabel_ = addTopRightLabel(2, "time: ");
-        scoreLabel_ = addScoreLabel();
+    if(editorMode_){
+        addEditorTopLeftButtons();
+        addEditorPanel();
+    }else{
+        addTopLeftButtons();
+        addTopRightLabels();
     }
     addProjectileBar();
     UpdateProjectileList({
@@ -110,8 +112,33 @@ void GameScreen::addTopLeftButtons(){
     }, SpriteID::ui_button_exit);
 }
 
+void GameScreen::addEditorTopLeftButtons(){
+    addTopLeftButton(1, [this](){
+        //this->GetApplication().GetFileManager().SaveLevel(/*some code here*/);
+        this->Alert("Level saved (not really).");
+    }, SpriteID::ui_button_save);
+    auto startButton = std::weak_ptr<RoundIcon>(addTopLeftButton(2, SpriteID::ui_button_resume));
+    startButton.lock()->SetMouseDownHandler([this, startButton](){
+        auto sb = startButton.lock();
+        if(sb->GetIcon() == SpriteID::ui_button_resume){
+            sb->SetIcon(SpriteID::ui_button_restart);
+            //resume editor here
+        }else{
+            sb->SetIcon(SpriteID::ui_button_resume);
+            //restart and pause Editor here
+        }
+    });
+    addTopLeftButton(3, [this](){
+        this->GetGame().Pause();
+        this->Confirm("Do you want to quit to main menu?", [this](bool b){
+            if(b) this->Exit();
+            else this->GetGame().Resume();
+        });
+    }, SpriteID::ui_button_exit);
+}
+
 void GameScreen::OnScoreChange(int score){
-    scoreLabel_->SetText("score: " + getString(score));
+    if(!editorMode_) scoreLabel_->SetText("score: " + getString(score));
 }
 
 ui::pfloat GameScreen::calcTopRightLabelTop(unsigned char labelNumber) const {
@@ -121,6 +148,11 @@ ui::pfloat GameScreen::calcTopRightLabelTop(unsigned char labelNumber) const {
 
 ui::pfloat GameScreen::calcTopRightLabelLeft() const {
     return (100 - ui::toVWFloat(topRightLabelLength_)) VW;
+}
+
+void GameScreen::addTopRightLabels(){
+    timeLabel_ = addTopRightLabel(2, "time: ");
+    scoreLabel_ = addTopRightLabel(1, "score: ");
 }
 
 std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
@@ -146,11 +178,8 @@ std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
     return e;
 }
 
-std::shared_ptr<TextLine> GameScreen::addScoreLabel(){
-    return addTopRightLabel(1, "score: ");
-}
-
 void GameScreen::OnGameLost(){
+    if(editorMode_) return;
     std::vector<std::shared_ptr<Element>> v;
     v.push_back(std::make_shared<MessageBox>(messageBoxHeight_, messageBoxWidth_));
     v.push_back(generateMessageBoxButton(1, [this](){
@@ -166,6 +195,7 @@ void GameScreen::OnGameLost(){
 }
 
 void GameScreen::OnGameCompleted(int score, int requiredMaxScore){
+    if(editorMode_) return;
     std::vector<std::shared_ptr<Element>> v;
     v.push_back(std::make_shared<MessageBox>(victoryMessageHeight_, victoryMessageWidth_));
     addVictoryMessageStars(score, requiredMaxScore, v);
@@ -345,7 +375,7 @@ std::shared_ptr<ColoredElement> GameScreen::addListTop(){
     auto e = std::make_shared<ColoredElement>(
         calcProjectileBarTop(), 
         0 VW, 
-        projectileBarSpacing, 
+        projectileBarSpacing_, 
         calcProjectileBarWidth()
     );
     e->SetBackgroundColor(ui::backgroundColor2);
@@ -354,18 +384,18 @@ std::shared_ptr<ColoredElement> GameScreen::addListTop(){
 }
 
 ui::pfloat GameScreen::calcProjectileBarWidth() const {
-    return (ui::toVHFloat(projectileBarIconSize) + ui::toVHFloat(projectileBarSpacing) * 2) VH;
+    return (ui::toVHFloat(projectileBarIconSize_) + ui::toVHFloat(projectileBarSpacing_) * 2) VH;
 }
 
 ui::pfloat GameScreen::calcProjectileBarTop() const {
-    return (50 - ui::toVHFloat(projectileBarHeight) / 2) VH;
+    return (50 - ui::toVHFloat(projectileBarHeight_) / 2) VH;
 }
 
 std::shared_ptr<ColoredElement> GameScreen::addListBottom(){
     auto e = std::make_shared<ColoredElement>(
         calcProjectileBarBottomTop(), 
         0 VW, 
-        projectileBarSpacing, 
+        projectileBarSpacing_, 
         calcProjectileBarWidth()
     );
     e->SetBackgroundColor(ui::backgroundColor2);
@@ -374,7 +404,7 @@ std::shared_ptr<ColoredElement> GameScreen::addListBottom(){
 }
 
 ui::pfloat GameScreen::calcProjectileBarBottomTop() const {
-    return (50 + ui::toVHFloat(projectileBarHeight) / 2 - ui::toVHFloat(projectileBarSpacing)) VH;
+    return (50 + ui::toVHFloat(projectileBarHeight_) / 2 - ui::toVHFloat(projectileBarSpacing_)) VH;
 }
 
 void GameScreen::addList(){
@@ -389,11 +419,11 @@ void GameScreen::addList(){
 }
 
 ui::pfloat GameScreen::calcProjectileBarBodyTop() const {
-    return (50 - ui::toVHFloat(projectileBarHeight) / 2 + ui::toVHFloat(projectileBarSpacing)) VH;
+    return (50 - ui::toVHFloat(projectileBarHeight_) / 2 + ui::toVHFloat(projectileBarSpacing_)) VH;
 }
 
 ui::pfloat GameScreen::calcProjectileBarBodyHeight() const {
-    return (ui::toVHFloat(projectileBarHeight) - ui::toVHFloat(projectileBarSpacing) * 2) VH;
+    return (ui::toVHFloat(projectileBarHeight_) - ui::toVHFloat(projectileBarSpacing_) * 2) VH;
 }
 
 void GameScreen::UpdateProjectileList(std::vector<SpriteID> projectiles){
@@ -414,8 +444,8 @@ void GameScreen::clearIcons(){
 void GameScreen::addProjectileIcon(SpriteID icon){
     auto i = std::make_shared<RoundIcon>(
         0 VH, 
-        projectileBarSpacing, 
-        projectileBarIconSize / 2, 
+        projectileBarSpacing_, 
+        projectileBarIconSize_ / 2, 
         icon
     );
     auto wi = std::weak_ptr<RoundIcon>(i);
@@ -433,6 +463,54 @@ void GameScreen::selectProjectileIcon(std::shared_ptr<RoundIcon> i){
     else hasSelectedIcon_ = true;
     i->Select();
     selectedIcon_ = i;
+}
+
+void GameScreen::addEditorPanel(){
+    addEditorPanelBackground();
+    addEditorNameInput();
+}
+
+void GameScreen::addEditorPanelBackground(){
+    auto b = std::make_shared<ColoredElement>(
+        0 VH, 
+        calcEditorPanelLeft(), 
+        100 VH, 
+        editorPanelWidth_
+    );
+    auto wb = std::weak_ptr<ColoredElement>(b);
+    b->SetWindowResizeHandler([this, wb](){
+        wb.lock()->SetLeft(this->calcEditorPanelLeft());
+    });
+    menu_.push_back(b);
+}
+
+ui::pfloat GameScreen::calcEditorPanelLeft() const {
+    return (100 - ui::toVWFloat(editorPanelWidth_)) VW;
+}
+
+void GameScreen::addEditorNameInput(){
+    editorNameInput_ = std::make_shared<InputElement>(
+        editorPanelPadding_, 
+        calcEditorContentLeft(), 
+        editorFontSize_ * 2, 
+        calcEditorContentWidth()
+    );
+    editorNameInput_->SetText(level_.levelName);
+    auto wi = std::weak_ptr<InputElement>(editorNameInput_);
+    editorNameInput_->SetWindowResizeHandler([this, wi](){
+        auto i = wi.lock();
+        i->SetLeft(this->calcEditorContentLeft());
+        i->SetWidth(this->calcEditorContentWidth());
+    });
+    menu_.push_back(editorNameInput_);
+}
+
+ui::pfloat GameScreen::calcEditorContentWidth() const {
+    return (ui::toVWFloat(editorPanelWidth_) - ui::toVWFloat(editorPanelPadding_) * 2) VW;
+}
+
+ui::pfloat GameScreen::calcEditorContentLeft() const {
+    return (100 - ui::toVWFloat(editorPanelWidth_) + ui::toVWFloat(editorPanelPadding_)) VW;
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {
