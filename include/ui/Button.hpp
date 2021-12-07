@@ -36,7 +36,7 @@ public:
 
     virtual void Render(const RenderSystem&);
 
-    virtual void ExecuteOnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
+    virtual void ExecuteOnMouseDown();
 
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
 

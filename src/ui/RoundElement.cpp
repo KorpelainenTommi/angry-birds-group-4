@@ -13,19 +13,19 @@ bool RoundElement::isInside(float xw, float yh) const {
 }
 
 float RoundElement::getCenterVHFloatX() const {
-    return ui::toVHFloat(x_) + ui::toVHFloat(r_);
+    return ui::toVHFloat(GetLeft()) + ui::toVHFloat(r_);
 }
 
 float RoundElement::getCenterVHFloatX(float rvh) const {
-    return ui::toVHFloat(x_) + rvh;
+    return ui::toVHFloat(GetLeft()) + rvh;
 }
 
 float RoundElement::getCenterVHFloatY() const {
-    return ui::toVHFloat(y_) + ui::toVHFloat(r_);
+    return ui::toVHFloat(GetTop()) + ui::toVHFloat(r_);
 }
 
 float RoundElement::getCenterVHFloatY(float rvh) const {
-    return ui::toVHFloat(y_) + rvh;
+    return ui::toVHFloat(GetTop()) + rvh;
 }
 
 float RoundElement::distance(float x1, float y1, float x2, float y2) const {

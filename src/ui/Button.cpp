@@ -16,7 +16,7 @@ void Button::Render(const RenderSystem& r){
     }
 }
 
-void Button::ExecuteOnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
+void Button::ExecuteOnMouseDown(){
     if(mouseDownHandler_ != NULL && active_) mouseDownHandler_();
 }
 

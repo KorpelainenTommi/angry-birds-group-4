@@ -108,9 +108,22 @@ namespace ui {
     const float targetFrametime = 1.0F / targetFramerate;
 
     enum TextAlign { left, center, right };
-    const sf::Color textColor = {255, 255, 255};
+    const sf::Color textColor = {0, 0, 0};
+    const sf::Color buttonTextColor = {0, 0, 0};
+    const sf::Color backgroundColor = {255, 255, 255};
+    const sf::Color backgroundColor2 = {221, 221, 221};
+    const sf::Color buttonBackgroundColor = {204, 204, 204};
+    const sf::Color messageBoxBackgroundColor = {0, 0, 0, 100};
+    const sf::Color messageBoxColor = {255, 255, 255};
+    const sf::Color highlightColor = {200, 200, 255};
+    const sf::Color deactivatedButtonBackgroundColor = {150, 150, 150};
+    const sf::Color inputBackgroundColor = {204, 204, 204};
+    const sf::Color inputCaretColor = {0, 0, 0};
+
+    /*const sf::Color textColor = {255, 255, 255};
     const sf::Color buttonTextColor = {255, 255, 255};
-    const sf::Color backgroundColor = {0, 68, 66};
+    //const sf::Color backgroundColor = {0, 68, 66};
+    const sf::Color backgroundColor = {0, 25, 25};
     const sf::Color backgroundColor2 = {27, 153, 150, 127};
     //const sf::Color backgroundColor2 = {29, 156, 113, 127};
     const sf::Color buttonBackgroundColor = {50, 219, 214};
@@ -119,7 +132,7 @@ namespace ui {
     const sf::Color highlightColor = {127, 255, 212};
     const sf::Color deactivatedButtonBackgroundColor = {93, 176, 174};
     const sf::Color inputBackgroundColor = {0, 119, 116};
-    const sf::Color inputCaretColor = {255, 255, 255};
+    const sf::Color inputCaretColor = {255, 255, 255};*/
 
     const FontID defaultFont = FontID::source_serif;
 
