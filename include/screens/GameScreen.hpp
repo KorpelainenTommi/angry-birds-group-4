@@ -15,7 +15,7 @@ class GameScreen : public Screen {
 public:
 
     /// Create a screen and start the Game with the selected level
-    GameScreen(Application& app, const Level& initialLevel);
+    GameScreen(Application& app, const Level& initialLevel, bool editorMode = false);
     
     virtual void Update();
 
@@ -113,6 +113,7 @@ private:
     std::vector<std::size_t> iconIndexes_;
     std::shared_ptr<RoundIcon> selectedIcon_;
     bool hasSelectedIcon_ = false;
+    bool editorMode_;
 
     /**
      * button number is the number of the button from left starting from 1.

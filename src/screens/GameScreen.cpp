@@ -4,13 +4,17 @@
 #include <ui/InputElement.hpp>
 
 GameScreen::GameScreen(
-    Application& app, const Level& initialLevel
-): Screen(app), scoreLabel_(addScoreLabel()), game_(Game(*this, initialLevel)){
+    Application& app, const Level& initialLevel, bool editorMode
+): Screen(app), /*scoreLabel_(addScoreLabel()), */game_(Game(*this, initialLevel)){
     level_ = initialLevel;
+    editorMode_ = editorMode;
     addTopLeftButtons();
-    timeLabel_ = addTopRightLabel(2, "time: ");
+    if(!editorMode_){
+        timeLabel_ = addTopRightLabel(2, "time: ");
+        scoreLabel_ = addScoreLabel();
+    }
     addProjectileBar();
-    /*UpdateProjectileList({
+    UpdateProjectileList({
         SpriteID::ui_button_restart,
         SpriteID::ui_button_resume,
         SpriteID::ui_button_ok,
@@ -23,7 +27,7 @@ GameScreen::GameScreen(
         SpriteID::ui_button_exit,
         SpriteID::ui_button_cancel,
         SpriteID::ui_button_pause
-    });*/
+    });
     /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
     input->SetFontSize(ui::defaultFontSize * 4);
     menu_.push_back(input);*/
@@ -32,7 +36,7 @@ GameScreen::GameScreen(
 
 void GameScreen::Update(){
     game_.Update();
-    timeLabel_->SetText("time: " + getString((int)(game_.GetTimeForUI())));
+    if(!editorMode_) timeLabel_->SetText("time: " + getString((int)(game_.GetTimeForUI())));
 }
 
 void GameScreen::Render(const RenderSystem& r){

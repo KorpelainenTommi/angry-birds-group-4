@@ -1,7 +1,6 @@
 #include <math.h>
 #include <Application.hpp>
 #include <ui/UIConstants.hpp>
-#include <screens/DemoScreen.hpp>
 #include <screens/MainMenu.hpp>
 #include <screens/GameScreen.hpp>
 //#include <gameplay/TestLevel.hpp>
@@ -61,8 +60,6 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
 
     
     TransitionTo(std::make_unique<MainMenu>(*this));
-    //TransitionTo(std::make_unique<GameScreen>(*this,TestLevel()));
-    //TransitionTo(std::make_unique<DemoScreen>(*this));
 }
 
 float Application::GetAspectRatio() const { return ui::aspectRatio; }
