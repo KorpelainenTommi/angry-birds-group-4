@@ -48,9 +48,6 @@ public:
 
     void Confirm(std::string text, const std::function<void(bool)> callBack);
 
-    void Alert(std::string text, const std::function<void()> callBack);
-    void Alert(std::string text);
-
     void DequeueMessage();
 
     ui::pfloat calcMessageBoxButtonTop(const ui::pfloat& messageHeight) const;

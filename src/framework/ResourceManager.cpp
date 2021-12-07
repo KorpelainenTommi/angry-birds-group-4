@@ -43,7 +43,6 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::ui_button_resume, 4, {384, 0, 127, 127}},
     {SpriteID::ui_button_cancel, 4, {512, 0, 127, 127}},
     {SpriteID::ui_button_ok, 4, {640, 0, 127, 127}},
-    {SpriteID::ui_button_save, 4, {768, 0, 127, 127}},
 
     {SpriteID::ui_star, 5, {0, 0, 256, 256}},
     {SpriteID::ui_missing_star, 5, {257, 0, 256, 256}},
