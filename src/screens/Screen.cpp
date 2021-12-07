@@ -23,16 +23,13 @@ void Screen::Render(const RenderSystem& r){
 }
 
 void Screen::setFocusedElement(const std::shared_ptr<Element>& p){
-    hasFocusedElement_ = true;
+    if(hasFocusedElement_) focusedElement_->Blur();
+    else hasFocusedElement_ = true;
     p->Focus();
     focusedElement_ = p;
 }
 
 bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    if(hasFocusedElement_){
-        hasFocusedElement_ = false;
-        focusedElement_->Blur();
-    }
     if(messages_.size() > 0){
         auto m = messages_.front();
         for(std::size_t i = m.size(); i > 0;){
@@ -49,6 +46,10 @@ bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
             menu_[i]->ExecuteOnMouseDown();
             return true;
         }
+    }
+    if(hasFocusedElement_){
+        focusedElement_->Blur();
+        hasFocusedElement_ = false;
     }
     return false;
 }
@@ -108,6 +109,21 @@ void Screen::Confirm(std::string text, const std::function<void(bool)> callBack)
     }, SpriteID::ui_button_cancel, messageBoxHeight_, messageBoxWidth_));
     v.push_back(generateConfirmText(text));
     messages_.push(v);
+}
+
+void Screen::Alert(std::string text, const std::function<void()> callBack){
+    std::vector<std::shared_ptr<Element>> v;
+    v.push_back(std::make_shared<MessageBox>(messageBoxHeight_, messageBoxWidth_));
+    v.push_back(generateMessageBoxButton(1, [this, callBack](){
+        this->DequeueMessage();
+        if(callBack != NULL) callBack();
+    }, SpriteID::ui_button_ok, messageBoxHeight_, messageBoxWidth_));
+    v.push_back(generateConfirmText(text));
+    messages_.push(v);
+}
+
+void Screen::Alert(std::string text){
+    Alert(text, NULL);
 }
 
 void Screen::DequeueMessage(){
