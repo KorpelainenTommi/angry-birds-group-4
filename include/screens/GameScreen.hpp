@@ -28,6 +28,10 @@ public:
     virtual bool OnMouseScroll(float delta, float xw, float yh);
 
     virtual bool OnMouseMove(float x, float y);
+
+    virtual bool OnKeyDown(const sf::Event::KeyEvent&);
+
+    virtual bool OnKeyUp(const sf::Event::KeyEvent&);
     
     virtual ~GameScreen() = default;
 
@@ -99,6 +103,12 @@ public:
 
     ui::pfloat calcEditorContentLeft() const;
 
+    ui::pfloat calcEditorDropDownTop() const;
+
+    void addDropDownContents(std::shared_ptr<TextElement> e);
+
+    void setSelectedGameMode(LevelMode m);
+
 private:
     const ui::pfloat topLeftButtonSpacing_ = 1 VH;
     const ui::pfloat topLeftButtonSize_ = 4 VH;
@@ -127,6 +137,7 @@ private:
     bool hasSelectedIcon_ = false;
     bool editorMode_;
     std::shared_ptr<InputElement> editorNameInput_;
+    LevelMode selectedGameMode_ = LevelMode::normal;
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -177,6 +188,8 @@ private:
     void addEditorPanelBackground();
 
     void addEditorNameInput();
+
+    void addEditorGameModeDropDown();
 };
 
 

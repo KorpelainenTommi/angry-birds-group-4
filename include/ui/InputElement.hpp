@@ -11,7 +11,7 @@ public:
         const ui::pfloat& height, 
         const ui::pfloat& width
     ): ColoredElement(top, left, height, width){
-        canBeFocused_ = true;
+        captureFocus_ = true;
         defaultBackgroundColor_ = ui::inputBackgroundColor;
         backgroundColor_ = ui::inputBackgroundColor;
         updateInputArea();

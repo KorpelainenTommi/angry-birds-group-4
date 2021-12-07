@@ -353,8 +353,11 @@ void GameScreen::saveScore(const std::string& name, int score){
 
 void GameScreen::addProjectileBar(){
     addList();
+    projectileList_->SetFocusCapture(true);
     auto listTop = addListTop();
+    listTop->SetFocusCapture(true);
     auto listBottom = addListBottom();
+    listBottom->SetFocusCapture(true);
     auto wp = std::weak_ptr<ListElement>(projectileList_);
     projectileList_->SetWindowResizeHandler([this, wp, listTop, listBottom](){
         ui::pfloat w = this->calcProjectileBarWidth();
@@ -468,6 +471,7 @@ void GameScreen::selectProjectileIcon(std::shared_ptr<RoundIcon> i){
 void GameScreen::addEditorPanel(){
     addEditorPanelBackground();
     addEditorNameInput();
+    addEditorGameModeDropDown();
 }
 
 void GameScreen::addEditorPanelBackground(){
@@ -477,6 +481,7 @@ void GameScreen::addEditorPanelBackground(){
         100 VH, 
         editorPanelWidth_
     );
+    b->SetFocusCapture(true);
     auto wb = std::weak_ptr<ColoredElement>(b);
     b->SetWindowResizeHandler([this, wb](){
         wb.lock()->SetLeft(this->calcEditorPanelLeft());
@@ -513,11 +518,74 @@ ui::pfloat GameScreen::calcEditorContentLeft() const {
     return (100 - ui::toVWFloat(editorPanelWidth_) + ui::toVWFloat(editorPanelPadding_)) VW;
 }
 
+void GameScreen::addEditorGameModeDropDown(){
+    auto e = std::make_shared<TextElement>(
+        calcEditorDropDownTop(), 
+        calcEditorContentLeft(), 
+        editorFontSize_ * 2, 
+        calcEditorContentWidth()
+    );
+    e->SetRelativeFontSize(editorFontSize_);
+    e->SetText(" game mode: " + levelModeNames[LevelMode::normal]);
+    e->SetBackgroundColor(ui::backgroundColor2);
+    e->SetFocusCapture(true);
+    auto we = std::weak_ptr<TextElement>(e);
+    e->SetFocusChangeHandler([this, we](bool b){
+        std::cout << b << std::endl;
+        if(b) this->addDropDownContents(we.lock());
+        else this->DequeueMessage();
+    });
+    e->SetWindowResizeHandler([this, we](){
+        auto e = we.lock();
+        e->Blur(); //I just don't want to even think about resizing the contents.
+        e->SetPosition(
+            this->calcEditorContentLeft(), 
+            this->calcEditorDropDownTop()
+        );
+        e->SetWidth(this->calcEditorContentWidth());
+    });
+    menu_.push_back(e);
+}
+
+void GameScreen::addDropDownContents(std::shared_ptr<TextElement> e){
+    float y = ui::toVHFloat(e->GetTop()) + ui::toVHFloat(e->GetHeight());
+    const ui::pfloat x = calcEditorContentLeft();
+    float h = ui::toVHFloat(editorFontSize_ * 2);
+    const ui::pfloat w = calcEditorContentWidth();
+    std::vector<std::shared_ptr<Element>> v;
+    std::size_t len = levelModeNames.size();
+    for(std::size_t i = 0; i < len; i++){
+        auto o = std::make_shared<TextElement>(y VH, x, h VH, w);
+        o->SetText(' ' + levelModeNames[i]);
+        o->SetBackgroundColor(ui::backgroundColor2);
+        o->SetMouseDownHandler([this, i, e](){
+            this->setSelectedGameMode((LevelMode)i);
+            e->SetText(" game mode: " + levelModeNames[i]);
+        });
+        auto wo = std::weak_ptr<TextElement>(o);
+        o->SetMouseEnterHandler([wo](){wo.lock()->SetBackgroundColor(ui::highlightColor);});
+        o->SetMouseLeaveHandler([wo](){wo.lock()->SetBackgroundColor(ui::backgroundColor2);});
+        v.push_back(o);
+        y += h;
+    }
+    messages_.push(v);
+}
+
+void GameScreen::setSelectedGameMode(LevelMode m){
+    selectedGameMode_ = m;
+}
+
+ui::pfloat GameScreen::calcEditorDropDownTop() const {
+    return (ui::toVHFloat(editorPanelPadding_) + ui::toVHFloat(editorFontSize_) * 2 
+        + ui::toVHFloat(editorPanelSpacing_)) VH;
+}
+
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {
     if(Screen::OnMouseScroll(delta, xw, yh)) return true;
     if(game_.OnMouseScroll(delta, xw, yh)) return true;
     return false;
 }
+
 bool GameScreen::OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
     if(Screen::OnMouseDown(e, x, y)) return true;
     if(game_.OnMouseDown(e, x, y)) return true;
@@ -533,4 +601,16 @@ bool GameScreen::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
 bool GameScreen::OnMouseMove(float x, float y) {
     bool b = Screen::OnMouseMove(x, y);
     return game_.OnMouseMove(x, y) || b;
+}
+
+bool GameScreen::OnKeyDown(const sf::Event::KeyEvent& e){
+    bool b = Screen::OnKeyDown(e);
+    if(e.code == 37) game_.OnCTRLDown();
+    return b;
+}
+
+bool GameScreen::OnKeyUp(const sf::Event::KeyEvent& e){
+    bool b = Screen::OnKeyUp(e);
+    if(e.code == 37) game_.OnCTRLUp();
+    return b;
 }

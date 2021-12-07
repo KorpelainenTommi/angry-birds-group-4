@@ -23,16 +23,13 @@ void Screen::Render(const RenderSystem& r){
 }
 
 void Screen::setFocusedElement(const std::shared_ptr<Element>& p){
-    hasFocusedElement_ = true;
+    if(hasFocusedElement_) focusedElement_->Blur();
+    else hasFocusedElement_ = true;
     p->Focus();
     focusedElement_ = p;
 }
 
 bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    if(hasFocusedElement_){
-        hasFocusedElement_ = false;
-        focusedElement_->Blur();
-    }
     if(messages_.size() > 0){
         auto m = messages_.front();
         for(std::size_t i = m.size(); i > 0;){
@@ -49,6 +46,10 @@ bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
             menu_[i]->ExecuteOnMouseDown();
             return true;
         }
+    }
+    if(hasFocusedElement_){
+        focusedElement_->Blur();
+        hasFocusedElement_ = false;
     }
     return false;
 }
