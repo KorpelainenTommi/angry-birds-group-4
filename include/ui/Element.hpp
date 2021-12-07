@@ -117,8 +117,6 @@ public:
     ui::pfloat GetTop() const;
     ui::pfloat GetLeft() const;
 
-    void SetFocusCapture(bool b){captureFocus_ = b;}
-
 protected:
 
     ui::pfloat x_;
@@ -127,7 +125,7 @@ protected:
     ui::pfloat h_;
     ui::pfloat offsetX_ = 0 VW;
     ui::pfloat offsetY_ = 0 VH;
-    bool captureFocus_ = false;
+    bool canBeFocused_ = false;
 
     std::function<void()> mouseDownHandler_ = NULL;
     std::function<void()> mouseUpHandler_ = NULL;

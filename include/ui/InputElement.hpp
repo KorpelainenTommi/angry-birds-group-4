@@ -11,7 +11,7 @@ public:
         const ui::pfloat& height, 
         const ui::pfloat& width
     ): ColoredElement(top, left, height, width){
-        captureFocus_ = true;
+        canBeFocused_ = true;
         defaultBackgroundColor_ = ui::inputBackgroundColor;
         backgroundColor_ = ui::inputBackgroundColor;
         updateInputArea();
@@ -74,7 +74,7 @@ private:
     sf::Color textColor_ = ui::textColor;
     ui::CropArea inputArea_;
     sf::Color caretColor_ = ui::inputCaretColor;
-    ui::pfloat caretWidth_ = ui::defaultFontSize / 8;
+    ui::pfloat caretWidth_ = ui::defaultFontSize / 4;
 
     void write(char);
 

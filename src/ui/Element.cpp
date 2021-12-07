@@ -21,7 +21,7 @@ bool Element::isInsideCropArea(float xvw, float yvh) const {
 }
 
 bool Element::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
-    if((mouseDownHandler_ != NULL || captureFocus_) && isInside(xw, yh)) return true;
+    if((mouseDownHandler_ != NULL || canBeFocused_) && isInside(xw, yh)) return true;
     return false;
 }
 
@@ -72,7 +72,7 @@ void Element::Blur(){
 }
 
 void Element::Focus(){
-    if(!focused_){
+    if(canBeFocused_ && !focused_){
         focused_ = true;
         if(focusChangeHandler_ != NULL) focusChangeHandler_(true);
     }
