@@ -6,10 +6,12 @@
 #include <gameplay/Physics.hpp>
 #include <box2d/b2_body.h>
 
+/// Constructs a physics ragdoll that can be used for people
 class Person : public PhysObject {
 public:
 
-    Person(Game& game, gm::GameObjectType type, float x, float y, float rot);
+    //The person will point right. If mirrored = true, it will point to the left
+    Person(Game& game, gm::GameObjectType type, float x, float y, float rot, bool mirrored = false, int collisionGroup = -5);
     virtual ~Person();
 
     virtual void Render(const RenderSystem& r);
@@ -18,6 +20,9 @@ public:
     virtual void Update();
 
 protected:
+
+    // Data defining the look and sound of this person
+    gm::PersonData data_;
 
     inline static const float restitution = 0.3F;
 

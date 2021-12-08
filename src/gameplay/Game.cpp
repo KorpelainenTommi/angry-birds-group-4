@@ -29,9 +29,16 @@ void Game::LoadLevel(Level level) {
     for(const auto& objectdata : level.objectData) {
         CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
     }
+
+    //Note
+    //This doesn't pick random starting teekkaris, it just picks random faces for the starting teekkaris
+    for(const auto& t : level.startingTeekkaris) {
+        teekkarisLeft_.push_back(gm::RandomTeekkari(t));
+    }
+
 }
 
-//TODO: this isn't an actual implementation, this will crash for invalid ID values
+//NOTE! This will crash for invalid ID values, so be careful
 GameObject& Game::GetObject(int id) {
     return *objects_[id];
 }
@@ -84,8 +91,8 @@ void Game::BeginContact(b2Contact* contact) {
     //Call OnCollision
     PhysObject* objA = ((PhysObject*)contact->GetFixtureA()->GetUserData().data);
     PhysObject* objB = ((PhysObject*)contact->GetFixtureB()->GetUserData().data);
-    if(objA) objA->OnCollision(-velocity, *objB);
-    if(objB) objB->OnCollision(velocity, *objA);
+    if(objA) objA->OnCollision(-velocity, *objB, *contact);
+    if(objB) objB->OnCollision(velocity, *objA, *contact);
 }
 
 void Game::Update() {
@@ -215,6 +222,7 @@ void Game::SetCameraRot(float rot) { camera_.rot = rot; }
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
 
+bool Game::CannonDisabled() const { return isPaused_; }
 bool Game::IsPaused() const { return isPaused_; }
 
 void Game::Pause() {
@@ -233,6 +241,6 @@ void Game::Restart() {
     isPaused_ = false;
     time_ = 0;
     points_ = 0;
-    chosenTeekkari_ = 0;
+    chosenTeekkari_ = -1;
     LoadLevel(level_);
 }

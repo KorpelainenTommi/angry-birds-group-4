@@ -22,11 +22,12 @@ struct Level {
 
     std::vector<gm::GameObjectType> startingTeekkaris;
     
-    //TODO: implement this. gm::GetObjectScore(GameObjectType) can be used to retrieve points for objects
-    /// Calculate a max score by adding the point values for all objects
     int CalculateMaxScore() {
 
-        return 0;
+        int sum = 0;
+        for(const auto& obj : objectData)
+            sum += gm::GetObjectScore(obj.type);
+        return sum;
 
     }
 

@@ -64,6 +64,7 @@ public:
     /// Not yet implemented, but can be done later
     void RenderAnimation(AnimationID id, int frame, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {}
 
+    /// Get the screen space coordinates of this world position when translated with a Camera
     sf::Vector2f GetRelativeCoords(sf::Vector2f coords, const Camera& camera) const;
 
 

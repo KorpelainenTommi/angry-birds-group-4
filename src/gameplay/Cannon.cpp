@@ -26,7 +26,7 @@ Cannon::Cannon(Game& game, gm::GameObjectType type, float x, float y, float rot)
 Cannon::~Cannon() {
 }
 bool Cannon::OnMouseMove(float xw, float yh) {
-    if(!isActive_ || relativeCoords_.x >= xw || game_.IsPaused()) return false;
+    if(!isActive_ || relativeCoords_.x >= xw || game_.CannonDisabled()) return false;
     float angle = std::atan((xw-relativeCoords_.x)/(-yh+relativeCoords_.y))*180/ph::pi;
     if(relativeCoords_.y < yh) angle += 180;
     if(angle > 15 && angle < 110) rot_pipe_ = angle;
@@ -40,7 +40,7 @@ bool Cannon::OnMouseMove(float xw, float yh) {
 }
 
 bool Cannon::OnMouseDown(const sf::Mouse::Button& e, float x, float y){
-    if(e != sf::Mouse::Button::Left || game_.IsPaused()) return false;
+    if(e != sf::Mouse::Button::Left || game_.CannonDisabled()) return false;
     isActive_ = true;
     OnMouseMove(x,y);
     return true;
@@ -48,17 +48,17 @@ bool Cannon::OnMouseDown(const sf::Mouse::Button& e, float x, float y){
 
 // This function will summon a teekkari when called
 bool Cannon::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
-    if(!isActive_ || e != sf::Mouse::Button::Left || game_.IsPaused()) return false;
+    if(!isActive_ || e != sf::Mouse::Button::Left || game_.CannonDisabled()) return false;
     isActive_ = false;
 
-    //Shoot teekkari (This is a demo version with a Person)
+    //Shoot selected teekkari
     
-    float angleRad = ph::rotToAng(rot_pipe_);
-    b2Vec2 dir = { -std::sin(angleRad), std::cos(angleRad) };
-    int id = game_.AddObject(std::make_unique<Person>(game_, gm::GameObjectType::teekkari_teemu, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, 0));
-    GameObject& obj = game_.GetObject(id);
-    Person& p = (Person&)obj;
-    p.Impulse({dir.x * relativeDistance_ * ph::cannonMaxForce, dir.y * relativeDistance_ * ph::cannonMaxForce});
+    //float angleRad = ph::rotToAng(rot_pipe_);
+    //b2Vec2 dir = { -std::sin(angleRad), std::cos(angleRad) };
+    //int id = game_.AddObject(std::make_unique<Person>(game_, gm::GameObjectType::teekkari_teemu, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, 0));
+    //GameObject& obj = game_.GetObject(id);
+    //Person& p = (Person&)obj;
+    //p.Impulse({dir.x * relativeDistance_ * ph::cannonMaxForce, dir.y * relativeDistance_ * ph::cannonMaxForce});
 
     return true;
 }

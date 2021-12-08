@@ -78,7 +78,7 @@ void PhysObject::SetPosition(float x, float y) {
     mainBody_->SetTransform({x, y}, a);
 }
 
-void PhysObject::OnCollision(b2Vec2 relativeVelocity, PhysObject& other) {
+void PhysObject::OnCollision(const b2Vec2& relativeVelocity, PhysObject& other, const b2Contact& contact) {
     hp_ -= ph::damageScaling * relativeVelocity.Length() * 0.5F * (GetMass() + other.GetMass());
 
 }

@@ -1,7 +1,7 @@
 #include <framework/FileManager.hpp>
+#include <framework/RandomGen.hpp>
 #include <sstream>
 #include <iostream>
-#include <random>
 #include <iomanip>
 #include <filesystem>
 #include <algorithm>
@@ -51,10 +51,7 @@ std::vector<Level> FileManager::ListEndless() const {
 
 std::string FileManager::GenerateFilepath(const std::string folder) const {
 
-    std::random_device dev;
-    std::default_random_engine rng(dev());
-    std::uniform_int_distribution<std::default_random_engine::result_type> dist;
-    unsigned int i = dist(rng);
+    unsigned int i = rng::RandomInt();
 
     std::stringstream ss;
     ss << "f" << std::hex << i;

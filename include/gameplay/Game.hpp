@@ -130,6 +130,9 @@ public:
     /// Is the game paused?
     bool IsPaused() const;
 
+    /// Should the cannon be disabled? (due to abilities or active projectiles)
+    bool CannonDisabled() const;
+
     /// Get a reference to an AudioSystem to play sounds
     AudioSystem& GetAudioSystem() const;
 
@@ -174,7 +177,7 @@ protected:
     Camera camera_;
 
     /// List of teekkaris that can be spawned to the cannon
-    std::vector<gm::TeekkariData> teekkarisLeft_;
+    std::vector<gm::PersonData> teekkarisLeft_;
     int chosenTeekkari_ = 0;
 
     bool isPaused_ = false;

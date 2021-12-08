@@ -1,13 +1,98 @@
 #include <gameplay/GameObjectTypes.hpp>
+#include <framework/RandomGen.hpp>
 #include <gameplay/Block.hpp>
 #include <gameplay/Cannon.hpp>
 #include <gameplay/Ground.hpp>
+#include <math.h>
+
+
+
+extern const std::vector<gm::PersonFace> gm::teekkariHeads = { 
+    {SpriteID::teekkari_head1,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head2,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head3,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head4,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head5,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head6,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head7,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head8,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head9,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head10, SoundID::grunt1, SoundID::teekkari_death1, false}
+};
+
+extern const std::vector<gm::PersonFace> gm::teekkariHeads_s = {
+    {SpriteID::teekkari_head1s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head2s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head3s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head4s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head5s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head6s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head7s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head8s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head9s,  SoundID::grunt1, SoundID::teekkari_death1, false},
+    {SpriteID::teekkari_head10s, SoundID::grunt1, SoundID::teekkari_death1, false}
+};
+
+extern const std::vector<gm::PersonFace> gm::fuksiHeads = {
+    {SpriteID::fuksi_head1, SoundID::fuksi_cry1, SoundID::fuksi_death1, false},
+    {SpriteID::fuksi_head2, SoundID::fuksi_cry1, SoundID::fuksi_death1, false},
+    {SpriteID::fuksi_head3, SoundID::fuksi_cry1, SoundID::fuksi_death1, false},
+    {SpriteID::fuksi_head4, SoundID::fuksi_cry1, SoundID::fuksi_death1, false},
+    {SpriteID::fuksi_head5, SoundID::fuksi_cry1, SoundID::fuksi_death1, false},
+    {SpriteID::fuksi_head6, SoundID::fuksi_cry1, SoundID::fuksi_death1, false},
+    {SpriteID::fuksi_head7, SoundID::fuksi_cry1, SoundID::fuksi_death1, false},
+    {SpriteID::fuksi_head8, SoundID::fuksi_cry1, SoundID::fuksi_death1, false}
+};
+
+extern const std::unordered_map<gm::GameObjectType, gm::PersonBody> gm::teekkariBodies = {
+    { gm::GameObjectType::teekkari_ik, { SpriteID::torso_blue, SpriteID::arm_blue, SpriteID::leg_blue, SpriteID::armb_blue }},
+    { gm::GameObjectType::teekkari_sik, { SpriteID::torso_white, SpriteID::arm_white, SpriteID::leg_white, SpriteID::armb_white }},
+    { gm::GameObjectType::teekkari_tik, { SpriteID::torso_black, SpriteID::arm_black, SpriteID::leg_black, SpriteID::armb_black }},
+    { gm::GameObjectType::teekkari_kik, { SpriteID::torso_pink, SpriteID::arm_pink, SpriteID::leg_pink, SpriteID::armb_pink }},
+    { gm::GameObjectType::teekkari_tefy, { SpriteID::torso_lwhite, SpriteID::arm_lwhite, SpriteID::leg_lwhite, SpriteID::armb_lwhite }},
+    { gm::GameObjectType::teekkari_tuta, { SpriteID::torso_rainbow, SpriteID::arm_rainbow, SpriteID::leg_rainbow, SpriteID::armb_rainbow }},
+    { gm::GameObjectType::teekkari_inkubio, { SpriteID::torso_brown, SpriteID::arm_brown, SpriteID::leg_brown, SpriteID::armb_brown }},
+    { gm::GameObjectType::teekkari_professor, { SpriteID::professor_torso, SpriteID::professor_arm, SpriteID::professor_leg, SpriteID::professor_arm }}
+};
+
+extern const std::vector<gm::PersonBody> gm::fuksiBodies = {
+    { SpriteID::fuksi_torso_blue, SpriteID::fuksi_arm_blue, SpriteID::fuksi_leg_blue, SpriteID::fuksi_armb_blue },
+    { SpriteID::fuksi_torso_white, SpriteID::fuksi_arm_white, SpriteID::fuksi_leg_white, SpriteID::fuksi_armb_white },
+    { SpriteID::fuksi_torso_black, SpriteID::fuksi_arm_black, SpriteID::fuksi_leg_black, SpriteID::fuksi_armb_black },
+    { SpriteID::fuksi_torso_pink, SpriteID::fuksi_arm_pink, SpriteID::fuksi_leg_pink, SpriteID::fuksi_armb_pink },
+    { SpriteID::fuksi_torso_lwhite, SpriteID::fuksi_arm_lwhite, SpriteID::fuksi_leg_lwhite, SpriteID::fuksi_armb_lwhite },
+    { SpriteID::fuksi_torso_rainbow, SpriteID::fuksi_arm_rainbow, SpriteID::fuksi_leg_rainbow, SpriteID::fuksi_armb_rainbow },
+    { SpriteID::fuksi_torso_brown, SpriteID::fuksi_arm_brown, SpriteID::fuksi_leg_brown, SpriteID::fuksi_armb_brown }
+};
+
+
+gm::PersonData gm::RandomTeekkari(gm::GameObjectType type) {
+
+    gm::PersonFace face;
+    gm::PersonBody body = teekkariBodies.at(type);
+    if(type == gm::GameObjectType::teekkari_professor)
+        face = {SpriteID::professor_head, SoundID::grunt1, SoundID::teekkari_death1, false};
+    else if(type == gm::GameObjectType::teekkari_sik)
+        face = gm::teekkariHeads_s.at(rng::RandomInt(0, gm::teekkariHeads_s.size()));
+    else face = gm::teekkariHeads.at(rng::RandomInt(0, gm::teekkariHeads.size()));
+    return {face, body, type};
+
+}
+
+
+gm::PersonData gm::RandomFuksi() {
+    gm::PersonFace face = fuksiHeads.at(rng::RandomInt(0, gm::fuksiHeads.size()));
+    gm::PersonBody body = fuksiBodies.at(rng::RandomInt(0, gm::fuksiBodies.size()));
+    return {face, body, gm::GameObjectType::fuksi};
+}
+
+
 
 
 const std::unordered_map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
 
     //1x1
-    { gm::GameObjectType::block_wood1x1, { SpriteID::wood_block1x1, gm::BlockMaterial::wood, gm::BlockShape::block_1x1 } },
+    { gm::GameObjectType::block_wood1x1,  { SpriteID::wood_block1x1, gm::BlockMaterial::wood, gm::BlockShape::block_1x1 } },
     { gm::GameObjectType::block_metal1x1, { SpriteID::metal_block1x1, gm::BlockMaterial::metal, gm::BlockShape::block_1x1 } },
     { gm::GameObjectType::block_glass1x1, { SpriteID::glass_block1x1, gm::BlockMaterial::glass, gm::BlockShape::block_1x1 } },
     { gm::GameObjectType::block_plastic1x1, { SpriteID::plastic_block1x1, gm::BlockMaterial::plastic, gm::BlockShape::block_1x1 } },
@@ -39,12 +124,13 @@ const std::unordered_map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
     { gm::GameObjectType::ball_concrete, { SpriteID::concrete_ball, gm::BlockMaterial::concrete, gm::BlockShape::block_ball } },
 
     //Tri
+    /*
     { gm::GameObjectType::block_woodTri, { SpriteID::wood_blockTri, gm::BlockMaterial::wood, gm::BlockShape::block_tri } },
     { gm::GameObjectType::block_metalTri, { SpriteID::metal_blockTri, gm::BlockMaterial::metal, gm::BlockShape::block_tri } },
     { gm::GameObjectType::block_glassTri, { SpriteID::glass_blockTri, gm::BlockMaterial::glass, gm::BlockShape::block_tri } },
     { gm::GameObjectType::block_plasticTri, { SpriteID::plastic_blockTri, gm::BlockMaterial::plastic, gm::BlockShape::block_tri } },
     { gm::GameObjectType::block_rubberTri, { SpriteID::rubber_blockTri, gm::BlockMaterial::rubber, gm::BlockShape::block_tri } },
-    { gm::GameObjectType::block_concreteTri, { SpriteID::concrete_blockTri, gm::BlockMaterial::concrete, gm::BlockShape::block_tri } },
+    { gm::GameObjectType::block_concreteTri, { SpriteID::concrete_blockTri, gm::BlockMaterial::concrete, gm::BlockShape::block_tri } },*/
 
     //Plank
     { gm::GameObjectType::plank_wood, { SpriteID::wood_plank, gm::BlockMaterial::wood, gm::BlockShape::block_plank } },
@@ -83,8 +169,8 @@ std::shared_ptr<b2Shape> gm::CreateShape1x1() { b2PolygonShape shape; shape.SetA
 std::shared_ptr<b2Shape> gm::CreateShape2x1() { b2PolygonShape shape; shape.SetAsBox(1.0F, 0.5F); return std::make_shared<b2PolygonShape>(shape); }
 std::shared_ptr<b2Shape> gm::CreateShape2x2() { b2PolygonShape shape; shape.SetAsBox(1.0F, 1.0F); return std::make_shared<b2PolygonShape>(shape); }
 std::shared_ptr<b2Shape> gm::CreateShapeBall() { b2CircleShape shape; shape.m_radius = 0.5F; return std::make_shared<b2CircleShape>(shape); }
-std::shared_ptr<b2Shape> gm::CreateShapePlank() { b2PolygonShape shape; shape.SetAsBox(1.5F, 0.1F); return std::make_shared<b2PolygonShape>(shape); }
-std::shared_ptr<b2Shape> gm::CreateShapeThickPlank() { b2PolygonShape shape; shape.SetAsBox(1.5F, 0.2F); return std::make_shared<b2PolygonShape>(shape); }
+std::shared_ptr<b2Shape> gm::CreateShapePlank() { b2PolygonShape shape; shape.SetAsBox(1.5F, 0.09375F); return std::make_shared<b2PolygonShape>(shape); }
+std::shared_ptr<b2Shape> gm::CreateShapeThickPlank() { b2PolygonShape shape; shape.SetAsBox(3.0F, 0.1875F); return std::make_shared<b2PolygonShape>(shape); }
 std::shared_ptr<b2Shape> gm::CreateShapeTri() {
     b2PolygonShape shape;
     b2Vec2 v[3] = {{0.5F, -0.3F},{0, 0.58F},{-0.5F, -0.3F}};
@@ -97,8 +183,8 @@ const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties
     { gm::BlockShape::block_2x2, { gm::BlockShape::block_2x2, 4, 2, gm::CreateShape2x2()}},
     { gm::BlockShape::block_ball, { gm::BlockShape::block_ball, 3.1415926F, 1, gm::CreateShapeBall()}},
     { gm::BlockShape::block_tri, { gm::BlockShape::block_tri, 0.435F, 0.87F, gm::CreateShapeTri()}},
-    { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.6F, 0.2F, gm::CreateShapePlank()}},
-    { gm::BlockShape::block_thickplank, { gm::BlockShape::block_thickplank, 1.2F, 0.4F, gm::CreateShapeThickPlank()}}
+    { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.5625F, 0.1875F, gm::CreateShapePlank()}},
+    { gm::BlockShape::block_thickplank, { gm::BlockShape::block_thickplank, 2.25F, 0.375F, gm::CreateShapeThickPlank()}}
 };
 
 
@@ -111,8 +197,15 @@ int gm::GetObjectGroup(gm::GameObjectType type) {
     else return gm::GameObjectGroup::ground;
 }
 
-int GetObjectScore(gm::GameObjectType type) {
-    return 0;
+int gm::GetObjectScore(gm::GameObjectType type) {
+    if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) {
+        gm::BlockData bd = blockTypes.at(type);
+        gm::BlockShapeData shapeData = shapeProperties.at(bd.shape);
+        gm::BlockMaterialData materialData = materialProperties.at(bd.material);
+        return (int)roundf(shapeData.volume * materialData.density * materialData.pointsPerMass);
+    }
+    else if(type == gm::GameObjectType::fuksi) return ph::fuksiScore;
+    else return 0;
 }
 
 std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, float x, float y, float rot) {
@@ -124,6 +217,5 @@ std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, 
     if(type == gm::GameObjectType::cannon) return std::make_unique<Cannon>(game, type, x, y, rot);
     if(type == gm::GameObjectType::ground_obj) return std::make_unique<Ground>(game);
     else return std::unique_ptr<GameObject>(nullptr);
-
 
 }

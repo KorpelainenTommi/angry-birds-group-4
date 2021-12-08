@@ -38,9 +38,9 @@ void Block::Render(const RenderSystem& r) {
     r.RenderSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_, game_.GetCamera());
 }
 
-void Block::OnCollision(b2Vec2 velocity, PhysObject& other) {
+void Block::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
     
-    PhysObject::OnCollision(velocity, other);
+    PhysObject::OnCollision(velocity, other, contact);
 
     //Play sounds and stuff
 

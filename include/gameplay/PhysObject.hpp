@@ -10,6 +10,7 @@
 #include <box2d/b2_body.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_shape.h>
+#include <box2d/b2_contact.h>
 
 /// An object that has one or more rigidbodies. Can be affected with forces and other PhysObjects
 class PhysObject : public GameObject {
@@ -25,7 +26,7 @@ public:
     virtual void Update();
 
     /// OnCollision is called when this PhysObject collides with another PhysObject
-    virtual void OnCollision(b2Vec2 relativeVelocity, PhysObject& other);
+    virtual void OnCollision(const b2Vec2& relativeVelocity, PhysObject& other, const b2Contact& contact);
 
     /// Set this rigidbody's x
     virtual void SetX(float x);
