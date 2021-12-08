@@ -186,10 +186,6 @@ bool Game::OnMouseMove(float xw, float yh) {
 
 bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
 
-    if(button == sf::Mouse::Button::Middle) {
-        CreateObject(gm::GameObjectType::fuksi, 0, 20, 45);
-    }
-
     for(auto& obj : objects_) {
         if(obj.second->OnMouseDown(button, xw, yh)) return true;
     }

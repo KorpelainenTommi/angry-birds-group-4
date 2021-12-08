@@ -14,7 +14,7 @@ inline const std::vector<std::string> levelModeNames = {"normal", "time trial", 
 /// A struct defining the initial state of all objects at the start of a game
 struct Level {
 
-    std::string levelName = "";
+    std::string levelName = "new level";
     std::string levelPath = "";
     LevelMode levelMode = LevelMode::normal;
     std::vector<gm::GameObjectData> objectData;

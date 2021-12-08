@@ -81,7 +81,7 @@ void FileManager::PrintHighScores(std::ofstream& file, const std::pair<std::stri
 }
 
 void FileManager::PrintStartingTeekkaris(std::ofstream& file, const gm::GameObjectType& object) const {
-    file << "START" << object << "\n";
+    file << "START " << object << "\n";
 }
 
 bool FileManager::SaveLevel(const Level& level, const std::string& path) const{
