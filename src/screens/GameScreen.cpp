@@ -14,7 +14,7 @@ GameScreen::GameScreen(
         scoreLabel_ = addScoreLabel();
     }
     addProjectileBar();
-    UpdateProjectileList({
+    /*UpdateProjectileList({
         SpriteID::ui_button_restart,
         SpriteID::ui_button_resume,
         SpriteID::ui_button_ok,
@@ -27,7 +27,7 @@ GameScreen::GameScreen(
         SpriteID::ui_button_exit,
         SpriteID::ui_button_cancel,
         SpriteID::ui_button_pause
-    });
+    });*/
     /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
     input->SetFontSize(ui::defaultFontSize * 4);
     menu_.push_back(input);*/
@@ -121,6 +121,11 @@ ui::pfloat GameScreen::calcTopRightLabelTop(unsigned char labelNumber) const {
 
 ui::pfloat GameScreen::calcTopRightLabelLeft() const {
     return (100 - ui::toVWFloat(topRightLabelLength_)) VW;
+}
+
+void GameScreen::addTopRightLabels(){
+    timeLabel_ = addTopRightLabel(2, "time: ");
+    scoreLabel_ = addTopRightLabel(1, "score: 0");
 }
 
 std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
@@ -397,9 +402,15 @@ ui::pfloat GameScreen::calcProjectileBarBodyHeight() const {
 }
 
 void GameScreen::UpdateProjectileList(std::vector<SpriteID> projectiles){
+
     clearIcons();
     for(auto e: projectiles){
         addProjectileIcon(e);
+    }
+
+    if(projectiles.size() > 0) {
+        auto last = std::reinterpret_pointer_cast<RoundIcon>(projectileList_->GetElements().cbegin()->second);
+        selectProjectileIcon(last);
     }
 }
 
@@ -419,8 +430,9 @@ void GameScreen::addProjectileIcon(SpriteID icon){
         icon
     );
     auto wi = std::weak_ptr<RoundIcon>(i);
-    i->SetMouseDownHandler([this, icon, wi](){
-        this->GetGame().SelectProjectile(icon);
+    auto index = projectileList_->GetElements().size();
+    i->SetMouseDownHandler([this, index, wi](){
+        this->GetGame().SelectProjectile(index);
         this->selectProjectileIcon(wi.lock());
     });
     projectileList_->InsertElement(i);
@@ -433,6 +445,117 @@ void GameScreen::selectProjectileIcon(std::shared_ptr<RoundIcon> i){
     else hasSelectedIcon_ = true;
     i->Select();
     selectedIcon_ = i;
+}
+
+void GameScreen::addEditorPanel(){
+    addEditorPanelBackground();
+    addEditorNameInput();
+    addEditorGameModeDropDown();
+}
+
+void GameScreen::addEditorPanelBackground(){
+    auto b = std::make_shared<ColoredElement>(
+        0 VH, 
+        calcEditorPanelLeft(), 
+        100 VH, 
+        editorPanelWidth_
+    );
+    b->SetFocusCapture(true);
+    auto wb = std::weak_ptr<ColoredElement>(b);
+    b->SetWindowResizeHandler([this, wb](){
+        wb.lock()->SetLeft(this->calcEditorPanelLeft());
+    });
+    menu_.push_back(b);
+}
+
+ui::pfloat GameScreen::calcEditorPanelLeft() const {
+    return (100 - ui::toVWFloat(editorPanelWidth_)) VW;
+}
+
+void GameScreen::addEditorNameInput(){
+    editorNameInput_ = std::make_shared<InputElement>(
+        editorPanelPadding_, 
+        calcEditorContentLeft(), 
+        editorFontSize_ * 2, 
+        calcEditorContentWidth()
+    );
+    editorNameInput_->SetText(level_.levelName);
+    auto wi = std::weak_ptr<InputElement>(editorNameInput_);
+    editorNameInput_->SetWindowResizeHandler([this, wi](){
+        auto i = wi.lock();
+        i->SetLeft(this->calcEditorContentLeft());
+        i->SetWidth(this->calcEditorContentWidth());
+    });
+    menu_.push_back(editorNameInput_);
+}
+
+ui::pfloat GameScreen::calcEditorContentWidth() const {
+    return (ui::toVWFloat(editorPanelWidth_) - ui::toVWFloat(editorPanelPadding_) * 2) VW;
+}
+
+ui::pfloat GameScreen::calcEditorContentLeft() const {
+    return (100 - ui::toVWFloat(editorPanelWidth_) + ui::toVWFloat(editorPanelPadding_)) VW;
+}
+
+void GameScreen::addEditorGameModeDropDown(){
+    auto e = std::make_shared<TextElement>(
+        calcEditorDropDownTop(), 
+        calcEditorContentLeft(), 
+        editorFontSize_ * 2, 
+        calcEditorContentWidth()
+    );
+    e->SetRelativeFontSize(editorFontSize_);
+    e->SetText(" game mode: " + levelModeNames[LevelMode::normal]);
+    e->SetBackgroundColor(ui::backgroundColor2);
+    e->SetFocusCapture(true);
+    auto we = std::weak_ptr<TextElement>(e);
+    e->SetFocusChangeHandler([this, we](bool b){
+        if(b) this->addDropDownContents(we.lock());
+        else this->DequeueMessage();
+    });
+    e->SetWindowResizeHandler([this, we](){
+        auto e = we.lock();
+        e->Blur(); //I just don't want to even think about resizing the contents.
+        e->SetPosition(
+            this->calcEditorContentLeft(), 
+            this->calcEditorDropDownTop()
+        );
+        e->SetWidth(this->calcEditorContentWidth());
+    });
+    menu_.push_back(e);
+}
+
+void GameScreen::addDropDownContents(std::shared_ptr<TextElement> e){
+    float y = ui::toVHFloat(e->GetTop()) + ui::toVHFloat(e->GetHeight());
+    const ui::pfloat x = calcEditorContentLeft();
+    float h = ui::toVHFloat(editorFontSize_ * 2);
+    const ui::pfloat w = calcEditorContentWidth();
+    std::vector<std::shared_ptr<Element>> v;
+    std::size_t len = levelModeNames.size();
+    for(std::size_t i = 0; i < len; i++){
+        auto o = std::make_shared<TextElement>(y VH, x, h VH, w);
+        o->SetText(' ' + levelModeNames[i]);
+        o->SetBackgroundColor(ui::backgroundColor2);
+        o->SetMouseDownHandler([this, i, e](){
+            this->setSelectedGameMode((LevelMode)i);
+            e->SetText(" game mode: " + levelModeNames[i]);
+        });
+        auto wo = std::weak_ptr<TextElement>(o);
+        o->SetMouseEnterHandler([wo](){wo.lock()->SetBackgroundColor(ui::highlightColor);});
+        o->SetMouseLeaveHandler([wo](){wo.lock()->SetBackgroundColor(ui::backgroundColor2);});
+        v.push_back(o);
+        y += h;
+    }
+    messages_.push(v);
+}
+
+void GameScreen::setSelectedGameMode(LevelMode m){
+    selectedGameMode_ = m;
+}
+
+ui::pfloat GameScreen::calcEditorDropDownTop() const {
+    return (ui::toVHFloat(editorPanelPadding_) + ui::toVHFloat(editorFontSize_) * 2 
+        + ui::toVHFloat(editorPanelSpacing_)) VH;
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {

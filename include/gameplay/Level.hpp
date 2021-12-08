@@ -9,11 +9,12 @@
 
 /// The mode this level is played at
 enum LevelMode { normal, time_trial, endless };
+inline const std::vector<std::string> levelModeNames = {"normal", "time trial", "endless"};
 
 /// A struct defining the initial state of all objects at the start of a game
 struct Level {
 
-    std::string levelName = "";
+    std::string levelName = "new level";
     std::string levelPath = "";
     LevelMode levelMode = LevelMode::normal;
     std::vector<gm::GameObjectData> objectData;
@@ -22,11 +23,12 @@ struct Level {
 
     std::vector<gm::GameObjectType> startingTeekkaris;
     
-    //TODO: implement this. gm::GetObjectScore(GameObjectType) can be used to retrieve points for objects
-    /// Calculate a max score by adding the point values for all objects
     int CalculateMaxScore() {
 
-        return 0;
+        int sum = 0;
+        for(const auto& obj : objectData)
+            sum += gm::GetObjectScore(obj.type);
+        return sum;
 
     }
 

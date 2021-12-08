@@ -3,7 +3,8 @@
 #include <ui/UIConstants.hpp>
 #include <screens/MainMenu.hpp>
 #include <screens/GameScreen.hpp>
-//#include <gameplay/TestLevel.hpp>
+#include <framework/RandomGen.hpp>
+
 float ui::windowWidth = 0;
 float ui::windowHeight = 0;
 float ui::aspectRatio = 1;
@@ -47,6 +48,9 @@ void Application::Resize(unsigned int width, unsigned int height) {
 }
 
 Application::Application() : resourceManager_(fileManager_), renderSystem_(window_, resourceManager_), audioSystem_(resourceManager_) {
+
+    //Seed rng
+    rng::InitializeRng();
 
     //Create fullscreen window
     //Fullscreen();

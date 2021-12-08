@@ -29,9 +29,18 @@ void Game::LoadLevel(Level level) {
     for(const auto& objectdata : level.objectData) {
         CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
     }
+
+    //Note
+    //This doesn't pick random starting teekkaris, it just picks random faces for the starting teekkaris
+    for(const auto& t : level.startingTeekkaris) {
+        teekkarisLeft_.push_back(gm::RandomTeekkari(t));
+    }
+
+    projectilesUpdated_ = true;
+
 }
 
-//TODO: this isn't an actual implementation, this will crash for invalid ID values
+//NOTE! This will crash for invalid ID values, so be careful
 GameObject& Game::GetObject(int id) {
     return *objects_[id];
 }
@@ -65,6 +74,22 @@ void Game::ClearObjects() {
     objects_.clear();
 }
 
+void Game::SelectProjectile(int index) {
+    chosenTeekkari_ = index;
+}
+
+gm::PersonData Game::TakeProjectile() {
+    if(teekkarisLeft_.size() < 1) {
+        Pause();
+        screen_.OnGameLost();
+        return {};
+    }
+    gm::PersonData p = teekkarisLeft_.at(chosenTeekkari_);
+    teekkarisLeft_.erase(teekkarisLeft_.begin() + chosenTeekkari_);
+    chosenTeekkari_ = 0;
+    projectilesUpdated_ = true;
+    return p;
+}
 
 Game::~Game() {
     ClearObjects();
@@ -84,11 +109,20 @@ void Game::BeginContact(b2Contact* contact) {
     //Call OnCollision
     PhysObject* objA = ((PhysObject*)contact->GetFixtureA()->GetUserData().data);
     PhysObject* objB = ((PhysObject*)contact->GetFixtureB()->GetUserData().data);
-    if(objA) objA->OnCollision(-velocity, *objB);
-    if(objB) objB->OnCollision(velocity, *objA);
+    if(objA) objA->OnCollision(-velocity, *objB, *contact);
+    if(objB) objB->OnCollision(velocity, *objA, *contact);
 }
 
 void Game::Update() {
+    if(projectilesUpdated_) {
+        std::vector<SpriteID> uiSprites;
+        for(const auto& t : teekkarisLeft_)
+            uiSprites.push_back(t.face.face);
+        screen_.UpdateProjectileList(uiSprites);
+        chosenTeekkari_ = 0;
+        projectilesUpdated_ = false;
+    }
+
     if(isPaused_) return;
     //Increment tick count
     time_++;
@@ -151,6 +185,7 @@ bool Game::OnMouseMove(float xw, float yh) {
 
 
 bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
+
     for(auto& obj : objects_) {
         if(obj.second->OnMouseDown(button, xw, yh)) return true;
     }
@@ -210,11 +245,12 @@ void Game::ResetCamera() {
 void Game::SetCameraPos(float x, float y) { camera_.x = x; camera_.y = y; }
 void Game::SetCameraZoom(float zoom) { camera_.zoom = zoom; }
 void Game::SetCameraRot(float rot) { camera_.rot = rot; }
-
+void Game::AddPoints(int p) { points_ += p; screen_.OnScoreChange(p); }
 
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
 
+bool Game::CannonDisabled() const { return isPaused_; }
 bool Game::IsPaused() const { return isPaused_; }
 
 void Game::Pause() {
@@ -235,4 +271,5 @@ void Game::Restart() {
     points_ = 0;
     chosenTeekkari_ = 0;
     LoadLevel(level_);
+    screen_.OnScoreChange(0);
 }

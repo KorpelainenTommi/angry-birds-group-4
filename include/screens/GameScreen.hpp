@@ -101,9 +101,13 @@ private:
     const ui::pfloat victoryMessageWidth_ = 30 VW;
     const ui::pfloat victoryMessageStarSize_ = 5 VH;
     const ui::pfloat victoryMessageFontSize_ = ui::defaultFontSize;
-    const ui::pfloat projectileBarHeight = 50 VH;
-    const ui::pfloat projectileBarIconSize = 4 VH;
-    const ui::pfloat projectileBarSpacing = 1 VH;
+    const ui::pfloat projectileBarHeight_ = 50 VH;
+    const ui::pfloat projectileBarIconSize_ = 8 VH;
+    const ui::pfloat projectileBarSpacing_ = 1 VH;
+    const ui::pfloat editorPanelWidth_ = 20 VW;
+    const ui::pfloat editorPanelPadding_ = 1 VH;
+    const ui::pfloat editorPanelSpacing_ = 1 VH;
+    const ui::pfloat editorFontSize_ = ui::defaultFontSize;
 
     Game game_;
     Level level_;

@@ -4,11 +4,14 @@
 #include <framework/RenderSystem.hpp>
 #include <utility>
 
-//relative rectangle
 
 void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) const {
+
+    //Create copies of the current view
     sf::View view = window_.getView();
     sf::View v = view;
+
+    //Scale x and y from world => screen, translate left-top origin to middle of the screen
     float cxw = camera.x / ph::fullscreenPlayArea;
     float cyw = camera.y / ph::fullscreenPlayArea;
     v.zoom(camera.zoom);
@@ -20,6 +23,7 @@ void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) c
 }
 
 sf::Vector2f RenderSystem::GetRelativeCoords(sf::Vector2f coords, const Camera& camera) const {
+    //Copied from cameradraw, test how the camera would translate coords
     sf::View view = window_.getView();
     sf::View v = view;
     float cxw = camera.x / ph::fullscreenPlayArea;
@@ -35,6 +39,7 @@ sf::Vector2f RenderSystem::GetRelativeCoords(sf::Vector2f coords, const Camera& 
 
 
 void RenderSystem::RenderRelative(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
+    //Map VW and VH to range [0,1]
     float xx = 0.01F * x * (x.p ? WW : HH);
     float yy = 0.01F * y * (y.p ? WW : HH);
     float ww = 0.01F * w * (w.p ? WW : HH);
@@ -49,20 +54,25 @@ void RenderSystem::RenderRelativeCrop(sf::Shape& shape, const sf::Color& color, 
     sf::View view = window_.getView();
     sf::View v = view;
 
+    //Calculate a viewport based on cropArea pos, scale and shape
     float viewPortX = 0.01F * (cropArea.left.p ? cropArea.left : cropArea.left / ui::aspectRatio);
     float viewPortY = 0.01F * (cropArea.top.p ? cropArea.top * ui::aspectRatio : cropArea.top);
     float viewPortW = 0.01F * (cropArea.width.p ? cropArea.width : cropArea.width / ui::aspectRatio);
     float viewPortH = 0.01F * (cropArea.height.p ? cropArea.height * ui::aspectRatio : cropArea.height);
 
+    //Cannot transform if 0 determinant, so force min size
     if(viewPortW < 0.000001F) viewPortW = 0.000001F;
     if(viewPortH < 0.000001F) viewPortH = 0.000001F;
 
+    //Viewport crops rendering, but also transforms drawables. Calculate and apply an inverse transformation
     float wScale = 1 / viewPortW;
     float hScale = 1 / viewPortH;
 
+    //translation
     float cx = wScale * 0.01F * cropArea.left * (cropArea.left.p ? WW : HH);
     float cy = hScale * 0.01F * cropArea.top * (cropArea.top.p ? WW : HH);
 
+    //scale
     float xx = wScale * 0.01F * x * (x.p ? WW : HH) - cx;
     float yy = hScale * 0.01F * y * (y.p ? WW : HH) - cy;
     float ww = wScale * 0.01F * w * (w.p ? WW : HH);
@@ -80,6 +90,7 @@ void RenderSystem::RenderRelativeCrop(sf::Shape& shape, const sf::Color& color, 
 }
 
 void RenderSystem::RenderAbs(sf::Shape& shape, const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
+    //Interpolate between last, and current physics position (so we get an inbetween)
     float xw = x.Lerp(ALPHA) / ph::fullscreenPlayArea;
     float yw = y.Lerp(ALPHA) / ph::fullscreenPlayArea;
     float hw = h.Lerp(ALPHA) / ph::fullscreenPlayArea;
@@ -139,6 +150,8 @@ void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat 
     float ww = 0.01F * w * (w.p ? WW : HH);
     float hh = 0.01F * h * (h.p ? WW : HH);
     sf::Text t(text, resourceManager_.GetFont(id), (unsigned int)hh);
+
+    //Calculate origin based on text length
     if(textAlign == ui::TextAlign::center) t.setOrigin((ww - t.getLocalBounds().width) * -0.5F, hh * 0.25F);
     else if(textAlign == ui::TextAlign::right) t.setOrigin(t.getLocalBounds().width - ww, hh * 0.25F);
     else t.setOrigin(0, hh * 0.25F);
@@ -174,6 +187,9 @@ const ui::CropArea& cropArea, const sf::Color& color, FontID id, ui::TextAlign t
 
     v.setViewport({viewPortX, viewPortY, viewPortW, viewPortH});
 
+    //Font origin here is wrong by a very small margin (noticeable on very long strings)
+    //Not sure where the error is, but this is close enough to not be a problem
+
     sf::Text t(text, resourceManager_.GetFont(id), (unsigned int)hh);
     if(textAlign == ui::TextAlign::center) t.setOrigin((ww / fontScale - t.getLocalBounds().width) * -0.5F, hh * 0.25F);
     else if(textAlign == ui::TextAlign::right) t.setOrigin(t.getLocalBounds().width - ww / fontScale, hh * 0.25F);
@@ -182,8 +198,6 @@ const ui::CropArea& cropArea, const sf::Color& color, FontID id, ui::TextAlign t
     t.setScale(fontScale, 1);
     t.setPosition(xx, yy);
     t.setFillColor(color);
-
-    //RenderRect({0, 100, 0}, x, y, w, h, cropArea);
 
     window_.setView(v);
     window_.draw(t);

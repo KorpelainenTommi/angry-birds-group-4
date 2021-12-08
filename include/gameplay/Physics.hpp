@@ -62,7 +62,8 @@
  */
 
 #include <SFML/Graphics/Color.hpp>
-
+#include <SFML/System/Vector2.hpp>
+#include <math.h>
 
 
 
@@ -107,7 +108,7 @@ namespace ph {
     const float damageScaling = 0.1F;
 
     /// Force of a cannon shot at maximum force
-    const float cannonMaxForce = 10000;
+    const float cannonMaxForce = 5000;
 
 
     /// Total height of a Teekkari or Fuksi when standing upright
@@ -122,6 +123,9 @@ namespace ph {
     /// HP of a Fuksi
     const float fuksiHP = 100;
 
+    /// Score from a Fuksi
+    const int fuksiScore = 1000;
+
     /// Mathematical constant pi
     const float pi = 3.14159265F;
 
@@ -130,6 +134,12 @@ namespace ph {
 
     /// Convert from SFML rotation (degrees) to Box2D angle (radians)
     inline float rotToAng(float rot) { return -pi * rot / 180; }
+
+    /// Rotate a 2D vector counterclockwise by rot degrees
+    inline sf::Vector2f rotateVector(float x, float y, float rot) {
+        float rad = rotToAng(rot);
+        return { x * cosf(rad) - y * sinf(rad), x * sinf(rad) + y * cosf(rad) };
+    }
 
 
     /* A tfloat is simply a float that keeps track of its last value

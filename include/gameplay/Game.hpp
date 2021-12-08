@@ -130,6 +130,9 @@ public:
     /// Is the game paused?
     bool IsPaused() const;
 
+    /// Should the cannon be disabled? (due to abilities or active projectiles)
+    bool CannonDisabled() const;
+
     /// Get a reference to an AudioSystem to play sounds
     AudioSystem& GetAudioSystem() const;
 
@@ -158,8 +161,14 @@ public:
     // Set the camera inside world's bounds
     void checkCameraBounds();
 
+    /// Increment current points
+    void AddPoints(int p);
+
     /// UI calls this to report Game that the user has selected a projectile.
-    void SelectProjectile(SpriteID s/*this can be changed*/){std::cout << s << std::endl;}
+    void SelectProjectile(int index);
+
+    /// Pop out the selected teekkari. This will also update UI
+    gm::PersonData TakeProjectile();
 
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
@@ -174,9 +183,10 @@ protected:
     Camera camera_;
 
     /// List of teekkaris that can be spawned to the cannon
-    std::vector<gm::TeekkariData> teekkarisLeft_;
+    std::vector<gm::PersonData> teekkarisLeft_;
     int chosenTeekkari_ = 0;
 
+    bool projectilesUpdated_ = false;
     bool isPaused_ = false;
     int points_;
     unsigned int time_ = 0; //Game ticks since starting => number of update calls
