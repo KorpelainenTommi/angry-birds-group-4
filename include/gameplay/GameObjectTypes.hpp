@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 #include <unordered_map>
 #include <box2d/b2_shape.h>
 #include <box2d/b2_polygon_shape.h>
