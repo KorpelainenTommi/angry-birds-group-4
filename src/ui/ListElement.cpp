@@ -3,9 +3,8 @@
 #include <iostream>
 
 int ListElement::InsertElement(std::shared_ptr<Element> element){
-    element->SetOffsetX(GetLeft());
-    element->SetCropArea(calcCropArea());
     elements_[nextId_] = element;
+    updateValues();
     return nextId_++;
 }
 
@@ -16,23 +15,6 @@ void ListElement::RemoveElement(int id){
 std::shared_ptr<Element> ListElement::GetElement(int id){
     return elements_[id];
 }
-
-/*void ListElement::Render(const RenderSystem& r){
-    ColoredElement::Render(r);
-    float h = toVHFloat(GetTop());
-    float s = toVHFloat(spacing_);
-    for(const auto t: elements_){
-        auto e = t.second;
-        e->SetTop(h VH);
-        h += toVHFloat(e->GetHeight()) + s;
-    }
-}*/
-
-/*void ListElement::SetCropArea(){
-    cropped_ = false;
-    ui::CropArea ca = {GetTop(), GetLeft(), h_, w_};
-    for(auto t: elements_) t.second->SetCropArea(ca);
-}*/
 
 bool ListElement::OnMouseScroll(float delta, float xw, float yh){
     if(isInside(xw, yh)){

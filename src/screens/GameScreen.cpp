@@ -429,12 +429,8 @@ ui::pfloat GameScreen::calcProjectileBarBodyHeight() const {
 }
 
 void GameScreen::UpdateProjectileList(std::vector<SpriteID> projectiles){
-
     clearIcons();
-    for(auto e: projectiles){
-        addProjectileIcon(e);
-    }
-
+    for(auto e: projectiles) addProjectileIcon(e);
     if(projectiles.size() > 0) {
         auto last = std::reinterpret_pointer_cast<RoundIcon>(projectileList_->GetElements().cbegin()->second);
         selectProjectileIcon(last);
@@ -484,8 +480,6 @@ void GameScreen::addEditorPanel(){
     addEditorElementList();
 
     addBlocksToEditorElementList();
-
-    //addEditorElementListLine(SpriteID::teekkari_head10s, "teekkari", [](){std::cout << "click" << std::endl;});
 }
 
 void GameScreen::addEditorPanelBackground(){
