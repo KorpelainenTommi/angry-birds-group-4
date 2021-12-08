@@ -1,6 +1,7 @@
 #include <gameplay/PhysObject.hpp>
 
 #include <iostream>
+#include <cmath>
 
 PhysObject::~PhysObject() { 
     game_.GetB2World().DestroyBody(mainBody_);
@@ -21,7 +22,15 @@ void PhysObject::Angular(float a) { mainBody_->ApplyAngularImpulse(a, true); }
 
     /// Add explosive force away from this
 void PhysObject::Explosion(const b2Vec2& center, float magnitude) {
+    b2Vec2 pos(x_, y_);
+    b2Vec2 direction = pos - center;
+    float distance = direction.Normalize();
 
+    float decay = exp(-ph::explosionDecay * distance);
+    direction.x = direction.x * magnitude * decay;
+    direction.y = direction.y * magnitude * decay;
+
+    Impulse(direction);
 }
 
 
