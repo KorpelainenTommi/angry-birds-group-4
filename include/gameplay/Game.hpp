@@ -174,8 +174,6 @@ public:
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseScroll(float delta, float xw, float yh);
-    void OnCTRLDown(){}
-    void OnCTRLUp(){}
     
 protected:
     GameScreen& screen_;

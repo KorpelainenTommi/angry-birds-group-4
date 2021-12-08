@@ -20,6 +20,7 @@ GameScreen::GameScreen(
     game_ = editorMode ? 
         std::make_unique<Game>(*this, initialLevel) : 
         std::make_unique<Editor>(*this, initialLevel);
+    UpdateTheoreticalMaxScore(1234567);
 }
 
 void GameScreen::Update(){
@@ -91,10 +92,13 @@ void GameScreen::addTopLeftButtons(){
             this->GetGame().Pause();
         }
     });
-    addTopLeftButton(2, [this](){
+    addTopLeftButton(2, [this, pauseButton](){
         this->GetGame().Pause();
-        this->Confirm("Do you want to restart the level?", [this](bool b){
-            if(b) this->Restart();
+        this->Confirm("Do you want to restart the level?", [this, pauseButton](bool b){
+            if(b){
+                pauseButton.lock()->SetIcon(SpriteID::ui_button_pause);
+                this->Restart();
+            }
             else this->GetGame().Resume();
         });
     }, SpriteID::ui_button_restart);
@@ -474,6 +478,14 @@ void GameScreen::addEditorPanel(){
     addEditorPanelBackground();
     addEditorNameInput();
     addEditorGameModeDropDown();
+    addEditorMaxScoreLabel();
+    addEditorRequiredScoreLabel();
+    addEditorRequiredScoreInput();
+    addEditorElementList();
+
+    addBlocksToEditorElementList();
+
+    //addEditorElementListLine(SpriteID::teekkari_head10s, "teekkari", [](){std::cout << "click" << std::endl;});
 }
 
 void GameScreen::addEditorPanelBackground(){
@@ -503,6 +515,7 @@ void GameScreen::addEditorNameInput(){
         calcEditorContentWidth()
     );
     editorNameInput_->SetText(level_.levelName);
+    editorNameInput_->SetFontSize(editorFontSize_);
     auto wi = std::weak_ptr<InputElement>(editorNameInput_);
     editorNameInput_->SetWindowResizeHandler([this, wi](){
         auto i = wi.lock();
@@ -558,6 +571,7 @@ void GameScreen::addDropDownContents(std::shared_ptr<TextElement> e){
     for(std::size_t i = 0; i < len; i++){
         auto o = std::make_shared<TextElement>(y VH, x, h VH, w);
         o->SetText(' ' + levelModeNames[i]);
+        o->SetRelativeFontSize(editorFontSize_);
         o->SetBackgroundColor(ui::backgroundColor2);
         o->SetMouseDownHandler([this, i, e](){
             this->setSelectedGameMode((LevelMode)i);
@@ -579,6 +593,165 @@ void GameScreen::setSelectedGameMode(LevelMode m){
 ui::pfloat GameScreen::calcEditorDropDownTop() const {
     return (ui::toVHFloat(editorPanelPadding_) + ui::toVHFloat(editorFontSize_) * 2 
         + ui::toVHFloat(editorPanelSpacing_)) VH;
+}
+
+void GameScreen::addEditorMaxScoreLabel(){
+    editorMaxScoreLabel_ = std::make_shared<TextLine>(
+        calcEditorMaxScoreLabelTop(), 
+        calcEditorContentLeft(), 
+        editorFontSize_, 
+        calcEditorContentWidth(), 
+        " max score:"
+    );
+    editorMaxScoreLabel_->SetRelativeFontSize(editorFontSize_);
+    auto w = std::weak_ptr<TextLine>(editorMaxScoreLabel_);
+    editorMaxScoreLabel_->SetWindowResizeHandler([this, w](){
+        auto e = w.lock();
+        e->SetPosition(
+            this->calcEditorContentLeft(), 
+            this->calcEditorMaxScoreLabelTop()
+        );
+        e->SetWidth(this->calcEditorContentWidth());
+    });
+    menu_.push_back(editorMaxScoreLabel_);
+}
+
+ui::pfloat GameScreen::calcEditorMaxScoreLabelTop() const {
+    return (ui::toVHFloat(calcEditorDropDownTop()) + ui::toVHFloat(editorFontSize_) * 2 
+        + ui::toVHFloat(editorPanelSpacing_)) VH;
+}
+
+void GameScreen::UpdateTheoreticalMaxScore(int maxScore){
+    if(!editorMode_) return;
+    editorMaxScoreLabel_->SetText(" max score: " + getString(maxScore));
+}
+
+void GameScreen::addEditorRequiredScoreLabel(){
+    auto e = std::make_shared<TextLine>(
+        calcEditorRequiredScoreLabelTop(), 
+        calcEditorContentLeft(), 
+        editorFontSize_, 
+        calcEditorContentWidth(), 
+        " require for max points:"
+    );
+    e->SetRelativeFontSize(editorFontSize_);
+    auto we = std::weak_ptr<TextLine>(e);
+    e->SetWindowResizeHandler([this, we](){
+        auto e = we.lock();
+        e->SetPosition(
+            this->calcEditorContentLeft(), 
+            this->calcEditorRequiredScoreLabelTop()
+        );
+        e->SetWidth(this->calcEditorContentWidth());
+    });
+    menu_.push_back(e);
+}
+
+ui::pfloat GameScreen::calcEditorRequiredScoreLabelTop() const {
+    return (ui::toVHFloat(calcEditorMaxScoreLabelTop()) + ui::toVHFloat(editorFontSize_) 
+        + ui::toVHFloat(editorPanelSpacing_)) VH;
+}
+
+void GameScreen::addEditorRequiredScoreInput(){
+    editorRequiredScoreInput_ = std::make_shared<InputElement>(
+        calcEditorRequiredScoreInputTop(), 
+        calcEditorContentLeft(), 
+        editorFontSize_ * 2, 
+        calcEditorContentWidth()
+    );
+    editorRequiredScoreInput_->SetFontSize(editorFontSize_);
+    auto w = std::weak_ptr<InputElement>(editorRequiredScoreInput_);
+    editorRequiredScoreInput_->SetWindowResizeHandler([this, w](){
+        auto i = w.lock();
+        i->SetPosition(
+            this->calcEditorContentLeft(), 
+            this->calcEditorRequiredScoreInputTop()
+        );
+        i->SetWidth(this->calcEditorContentWidth());
+    });
+    menu_.push_back(editorRequiredScoreInput_);
+}
+
+ui::pfloat GameScreen::calcEditorRequiredScoreInputTop() const {
+    return (ui::toVHFloat(calcEditorRequiredScoreLabelTop()) + ui::toVHFloat(editorFontSize_)) VH;
+}
+
+void GameScreen::addEditorElementList(){
+    editorElementList_ = std::make_shared<ListElement>(
+        calcEditorElementListTop(), 
+        calcEditorContentLeft(), 
+        calcEditorElementListHeight(), 
+        calcEditorContentWidth()
+    );
+    editorElementList_->SetBackgroundColor(ui::backgroundColor2);
+    editorElementList_->SetSpacing(editorElementListSpacing_);
+    auto w = std::weak_ptr<ListElement>(editorElementList_);
+    editorElementList_->SetWindowResizeHandler([this, w](){
+        auto e = w.lock();
+        e->SetPosition(
+            this->calcEditorContentLeft(), 
+            this->calcEditorElementListTop()
+        );
+        e->SetSize(
+            this->calcEditorContentWidth(), 
+            this->calcEditorElementListHeight()
+        );
+    });
+    menu_.push_back(editorElementList_);
+}
+
+ui::pfloat GameScreen::calcEditorElementListTop() const {
+    return (ui::toVHFloat(calcEditorRequiredScoreInputTop()) + ui::toVHFloat(editorFontSize_) * 2 
+        + ui::toVHFloat(editorPanelSpacing_)) VH;
+}
+
+ui::pfloat GameScreen::calcEditorElementListHeight() const {
+    return (100 - ui::toVHFloat(calcEditorElementListTop()) - ui::toVHFloat(editorPanelPadding_)) VH;
+}
+
+std::shared_ptr<DivElement> GameScreen::addEditorElementListLine(
+    SpriteID icon, const std::string& text, const std::function<void()> mouseDownHandler
+){
+    auto div = std::make_shared<DivElement>(
+        0 VH, 
+        0 VW, 
+        editorElementListLineHeight_, 
+        calcEditorContentWidth()
+    );
+    div->SetMouseDownHandler(mouseDownHandler);
+    div->SetBackgroundColor({0, 0, 0, 0});
+    auto wd = std::weak_ptr<DivElement>(div);
+    div->SetMouseEnterHandler([wd](){wd.lock()->SetBackgroundColor(ui::highlightColor);});
+    div->SetMouseLeaveHandler([wd](){wd.lock()->SetBackgroundColor({0, 0, 0, 0});});
+    editorElementList_->InsertElement(div);
+    menu_.push_back(div);
+    auto ico = std::make_shared<RoundIcon>(0 VH, 0 VW, editorElementListLineHeight_ / 2, icon);
+    div->InsertElement(ico);
+    menu_.push_back(ico);
+    auto t = std::make_shared<TextElement>(
+        0 VH, editorElementListLineHeight_, editorElementListLineHeight_, 1 VW /*this doesn't matter*/
+    );
+    t->SetBackgroundColor({0, 0, 0, 0});
+    t->SetText(' ' + text);
+    t->SetRelativeFontSize(editorFontSize_);
+    div->InsertElement(t);
+    menu_.push_back(t);
+    div->SetWindowResizeHandler([this, wd](){
+        wd.lock()->SetWidth(this->calcEditorContentWidth());
+    });
+    return div;
+}
+
+void GameScreen::addBlocksToEditorElementList(){
+    for(auto t: gm::blockTypes){
+        gm::GameObjectType type = t.first;
+        std::string text = 
+            gm::blockMaterialNames[t.second.material] + ' ' + gm::blockShapeNames[t.second.shape];
+        SpriteID icon = t.second.sprite;
+        addEditorElementListLine(icon, text, [type, this](){
+            this->GetEditor().SetSelectedElement(type);
+        });
+    }
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {
@@ -605,13 +778,11 @@ bool GameScreen::OnMouseMove(float x, float y) {
 }
 
 bool GameScreen::OnKeyDown(const sf::Event::KeyEvent& e){
-    bool b = Screen::OnKeyDown(e);
-    if(e.code == 37) game_->OnCTRLDown();
-    return b;
+    if(Screen::OnKeyDown(e)) return true;
+    return game_->OnKeyDown(e);
 }
 
 bool GameScreen::OnKeyUp(const sf::Event::KeyEvent& e){
-    bool b = Screen::OnKeyUp(e);
-    if(e.code == 37) game_->OnCTRLUp();
-    return b;
+    if(Screen::OnKeyUp(e)) return true;
+    return game_->OnKeyUp(e);
 }
