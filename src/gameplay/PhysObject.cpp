@@ -15,12 +15,7 @@ void PhysObject::Torque(float t) { mainBody_->ApplyTorque(t, true); }
 void PhysObject::Angular(float a) { mainBody_->ApplyAngularImpulse(a, true); }
 
 
-    //TODO: Implement in the cpp
-    //Explosion should add an impulse away from center, with a magnitude that decays exponentially with distance
-    //The decay factor lambda is defined in ph::explosionDecay
-    //The magnitude should be <magnitude> at 0 distance from the center
-
-    /// Add explosive force away from this
+/// Add explosive force away from this
 void PhysObject::Explosion(const b2Vec2& center, float magnitude) {
     b2Vec2 pos(x_, y_);
     b2Vec2 direction = pos - center;
