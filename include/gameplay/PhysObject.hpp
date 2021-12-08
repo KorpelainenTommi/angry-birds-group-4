@@ -76,7 +76,7 @@ protected:
 
 
     /// This is called just before this object is destroyed from hp
-    virtual void OnDeath() {}
+    virtual void OnDeath() { }
 };
 
 

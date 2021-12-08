@@ -67,7 +67,7 @@ const std::vector<gm::PersonBody> gm::fuksiBodies = {
     { SpriteID::fuksi_torso_brown, SpriteID::fuksi_arm_brown, SpriteID::fuksi_leg_brown, SpriteID::fuksi_armb_brown }
 };
 
-const std::vector<gm::GameObjectType> teekkaris = {
+const std::vector<gm::GameObjectType> gm::teekkaris = {
     gm::GameObjectType::teekkari_ik,
     gm::GameObjectType::teekkari_sik,
     gm::GameObjectType::teekkari_tefy,

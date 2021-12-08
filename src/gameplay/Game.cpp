@@ -5,6 +5,8 @@
 #include <box2d/b2_body.h>
 #include <gameplay/PhysObject.hpp>
 #include <gameplay/GameObjectTypes.hpp>
+#include <framework/RandomGen.hpp>
+#include <math.h>
 #include <iostream>
 
 Game::Game(GameScreen& gameScreen) : screen_(gameScreen), world_({0, -ph::gravity}) {
@@ -20,27 +22,33 @@ Game::Game(GameScreen& gameScreen, Level level) : Game(gameScreen) {
     Restart();
 }
 
+//Notice that LoadLevel shouldn't reset the following things:
+//-points
+//-time
+//-projectiles the player can use
+//This way endless mode works as intended
 
 void Game::LoadLevel(Level level) {
     level_  = level;
     ClearObjects();
     IDCounter_ = {};
-    CreateObject(gm::GameObjectType::ground_obj);
-    for(const auto& objectdata : level.objectData) {
-        CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
-    }
     
-    std::vector<std::pair<SpriteID, std::string>> uiIcons;
+    //Create ground and cannon
+    CreateObject(gm::GameObjectType::ground_obj);
+    CreateObject(gm::GameObjectType::cannon, ph::cannonX);
 
-    //Note
-    //This doesn't pick random starting teekkaris, it just picks random faces for the starting teekkaris
-    for(const auto& t : level.startingTeekkaris) {
-        gm::PersonData teekkari = gm::RandomTeekkari(t);
-        teekkarisLeft_.push_back(teekkari);
-        uiIcons.push_back({teekkari.face.face, teekkari.body.guildName});
-    }
+    //Create all other objects
+    for(const auto& objectdata : level.objectData)
+        CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
 
-    screen_.UpdateProjectileList(uiIcons);
+
+    //Add starting teekkaris to list
+    for(const auto& t : level.startingTeekkaris)
+        teekkarisLeft_.push_back(gm::RandomTeekkari(t));
+    
+    //RandomTeekkari doesn't pick random starting teekkaris, it just picks random faces for the starting teekkaris
+    
+    UpdateProjectileList();
 
 }
 
@@ -87,11 +95,8 @@ bool Game::TakeProjectile(gm::PersonData& teekkari) {
     teekkari = teekkarisLeft_.at(chosenTeekkari_);
     teekkarisLeft_.erase(teekkarisLeft_.begin() + chosenTeekkari_);
     chosenTeekkari_ = 0;
-    
-    std::vector<std::pair<SpriteID, std::string>> uiIcons;
-    for(const auto& t : teekkarisLeft_)
-        uiIcons.push_back({t.face.face, t.body.guildName});
-    screen_.UpdateProjectileList(uiIcons);
+
+    UpdateProjectileList();
 
     return true;
 }
@@ -133,6 +138,14 @@ void Game::Update() {
     while(it != objects_.end()) {
         (it++)->second->Update();
     }
+
+    //Don't add anything after this. Fuksi and Teekkari checks might end the level
+    if(checkForFinish_) {
+        checkForFinish_ = false;
+        bool b = CheckFuksiCount();
+        if(!b) b = CheckTeekkariCount();
+        if(!b && level_.levelMode == LevelMode::time_trial && GetTime() > level_.timeLimit) screen_.OnGameLost();
+    }
 }
 
 void Game::CheckCameraBounds() {
@@ -150,6 +163,60 @@ void Game::CheckCameraBounds() {
     }
 }
 
+void Game::UpdateProjectileList() {
+    std::vector<std::pair<SpriteID, std::string>> uiIcons;
+    for(const auto& t : teekkarisLeft_)
+        uiIcons.push_back({t.face.face, t.body.guildName});
+    screen_.UpdateProjectileList(uiIcons);
+}
+
+//Mark for level end check
+
+void Game::CheckLevelEnd() {
+    checkForFinish_ = true;
+}
+
+bool Game::CheckTeekkariCount() {
+    if(teekkarisLeft_.empty()) {
+        bool noActiveTeekkaris = true;
+        for(const auto& o : objects_) {
+            if(std::find(gm::teekkaris.begin(), gm::teekkaris.end(), o.second->objectType_) != gm::teekkaris.end()) {
+                noActiveTeekkaris = false;
+                break;
+            }
+        }
+
+        if(noActiveTeekkaris) {
+            screen_.OnGameLost();
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Game::CheckFuksiCount() {
+    bool noFuksis = true;
+    for(const auto& o : objects_) {
+        if(o.second->objectType_ == gm::GameObjectType::fuksi) {
+            noFuksis = false;
+            break;
+        }
+    }
+
+    if(noFuksis) {
+        if(level_.levelMode == LevelMode::endless) {
+            auto levels = screen_.GetApplication().GetFileManager().ListEndless();
+            LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
+        }
+        else if(level_.levelMode == LevelMode::time_trial) {
+            float timeLeft = level_.timeLimit - GetTime();
+            int p = (int)roundf(timeLeft * points_);
+            screen_.OnGameCompleted(p, level_.timeLimit * level_.perfectScore);
+        }
+        else screen_.OnGameCompleted(points_, level_.perfectScore);
+    }
+    return noFuksis;
+}
 
 void Game::Render(const RenderSystem& r) {
     
@@ -242,12 +309,12 @@ void Game::ResetCamera() {
 void Game::SetCameraPos(float x, float y) { camera_.x = x; camera_.y = y; }
 void Game::SetCameraZoom(float zoom) { camera_.zoom = zoom; }
 void Game::SetCameraRot(float rot) { camera_.rot = rot; }
-void Game::AddPoints(int p) { points_ += p; screen_.OnScoreChange(p); }
+void Game::AddPoints(int p) { points_ += p; screen_.OnScoreChange(points_); }
 
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
 
-bool Game::CannonDisabled() const { return isPaused_; }
+bool Game::CannonDisabled() const { return isPaused_ || teekkarisLeft_.empty(); }
 bool Game::IsPaused() const { return isPaused_; }
 
 void Game::Pause() {

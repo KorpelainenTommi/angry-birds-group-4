@@ -110,6 +110,8 @@ namespace ph {
     /// Force of a cannon shot at maximum force
     const float cannonMaxForce = 5000;
 
+    /// The position of the cannon in the level
+    const float cannonX = -20;
 
     /// Total height of a Teekkari or Fuksi when standing upright
     const float personHeight = 1.8F;

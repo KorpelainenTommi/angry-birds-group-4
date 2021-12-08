@@ -147,8 +147,7 @@ public:
     /// Set the camera rotation
     void SetCameraRot(float rot);
     
-    // Set the camera inside world's bounds
-    void CheckCameraBounds();
+    void CheckLevelEnd();
 
     /// Increment current points
     void AddPoints(int p);
@@ -176,17 +175,33 @@ protected:
     std::vector<gm::PersonData> teekkarisLeft_;
     int chosenTeekkari_ = 0;
 
+    //Mark this level for ending check. It is important that the level isn't ended in the middle of an Update, since
+    //that could cause us to reference destructed objects
+    bool checkForFinish_ = false;
+
     bool isPaused_ = false;
     int points_;
     unsigned int time_ = 0; //Game ticks since starting => number of update calls
 
     b2World world_;
     
+    /// Notify UI of the changes to projectiles
+    void UpdateProjectileList();
+
+
     //Variables for panning the camera
     bool movingCamera_ = false;
     ph::tfloat cameraGrabX_;
     ph::tfloat cameraGrabY_;
     
+    /// Set the camera inside world's bounds
+    void CheckCameraBounds();
+
+    /// Check the amount of fuksis in the level, and end the level if 0
+    bool CheckFuksiCount();
+
+    /// Check the amount of teekkaris left, and end the level if 0
+    bool CheckTeekkariCount();
 
 };
 

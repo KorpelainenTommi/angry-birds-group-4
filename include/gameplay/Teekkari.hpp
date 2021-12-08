@@ -13,6 +13,7 @@ public:
     Teekkari(Game& game, gm::GameObjectType type, float x, float y, float rot) : Person(game, type, x, y, rot, false, -5)
     { data_ = gm::RandomTeekkari(type); hp_ = ph::teekkariHP; }
 protected:
+    virtual void OnDeath() { game_.CheckLevelEnd(); }
 
 };
 

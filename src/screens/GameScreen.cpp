@@ -179,6 +179,7 @@ std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
 
 void GameScreen::OnGameLost(){
     if(editorMode_) return;
+    game_->Pause();
     std::vector<std::shared_ptr<Element>> v;
     v.push_back(std::make_shared<MessageBox>(messageBoxHeight_, messageBoxWidth_));
     v.push_back(generateMessageBoxButton(1, [this](){
@@ -195,6 +196,7 @@ void GameScreen::OnGameLost(){
 
 void GameScreen::OnGameCompleted(int score, int requiredMaxScore){
     if(editorMode_) return;
+    game_->Pause();
     std::vector<std::shared_ptr<Element>> v;
     v.push_back(std::make_shared<MessageBox>(victoryMessageHeight_, victoryMessageWidth_));
     addVictoryMessageStars(score, requiredMaxScore, v);

@@ -295,7 +295,7 @@ void Person::Update() {
     legLRot_ = ph::angToRot(legLBody_->GetAngle());
 
 
-    //Important! Immediately return after destroying the object. DestroyObject causes the destructor to be called (I think???) which is why
+        //Important! Immediately return after destroying the object. DestroyObject causes the destructor to be called (I think???) which is why
     //any code that accesses member variables will crash if put after it
 
     //Destroy off screen objects
@@ -304,8 +304,11 @@ void Person::Update() {
 
     //Destroy zero hp objects
     bool zerohp = hp_ <= 0;
-    
-    if(offscreen || zerohp) { game_.DestroyObject(gameID_); return; }
+
+    if(offscreen || zerohp) { 
+        this->OnDeath();
+        game_.DestroyObject(gameID_); return;
+    }
 }
 
 void Person::Render(const RenderSystem& r) {

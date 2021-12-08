@@ -14,8 +14,10 @@ public:
     { data_ = gm::RandomFuksi(); hp_ = ph::fuksiHP; }
 
 protected:
-
-
+    virtual void OnDeath() {
+        game_.AddPoints(gm::GetObjectScore(gm::GameObjectType::fuksi));
+        game_.CheckLevelEnd();
+    }
 
 private:
 
