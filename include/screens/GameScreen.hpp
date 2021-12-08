@@ -2,7 +2,7 @@
 #define GAME_SCREEN_HPP
 
 #include <memory>
-#include <gameplay/Game.hpp>
+#include <gameplay/Editor.hpp>
 #include <gameplay/Level.hpp>
 #include <gameplay/Physics.hpp>
 #include <screens/Screen.hpp>
@@ -53,7 +53,9 @@ public:
      */
     void UpdateProjectileList(std::vector<SpriteID /*this can be changed*/>);
 
-    Game& GetGame(){return game_;}
+    Game& GetGame();
+
+    Editor& GetEditor();
 
     bool IsInEditorMode() const {return editorMode_;}
 
@@ -127,7 +129,7 @@ private:
     const ui::pfloat editorPanelSpacing_ = 1 VH;
     const ui::pfloat editorFontSize_ = ui::defaultFontSize;
 
-    Game game_;
+    std::unique_ptr<Game> game_;
     Level level_;
     std::shared_ptr<TextLine> scoreLabel_;
     std::shared_ptr<TextLine> timeLabel_;

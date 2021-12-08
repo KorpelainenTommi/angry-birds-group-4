@@ -2,10 +2,11 @@
 #include <ui/MessageBox.hpp>
 
 #include <ui/InputElement.hpp>
+#include <exception>
 
 GameScreen::GameScreen(
     Application& app, const Level& initialLevel, bool editorMode
-): Screen(app), game_(Game(*this, initialLevel)){
+): Screen(app){
     level_ = initialLevel;
     editorMode_ = editorMode;
     if(editorMode_){
@@ -30,19 +31,18 @@ GameScreen::GameScreen(
         SpriteID::ui_button_cancel,
         SpriteID::ui_button_pause
     });
-    /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
-    input->SetFontSize(ui::defaultFontSize * 4);
-    menu_.push_back(input);*/
-    //OnGameCompleted(8000, 10000);
+    game_ = editorMode ? 
+        std::make_unique<Game>(*this, initialLevel) : 
+        std::make_unique<Editor>(*this, initialLevel);
 }
 
 void GameScreen::Update(){
-    game_.Update();
-    if(!editorMode_) timeLabel_->SetText("time: " + getString((int)(game_.GetTimeForUI())));
+    game_->Update();
+    if(!editorMode_) timeLabel_->SetText("time: " + getString((int)(game_->GetTimeForUI())));
 }
 
 void GameScreen::Render(const RenderSystem& r){
-    game_.Render(r);
+    game_->Render(r);
     Screen::Render(r);
 }
 
@@ -51,7 +51,16 @@ void GameScreen::Exit(){
 }
 
 void GameScreen::Restart(){
-    game_.Restart();
+    game_->Restart();
+}
+
+Game& GameScreen::GetGame(){
+    return *game_;
+}
+
+Editor& GameScreen::GetEditor(){
+    if(!editorMode_) throw std::runtime_error("The GameScreen isn't in editor mode so GetEditor shouldn't be called.");
+    return *((Editor*)game_.get());
 }
 
 std::shared_ptr<RoundIcon> GameScreen::addTopLeftButton(
@@ -582,35 +591,35 @@ ui::pfloat GameScreen::calcEditorDropDownTop() const {
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {
     if(Screen::OnMouseScroll(delta, xw, yh)) return true;
-    if(game_.OnMouseScroll(delta, xw, yh)) return true;
+    if(game_->OnMouseScroll(delta, xw, yh)) return true;
     return false;
 }
 
 bool GameScreen::OnMouseDown(const sf::Mouse::Button& e, float x, float y) {
     if(Screen::OnMouseDown(e, x, y)) return true;
-    if(game_.OnMouseDown(e, x, y)) return true;
+    if(game_->OnMouseDown(e, x, y)) return true;
     return false;
 }
 
 bool GameScreen::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
     if(Screen::OnMouseUp(e, x, y)) return true;
-    if(game_.OnMouseUp(e, x, y)) return true;
+    if(game_->OnMouseUp(e, x, y)) return true;
     return false;
 }
 
 bool GameScreen::OnMouseMove(float x, float y) {
     bool b = Screen::OnMouseMove(x, y);
-    return game_.OnMouseMove(x, y) || b;
+    return game_->OnMouseMove(x, y) || b;
 }
 
 bool GameScreen::OnKeyDown(const sf::Event::KeyEvent& e){
     bool b = Screen::OnKeyDown(e);
-    if(e.code == 37) game_.OnCTRLDown();
+    if(e.code == 37) game_->OnCTRLDown();
     return b;
 }
 
 bool GameScreen::OnKeyUp(const sf::Event::KeyEvent& e){
     bool b = Screen::OnKeyUp(e);
-    if(e.code == 37) game_.OnCTRLUp();
+    if(e.code == 37) game_->OnCTRLUp();
     return b;
 }
