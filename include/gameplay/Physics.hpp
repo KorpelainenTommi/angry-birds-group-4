@@ -137,7 +137,8 @@ namespace ph {
 
     /// Rotate a 2D vector counterclockwise by rot degrees
     inline sf::Vector2f rotateVector(float x, float y, float rot) {
-
+        float rad = rotToAng(rot);
+        return { x * cosf(rad) - y * sinf(rad), x * sinf(rad) + y * cosf(rad) };
     }
 
 

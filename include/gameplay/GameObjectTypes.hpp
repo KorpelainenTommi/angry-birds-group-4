@@ -71,13 +71,14 @@ enum GameObjectType {
     ball_plastic,
     ball_rubber,
     ball_concrete,
-
+    
+    /*
     block_woodTri,
     block_metalTri,
     block_glassTri,
     block_plasticTri,
     block_rubberTri,
-    block_concreteTri,
+    block_concreteTri,*/
 
     plank_wood,
     plank_metal,

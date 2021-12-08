@@ -17,24 +17,45 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot,
     //Mirroring
     float m = (mirrored) ? -1.0F : 1.0F;
 
-    headX_ = x - m * 0.158878F * Person::headWidth;
-    headY_ = y + 0.44179F * Person::torsoHeight + 0.383333F * Person::headHeight;
-    headRot_ = ph::rotToAng(rot);
+    float hx = -m * 0.158878F * Person::headWidth;
+    float hy = 0.44179F * Person::torsoHeight + 0.383333F * Person::headHeight;
+    sf::Vector2f hv = ph::rotateVector(hx, hy, rot);
 
-    armRX_ = x + m * -0.32307F * Person::torsoWidth - m * 0.1764705F * Person::armWidth;
-    armRY_ = y + 0.18179F * Person::torsoHeight - 0.275F * Person::armHeight;
+    headX_ = x + hv.x;
+    headY_ = y + hv.y;
+    headRot_ = rot;
+
+    float arx = m * -0.32307F * Person::torsoWidth - m * 0.1764705F * Person::armWidth;
+    float ary = 0.18179F * Person::torsoHeight - 0.275F * Person::armHeight;
+    sf::Vector2f arv = ph::rotateVector(arx, ary, rot);
+    
+    armRX_ = x + arv.x;
+    armRY_ = y + arv.y;
     armRRot_ = headRot_;
 
-    armLX_ = x + m * 0.32307F * Person::torsoWidth - m * 0.1764705F * Person::armWidth;
-    armLY_ = y + 0.18179F * Person::torsoHeight - 0.275F * Person::armHeight;
+    float alx = m * 0.32307F * Person::torsoWidth - m * 0.1764705F * Person::armWidth;
+    float aly = 0.18179F * Person::torsoHeight - 0.275F * Person::armHeight;
+    sf::Vector2f alv = ph::rotateVector(alx, aly, rot);
+
+    armLX_ = x + alv.x;
+    armLY_ = y + alv.y;
     armLRot_ = headRot_;
 
-    legRX_ = x + m * -0.26307F * Person::torsoWidth - m * -0.1864705F * Person::legWidth;
-    legRY_ = y - 0.28179F * Person::torsoHeight - 0.335F * Person::legHeight;
+
+    float lrx = m * -0.26307F * Person::torsoWidth - m * -0.1864705F * Person::legWidth;
+    float lry = -0.28179F * Person::torsoHeight - 0.335F * Person::legHeight;
+    sf::Vector2f lrv = ph::rotateVector(lrx, lry, rot);
+    
+    legRX_ = x + lrv.x;
+    legRY_ = y + lrv.y;
     legRRot_ = headRot_;
 
-    legLX_ = x + m * 0.26307F * Person::torsoWidth - m * 0.1864705F * Person::legWidth;
-    legLY_ = y - 0.28179F * Person::torsoHeight - 0.335F * Person::legHeight;
+    float llx = m * 0.26307F * Person::torsoWidth - m * 0.1864705F * Person::legWidth;
+    float lly = -0.28179F * Person::torsoHeight - 0.335F * Person::legHeight;
+    sf::Vector2f llv = ph::rotateVector(llx, lly, rot);
+    
+    legLX_ = x + llv.x;
+    legLY_ = y + llv.y;
     legLRot_ = headRot_;
 
 
@@ -143,8 +164,8 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot,
     headJoint.localAnchorB = {m * 0.158878F * Person::headWidth, -0.383333F * Person::headHeight};
     headJoint.enableLimit = true;
     headJoint.referenceAngle = 0;
-    headJoint.lowerAngle = ph::rotToAng(mirrored ? -10.0F : 30.0F);
-    headJoint.upperAngle = ph::rotToAng(mirrored ?  30.0F : -10.0F);
+    headJoint.lowerAngle = ph::rotToAng(mirrored ? 10.0F : 30.0F);
+    headJoint.upperAngle = ph::rotToAng(mirrored ? -30.0F : -10.0F);
     headJoint.collideConnected = false;
 
     game_.GetB2World().CreateJoint(&headJoint);
@@ -178,8 +199,8 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot,
     legLJoint.localAnchorB = {m * -0.1864705F * Person::legWidth, 0.335F * Person::legHeight};
     legLJoint.enableLimit = true;
     legLJoint.referenceAngle = 0;
-    legLJoint.lowerAngle = ph::rotToAng(mirrored ? -60.0F : 45.0F);
-    legLJoint.upperAngle = ph::rotToAng(mirrored ?  45.0F : -60.0F);
+    legLJoint.lowerAngle = ph::rotToAng(mirrored ? 60.0F : 45.0F);
+    legLJoint.upperAngle = ph::rotToAng(mirrored ? -45.0F : -60.0F);
     legLJoint.collideConnected = false;
 
     game_.GetB2World().CreateJoint(&legLJoint);
@@ -191,8 +212,8 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot,
     legRJoint.localAnchorB = {m * -0.1864705F * Person::legWidth, 0.335F * Person::legHeight};
     legRJoint.enableLimit = true;
     legRJoint.referenceAngle = 0;
-    legRJoint.lowerAngle = ph::rotToAng(mirrored ? -60.0F : 45.0F);
-    legRJoint.upperAngle = ph::rotToAng(mirrored ? 45.0F : -60.0F);
+    legRJoint.lowerAngle = ph::rotToAng(mirrored ? 60.0F : 45.0F);
+    legRJoint.upperAngle = ph::rotToAng(mirrored ? -45.0F : -60.0F);
     legRJoint.collideConnected = false;
 
     game_.GetB2World().CreateJoint(&legRJoint);
@@ -308,3 +329,4 @@ void Person::Render(const RenderSystem& r) {
 }
 
 float Person::GetMass() const { return ph::personMass; }
+void Person::Impulse(const b2Vec2& f) { headBody_->ApplyLinearImpulseToCenter(f, true);}

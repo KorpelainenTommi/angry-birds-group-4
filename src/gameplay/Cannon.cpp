@@ -58,7 +58,7 @@ bool Cannon::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
     b2Vec2 dir = { -std::sin(angleRad), std::cos(angleRad) };
 
     auto teekkari = game_.TakeProjectile();
-    int id = game_.AddObject(std::make_unique<Teekkari>(game_, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, 0, teekkari));
+    int id = game_.AddObject(std::make_unique<Teekkari>(game_, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, rot_pipe_, teekkari));
     GameObject& obj = game_.GetObject(id);
     Teekkari& t = (Teekkari&)obj;
     t.Impulse({dir.x * relativeDistance_ * ph::cannonMaxForce, dir.y * relativeDistance_ * ph::cannonMaxForce});

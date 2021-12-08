@@ -19,6 +19,8 @@ public:
     virtual void Record();
     virtual void Update();
 
+    virtual void Impulse(const b2Vec2& f);
+
 protected:
 
     // Data defining the look and sound of this person
