@@ -88,6 +88,20 @@ enum SpriteID {
     rubber_thickplank,
     concrete_thickplank,
 
+    //Block crack overlays
+    crack1x1,
+    crack2x1,
+    crack2x2,
+    crack_ball,
+    crack_plank,
+    crack_thickplank,
+
+    crack1x1_b,
+    crack2x1_b,
+    crack2x2_b,
+    crack_ball_b,
+    crack_plank_b,
+    crack_thickplank_b,
 
     //Props
     beer1,
@@ -235,11 +249,33 @@ enum SpriteID {
 
 
     //Teekkari abilities
+    gravity_symbols,
     cow,
     lightning_strike,
     wrench,
+    math_cloud,
     integral_sign,
+    
+    
+    //Block break particles
+    particles_dust, //Generic ground hit
+    partices_wood,
+    particles_metal,
+    particles_glass,
+    particles_plastic,
+    particles_rubber,
+    particles_concrete,
 
+    //Prop particles
+    bottle_particle,
+    can_particle,
+
+    //Object collisions
+    hit_sparks1,
+    hit_sparks2,
+
+    //Person collisions
+    hit_stars,
 
     //Screen filters (sprite applied after all)
     filter_thunder,
@@ -251,42 +287,19 @@ enum SpriteID {
 /// All animations usable with RenderSystem
 enum AnimationID { 
 
-    //Block break particles
-    particles_dust, //Generic ground hit
-    partices_wood,
-    particles_metal,
-    particles_glass,
-    particles_plastic,
-    particles_rubber,
-    particles_concrete,
-
-
-    //Props
-    bottle_crack,
-    can_crack,
-
+    //Explosions
     explosion,
     cannon_explosion,
 
-
-
-
-    //Object collisions
-    hit_sparks1,
-    hit_sparks2,
-
-
-    //Fuksi collisions
-    hit_stars,
+    //Person despawning
     particles_poof,
 
 
     //Teekkari abilities
-    gravity_symbols,
+    gravity_flash,
     matrix_bug,
     hand_whirl,
-    thunder_sparks,
-    math_cloud
+    thunder_sparks
 
 
 };
@@ -317,6 +330,8 @@ enum SoundID {
 
     
     //Prop sounds
+    bottle_hit,
+    can_hit,
     bottle_break,
     can_break,
 
@@ -336,6 +351,8 @@ enum SoundID {
 
     grunt1,
     grunt2,
+    grunt3,
+    grunt4,
 
     teekkari_death1,
     teekkari_death2,
@@ -348,6 +365,8 @@ enum SoundID {
     //Fuksi sounds
     fuksi_cry1,
     fuksi_cry2,
+    fuksi_cry3,
+    fuksi_cry4,
 
     fuksi_death1,
     fuksi_death2,
@@ -359,9 +378,12 @@ enum SoundID {
     gravity_shift,
     glitch_sound,
     hand_whoosh,
+    wrench_swish,
+    cow_moo,
     thunder_static,
     thunder_strike,
-    professor_oneliner
+    professor_oneliner,
+    integral_destruction
 
 
 

@@ -14,8 +14,6 @@ void PhysObject::Force(const b2Vec2& f, const b2Vec2& p) { mainBody_->ApplyForce
 void PhysObject::Torque(float t) { mainBody_->ApplyTorque(t, true); }
 void PhysObject::Angular(float a) { mainBody_->ApplyAngularImpulse(a, true); }
 
-
-/// Add explosive force away from this
 void PhysObject::Explosion(const b2Vec2& center, float magnitude) {
     b2Vec2 pos(x_, y_);
     b2Vec2 direction = pos - center;
@@ -54,7 +52,10 @@ void PhysObject::Update() {
     //Destroy zero hp objects
     bool zerohp = hp_ <= 0;
 
-    if(offscreen || zerohp) { game_.DestroyObject(gameID_); return; }
+    if(offscreen || zerohp) { 
+        this->OnDeath();
+        game_.DestroyObject(gameID_); return;
+    }
 }
 
 void PhysObject::SetX(float x) {

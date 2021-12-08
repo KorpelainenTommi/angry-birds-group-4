@@ -29,14 +29,18 @@ void Game::LoadLevel(Level level) {
     for(const auto& objectdata : level.objectData) {
         CreateObject(objectdata.type,objectdata.x,objectdata.y,objectdata.rot);
     }
+    
+    std::vector<std::pair<SpriteID, std::string>> uiIcons;
 
     //Note
     //This doesn't pick random starting teekkaris, it just picks random faces for the starting teekkaris
     for(const auto& t : level.startingTeekkaris) {
-        teekkarisLeft_.push_back(gm::RandomTeekkari(t));
+        gm::PersonData teekkari = gm::RandomTeekkari(t);
+        teekkarisLeft_.push_back(teekkari);
+        uiIcons.push_back({teekkari.face.face, teekkari.body.guildName});
     }
 
-    projectilesUpdated_ = true;
+    screen_.UpdateProjectileList(uiIcons);
 
 }
 
@@ -78,17 +82,18 @@ void Game::SelectProjectile(int index) {
     chosenTeekkari_ = index;
 }
 
-gm::PersonData Game::TakeProjectile() {
-    if(teekkarisLeft_.size() < 1) {
-        Pause();
-        screen_.OnGameLost();
-        return {};
-    }
-    gm::PersonData p = teekkarisLeft_.at(chosenTeekkari_);
+bool Game::TakeProjectile(gm::PersonData& teekkari) {
+    if(teekkarisLeft_.size() < 1) return false;
+    teekkari = teekkarisLeft_.at(chosenTeekkari_);
     teekkarisLeft_.erase(teekkarisLeft_.begin() + chosenTeekkari_);
     chosenTeekkari_ = 0;
-    projectilesUpdated_ = true;
-    return p;
+    
+    std::vector<std::pair<SpriteID, std::string>> uiIcons;
+    for(const auto& t : teekkarisLeft_)
+        uiIcons.push_back({t.face.face, t.body.guildName});
+    screen_.UpdateProjectileList(uiIcons);
+
+    return true;
 }
 
 Game::~Game() {
@@ -114,14 +119,6 @@ void Game::BeginContact(b2Contact* contact) {
 }
 
 void Game::Update() {
-    if(projectilesUpdated_) {
-        std::vector<std::pair<SpriteID, std::string>> uiSprites;
-        for(const auto& t : teekkarisLeft_)
-            uiSprites.push_back({t.face.face, "teemu teekkari"});
-        screen_.UpdateProjectileList(uiSprites);
-        chosenTeekkari_ = 0;
-        projectilesUpdated_ = false;
-    }
 
     if(isPaused_) return;
     //Increment tick count
@@ -138,7 +135,7 @@ void Game::Update() {
     }
 }
 
-void Game::checkCameraBounds() {
+void Game::CheckCameraBounds() {
     if(camera_.x-ph::fullscreenPlayArea/2.0F*camera_.zoom < -ph::fullscreenPlayArea/2.0F){
         camera_.x = -ph::fullscreenPlayArea/2.0F*(1-camera_.zoom);
     }
@@ -165,16 +162,16 @@ void Game::Render(const RenderSystem& r) {
 
 bool Game::OnMouseMove(float xw, float yh) {
     
-    if(mDown_) {
-        mouseX_ = xw;
-        mouseY_ = yh;
+    if(movingCamera_) {
+        cameraGrabX_ = xw;
+        cameraGrabY_ = yh;
         Camera c = GetCamera();
-        c.x -= ph::fullscreenPlayArea * c.zoom * (mouseX_.f1 - mouseX_.f0);
-        c.y += ph::fullscreenPlayArea * c.zoom * (mouseY_.f1 - mouseY_.f0);
+        c.x -= ph::fullscreenPlayArea * c.zoom * (cameraGrabX_.f1 - cameraGrabX_.f0);
+        c.y += ph::fullscreenPlayArea * c.zoom * (cameraGrabY_.f1 - cameraGrabY_.f0);
         SetCameraPos(c.x, c.y);
-        mouseX_.Record();
-        mouseY_.Record();
-        checkCameraBounds();
+        cameraGrabX_.Record();
+        cameraGrabY_.Record();
+        CheckCameraBounds();
         return true;
     }
     for(auto& obj : objects_) {
@@ -190,12 +187,12 @@ bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
         if(obj.second->OnMouseDown(button, xw, yh)) return true;
     }
     
-    if(button == sf::Mouse::Button::Right) {
-        mDown_ = true;
-        mouseX_ = xw;
-        mouseY_ = yh;
-        mouseX_.Record();
-        mouseY_.Record();
+    if(button == sf::Mouse::Button::Middle) {
+        movingCamera_ = true;
+        cameraGrabX_ = xw;
+        cameraGrabY_ = yh;
+        cameraGrabX_.Record();
+        cameraGrabY_.Record();
         return true;
     }
     
@@ -204,8 +201,8 @@ bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
 
 
 bool Game::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
-    if(button == sf::Mouse::Button::Right && mDown_) {
-        mDown_ = false;
+    if(button == sf::Mouse::Button::Middle && movingCamera_) {
+        movingCamera_ = false;
         return true;
     }
     for(auto& obj : objects_) {
@@ -221,7 +218,7 @@ bool Game::OnMouseScroll(float delta, float xw, float yh) {
     if(zoom <= 0.1F) SetCameraZoom(0.1F);
     else if(zoom > 1.0F) SetCameraZoom(1.0F);
     else SetCameraZoom(zoom);
-    checkCameraBounds();
+    CheckCameraBounds();
 
     return true;
 }
@@ -236,10 +233,10 @@ float Game::GetTimeForUI() const {
 
 const Camera& Game::GetCamera() const { return camera_; }
 
-void Game::ResetCamera() { 
+void Game::ResetCamera() {
     camera_.SetFullscreen();
-    camera_.zoom = 0.8F;
     camera_.y = 10;
+    CheckCameraBounds();
 }
 
 void Game::SetCameraPos(float x, float y) { camera_.x = x; camera_.y = y; }
@@ -270,6 +267,6 @@ void Game::Restart() {
     time_ = 0;
     points_ = 0;
     chosenTeekkari_ = 0;
-    LoadLevel(level_);
     screen_.OnScoreChange(0);
+    LoadLevel(level_);
 }

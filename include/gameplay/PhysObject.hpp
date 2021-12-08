@@ -58,13 +58,7 @@ public:
     /// Instant change in angular velocity
     virtual void Angular(float a);
 
-
-    //TODO: Implement in the cpp
-    //Explosion should add an impulse away from center, with a magnitude that decays exponentially with distance
-    //The decay factor lambda is defined in ph::explosionDecay
-    //The magnitude should be <magnitude> at 0 distance from the center
-
-    /// Add explosive force away from this
+    /// Add explosive force away from center
     virtual void Explosion(const b2Vec2& center, float magnitude);
 
 
@@ -79,6 +73,10 @@ protected:
     /// This is the main (root) box2d body. Objects can have subparts such as bodies connected by joints
     b2Body* mainBody_;
     float hp_ = 0;
+
+
+    /// This is called just before this object is destroyed from hp
+    virtual void OnDeath() {}
 };
 
 

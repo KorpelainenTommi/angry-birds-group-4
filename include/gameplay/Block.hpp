@@ -21,12 +21,13 @@ public:
     /// Do additional things when colliding
     virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact);
 
-
-private:
+protected:
     gm::BlockData blockData_;
     gm::BlockShapeData shapeData_;
     gm::BlockMaterialData materialData_;
 
+
+    virtual void OnDeath();
 };
 
 

@@ -16,4 +16,38 @@ protected:
 
 };
 
+
+class IKTeekkari : public Teekkari {
+
+};
+
+class SIKTeekkari : public Teekkari {
+
+};
+
+class TEFYTeekkari : public Teekkari {
+
+};
+
+class TUTATeekkari : public Teekkari {
+
+};
+
+class TIKTeekkari : public Teekkari {
+
+};
+
+class INKUBIOTeekkari : public Teekkari {
+
+};
+
+class KIKTeekkari : public Teekkari {
+
+};
+
+class Professor : public Teekkari {
+
+};
+
+
 #endif

@@ -93,6 +93,8 @@ bool FileManager::SaveLevel(const Level& level, const std::string& path) const{
 
     file << "NAME " << level.levelName << "\n";
     file << "MODE " << level.levelMode << "\n";
+    file << "TIME " << level.timeLimit << "\n";
+    file << "MAXSCORE " << level.perfectScore << "\n";
     
     for(const auto& i : level.objectData){
         PrintGameObjectData(file, i);
@@ -135,7 +137,15 @@ bool FileManager::LoadLevel(Level& level, const std::string& path) const {
             int num = std::stoi(lineData[1]);
             LevelMode mode = static_cast<LevelMode>(num);
             level.levelMode = mode;
-
+            
+        }   else if (lineData[0] == "TIME"){
+            int num = std::stoi(lineData[1]);
+            level.timeLimit = num;
+            
+        }   else if (lineData[0] == "MAXSCORE"){
+            int num = std::stoi(lineData[1]);
+            level.perfectScore = num;
+        
         }   else if (lineData[0] == "DATA"){
             gm::GameObjectData object;
             object.x = std::stof(lineData[1]);

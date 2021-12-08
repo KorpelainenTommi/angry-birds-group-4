@@ -66,12 +66,6 @@ public:
     /// Update all objects in this game
     virtual void Update();
 
-    //===========================================================================
-    //TODO:
-    //In addition to implementin these methods call GameScreen::OnGameCompleted()
-    //or GameScreen::OnGameLost when the game ends.
-    //Call also GameScreen::OnScoreChange whenever the score changes.
-
     /// UI uses this to pause the physics simulation
     void Pause();
 
@@ -79,11 +73,6 @@ public:
     void Resume();
 
     void Restart();
-
-    //===========================================================================
-
-    void ChooseTeekkari(){}; // TODO: implement
-
 
     /// Create all objects from this level.
     void LoadLevel(Level level);
@@ -159,7 +148,7 @@ public:
     void SetCameraRot(float rot);
     
     // Set the camera inside world's bounds
-    void checkCameraBounds();
+    void CheckCameraBounds();
 
     /// Increment current points
     void AddPoints(int p);
@@ -168,7 +157,7 @@ public:
     void SelectProjectile(int index);
 
     /// Pop out the selected teekkari. This will also update UI
-    gm::PersonData TakeProjectile();
+    bool TakeProjectile(gm::PersonData& teekkari);
 
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
@@ -178,6 +167,7 @@ public:
 protected:
     GameScreen& screen_;
     
+    IDCounter IDCounter_;
     std::map<int,std::unique_ptr<GameObject>> objects_;
     Level level_;
     Camera camera_;
@@ -186,18 +176,16 @@ protected:
     std::vector<gm::PersonData> teekkarisLeft_;
     int chosenTeekkari_ = 0;
 
-    bool projectilesUpdated_ = false;
     bool isPaused_ = false;
     int points_;
     unsigned int time_ = 0; //Game ticks since starting => number of update calls
 
     b2World world_;
     
-    IDCounter IDCounter_;
-    
-    bool mDown_ = false;
-    ph::tfloat mouseX_;
-    ph::tfloat mouseY_;
+    //Variables for panning the camera
+    bool movingCamera_ = false;
+    ph::tfloat cameraGrabX_;
+    ph::tfloat cameraGrabY_;
     
 
 };

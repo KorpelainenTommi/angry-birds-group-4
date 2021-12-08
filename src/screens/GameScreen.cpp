@@ -740,8 +740,7 @@ std::shared_ptr<DivElement> GameScreen::addEditorElementListLine(
 void GameScreen::addBlocksToEditorElementList(){
     for(auto t: gm::blockTypes){
         gm::GameObjectType type = t.first;
-        std::string text = 
-            gm::blockMaterialNames[t.second.material] + ' ' + gm::blockShapeNames[t.second.shape];
+        std::string text = t.second.blockName;
         SpriteID icon = t.second.sprite;
         addEditorElementListLine(icon, text, [type, this](){
             this->GetEditor().SetSelectedElement(type);

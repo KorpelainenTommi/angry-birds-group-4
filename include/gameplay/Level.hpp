@@ -16,10 +16,13 @@ struct Level {
 
     std::string levelName = "new level";
     std::string levelPath = "";
+
+    int timeLimit = 0;
+    int perfectScore = 0;
     LevelMode levelMode = LevelMode::normal;
     std::vector<gm::GameObjectData> objectData;
     std::vector<std::pair<std::string, int>> highscores;
-    SpriteID backgroundImage = SpriteID::background_testroom;
+    SpriteID backgroundImage = SpriteID::background_field;
 
     std::vector<gm::GameObjectType> startingTeekkaris;
     

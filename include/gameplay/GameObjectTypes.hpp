@@ -1,6 +1,7 @@
 #ifndef GAME_OBJECT_TYPES
 #define GAME_OBJECT_TYPES
 
+#include <map>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -106,6 +107,15 @@ enum GameObjectType {
     prop_sofa2x1,
     prop_tnt,
 
+    pickup_ik,
+    pickup_sik,
+    pickup_tefy,
+    pickup_tuta,
+    pickup_tik,
+    pickup_inkubio,
+    pickup_kik,
+    pickup_professor,
+
 
     //Cannon
     cannon,
@@ -113,11 +123,11 @@ enum GameObjectType {
 
     //Teekkaris
     teekkari_ik,
+    teekkari_sik,
     teekkari_tefy,
+    teekkari_tuta,
     teekkari_tik,
     teekkari_inkubio,
-    teekkari_tuta,
-    teekkari_sik,
     teekkari_kik,
     teekkari_professor,
 
@@ -175,6 +185,7 @@ struct PersonBody {
     SpriteID arm = SpriteID::arm_blue;
     SpriteID leg = SpriteID::leg_blue;
     SpriteID armb = SpriteID::armb_blue;
+    std::string guildName = "Teemu Teekkari";
 };
 
 // All properties needed to spawn a unique Teekkari or Fuksi.
@@ -201,6 +212,9 @@ extern const std::unordered_map<GameObjectType, PersonBody> teekkariBodies;
 /// List of fuksi bodies
 extern const std::vector<gm::PersonBody> fuksiBodies;
 
+/// List of all teekkaris
+extern const std::vector<gm::GameObjectType> teekkaris;
+
 /// Return a random teekkari from a guild based on GameObjectType
 PersonData RandomTeekkari(GameObjectType type);
 
@@ -211,13 +225,7 @@ PersonData RandomFuksi();
 // Block properties
 
 enum BlockMaterial { wood, metal, glass, plastic, rubber, concrete };
-inline const std::vector<std::string> blockMaterialNames = {
-    "wood", "metal", "glass", "plastic", "rubber", "concrete"
-};
-enum BlockShape { block_1x1, block_2x1, block_2x2, block_ball, block_tri, block_plank, block_thickplank };
-inline const std::vector<std::string> blockShapeNames = {
-    "1x1", "2x1", "2x2", "ball", "triangle", "plank", "thick plank"
-};
+enum BlockShape { block_1x1, block_2x1, block_2x2, block_ball, /*block_tri,*/ block_plank, block_thickplank };
 
 
 // Allocate and create shared base shapes for BlockShapeData to use
@@ -226,7 +234,7 @@ std::shared_ptr<b2Shape> CreateShape1x1();
 std::shared_ptr<b2Shape> CreateShape2x1();
 std::shared_ptr<b2Shape> CreateShape2x2();
 std::shared_ptr<b2Shape> CreateShapeBall();
-std::shared_ptr<b2Shape> CreateShapeTri();
+//std::shared_ptr<b2Shape> CreateShapeTri();
 std::shared_ptr<b2Shape> CreateShapePlank();
 std::shared_ptr<b2Shape> CreateShapeThickPlank();
 
@@ -238,6 +246,8 @@ struct BlockMaterialData {
     float restitution;
     float hpMassRatio;
     float pointsPerMass;
+    SoundID hitSound;
+    SoundID breakSound;
 };
 
 struct BlockShapeData {
@@ -245,16 +255,19 @@ struct BlockShapeData {
     float volume;
     float height;
     std::shared_ptr<b2Shape> b2shape;
+    SpriteID halfHPSprite;
+    SpriteID lowHPSprite;
 };
 
 struct BlockData {
+    std::string blockName;
     SpriteID sprite;
     BlockMaterial material;
     BlockShape shape;
 };
 
-/// Lookup for all types of blocks
-extern const std::unordered_map<GameObjectType, BlockData> blockTypes;
+/// Ordered lookup for all types of blocks
+extern const std::map<GameObjectType, BlockData> blockTypes;
 
 /// Lookup for all block materials
 extern const std::unordered_map<BlockMaterial, BlockMaterialData> materialProperties;

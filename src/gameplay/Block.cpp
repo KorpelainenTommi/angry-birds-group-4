@@ -41,7 +41,15 @@ void Block::Render(const RenderSystem& r) {
 void Block::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
     
     PhysObject::OnCollision(velocity, other, contact);
+    game_.GetAudioSystem().PlaySound(materialData_.hitSound);
 
-    //Play sounds and stuff
+}
 
+void Block::OnDeath() {
+    game_.GetAudioSystem().PlaySound(materialData_.breakSound);
+    game_.AddPoints(gm::GetObjectScore(objectType_));
+
+    //Spawn points effect
+
+    //Spawn some particles
 }
