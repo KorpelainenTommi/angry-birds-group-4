@@ -329,4 +329,5 @@ void Person::Render(const RenderSystem& r) {
 }
 
 float Person::GetMass() const { return ph::personMass; }
-void Person::Impulse(const b2Vec2& f) { headBody_->ApplyLinearImpulseToCenter(f, true);}
+void Person::Impulse(const b2Vec2& f)
+{ headBody_->ApplyLinearImpulseToCenter(f, true); mainBody_->ApplyLinearImpulseToCenter(f, true); }

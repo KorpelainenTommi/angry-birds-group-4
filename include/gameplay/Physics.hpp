@@ -108,7 +108,7 @@ namespace ph {
     const float damageScaling = 0.1F;
 
     /// Force of a cannon shot at maximum force
-    const float cannonMaxForce = 10000;
+    const float cannonMaxForce = 5000;
 
 
     /// Total height of a Teekkari or Fuksi when standing upright

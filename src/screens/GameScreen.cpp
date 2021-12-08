@@ -435,7 +435,7 @@ void GameScreen::UpdateProjectileList(std::vector<SpriteID> projectiles){
     for(auto e: projectiles){
         addProjectileIcon(e);
     }
-    
+
     if(projectiles.size() > 0) {
         auto last = std::reinterpret_pointer_cast<RoundIcon>(projectileList_->GetElements().cbegin()->second);
         selectProjectileIcon(last);
@@ -538,7 +538,6 @@ void GameScreen::addEditorGameModeDropDown(){
     e->SetFocusCapture(true);
     auto we = std::weak_ptr<TextElement>(e);
     e->SetFocusChangeHandler([this, we](bool b){
-        std::cout << b << std::endl;
         if(b) this->addDropDownContents(we.lock());
         else this->DequeueMessage();
     });
