@@ -16,7 +16,7 @@ GameScreen::GameScreen(
         addTopRightLabels();
     }
     addProjectileBar();
-    UpdateProjectileList({
+    /*UpdateProjectileList({
         SpriteID::ui_button_restart,
         SpriteID::ui_button_resume,
         SpriteID::ui_button_ok,
@@ -29,7 +29,7 @@ GameScreen::GameScreen(
         SpriteID::ui_button_exit,
         SpriteID::ui_button_cancel,
         SpriteID::ui_button_pause
-    });
+    });*/
     /*auto input = std::make_shared<InputElement>(30 VH, 30 VW, ui::defaultFontSize * 8, 40 VW);
     input->SetFontSize(ui::defaultFontSize * 4);
     menu_.push_back(input);*/
@@ -152,7 +152,7 @@ ui::pfloat GameScreen::calcTopRightLabelLeft() const {
 
 void GameScreen::addTopRightLabels(){
     timeLabel_ = addTopRightLabel(2, "time: ");
-    scoreLabel_ = addTopRightLabel(1, "score: ");
+    scoreLabel_ = addTopRightLabel(1, "score: 0");
 }
 
 std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
@@ -430,9 +430,15 @@ ui::pfloat GameScreen::calcProjectileBarBodyHeight() const {
 }
 
 void GameScreen::UpdateProjectileList(std::vector<SpriteID> projectiles){
+
     clearIcons();
     for(auto e: projectiles){
         addProjectileIcon(e);
+    }
+    
+    if(projectiles.size() > 0) {
+        auto last = std::reinterpret_pointer_cast<RoundIcon>(projectileList_->GetElements().cbegin()->second);
+        selectProjectileIcon(last);
     }
 }
 
@@ -452,8 +458,9 @@ void GameScreen::addProjectileIcon(SpriteID icon){
         icon
     );
     auto wi = std::weak_ptr<RoundIcon>(i);
-    i->SetMouseDownHandler([this, icon, wi](){
-        this->GetGame().SelectProjectile(icon);
+    auto index = projectileList_->GetElements().size();
+    i->SetMouseDownHandler([this, index, wi](){
+        this->GetGame().SelectProjectile(index);
         this->selectProjectileIcon(wi.lock());
     });
     projectileList_->InsertElement(i);

@@ -36,6 +36,8 @@ void Game::LoadLevel(Level level) {
         teekkarisLeft_.push_back(gm::RandomTeekkari(t));
     }
 
+    projectilesUpdated_ = true;
+
 }
 
 //NOTE! This will crash for invalid ID values, so be careful
@@ -72,6 +74,22 @@ void Game::ClearObjects() {
     objects_.clear();
 }
 
+void Game::SelectProjectile(int index) {
+    chosenTeekkari_ = index;
+}
+
+gm::PersonData Game::TakeProjectile() {
+    if(teekkarisLeft_.size() < 1) {
+        Pause();
+        screen_.OnGameLost();
+        return {};
+    }
+    gm::PersonData p = teekkarisLeft_.at(chosenTeekkari_);
+    teekkarisLeft_.erase(teekkarisLeft_.begin() + chosenTeekkari_);
+    chosenTeekkari_ = 0;
+    projectilesUpdated_ = true;
+    return p;
+}
 
 Game::~Game() {
     ClearObjects();
@@ -96,6 +114,15 @@ void Game::BeginContact(b2Contact* contact) {
 }
 
 void Game::Update() {
+    if(projectilesUpdated_) {
+        std::vector<SpriteID> uiSprites;
+        for(const auto& t : teekkarisLeft_)
+            uiSprites.push_back(t.face.face);
+        screen_.UpdateProjectileList(uiSprites);
+        chosenTeekkari_ = 0;
+        projectilesUpdated_ = false;
+    }
+
     if(isPaused_) return;
     //Increment tick count
     time_++;
@@ -158,6 +185,11 @@ bool Game::OnMouseMove(float xw, float yh) {
 
 
 bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
+
+    if(button == sf::Mouse::Button::Middle) {
+        CreateObject(gm::GameObjectType::teekkari_tefy, 0, 20);
+    }
+
     for(auto& obj : objects_) {
         if(obj.second->OnMouseDown(button, xw, yh)) return true;
     }
@@ -217,7 +249,7 @@ void Game::ResetCamera() {
 void Game::SetCameraPos(float x, float y) { camera_.x = x; camera_.y = y; }
 void Game::SetCameraZoom(float zoom) { camera_.zoom = zoom; }
 void Game::SetCameraRot(float rot) { camera_.rot = rot; }
-
+void Game::AddPoints(int p) { points_ += p; screen_.OnScoreChange(p); }
 
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
@@ -241,6 +273,7 @@ void Game::Restart() {
     isPaused_ = false;
     time_ = 0;
     points_ = 0;
-    chosenTeekkari_ = -1;
+    chosenTeekkari_ = 0;
     LoadLevel(level_);
+    screen_.OnScoreChange(0);
 }

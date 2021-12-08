@@ -1,7 +1,8 @@
 #include <gameplay/Cannon.hpp>
 #include <gameplay/Block.hpp>
-#include <gameplay/Person.hpp>
+#include <gameplay/Teekkari.hpp>
 #include <iostream>
+
 Cannon::Cannon(Game& game, gm::GameObjectType type, float x, float y, float rot) :
     GameObject(game, type, x, y, rot) {
         
@@ -53,12 +54,14 @@ bool Cannon::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
 
     //Shoot selected teekkari
     
-    //float angleRad = ph::rotToAng(rot_pipe_);
-    //b2Vec2 dir = { -std::sin(angleRad), std::cos(angleRad) };
-    //int id = game_.AddObject(std::make_unique<Person>(game_, gm::GameObjectType::teekkari_teemu, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, 0));
-    //GameObject& obj = game_.GetObject(id);
-    //Person& p = (Person&)obj;
-    //p.Impulse({dir.x * relativeDistance_ * ph::cannonMaxForce, dir.y * relativeDistance_ * ph::cannonMaxForce});
+    float angleRad = ph::rotToAng(rot_pipe_);
+    b2Vec2 dir = { -std::sin(angleRad), std::cos(angleRad) };
+
+    auto teekkari = game_.TakeProjectile();
+    int id = game_.AddObject(std::make_unique<Teekkari>(game_, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, 0, teekkari));
+    GameObject& obj = game_.GetObject(id);
+    Teekkari& t = (Teekkari&)obj;
+    t.Impulse({dir.x * relativeDistance_ * ph::cannonMaxForce, dir.y * relativeDistance_ * ph::cannonMaxForce});
 
     return true;
 }

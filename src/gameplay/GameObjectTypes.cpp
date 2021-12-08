@@ -3,6 +3,8 @@
 #include <gameplay/Block.hpp>
 #include <gameplay/Cannon.hpp>
 #include <gameplay/Ground.hpp>
+#include <gameplay/Teekkari.hpp>
+#include <gameplay/Fuksi.hpp>
 #include <math.h>
 
 
@@ -73,16 +75,16 @@ gm::PersonData gm::RandomTeekkari(gm::GameObjectType type) {
     if(type == gm::GameObjectType::teekkari_professor)
         face = {SpriteID::professor_head, SoundID::grunt1, SoundID::teekkari_death1, false};
     else if(type == gm::GameObjectType::teekkari_sik)
-        face = gm::teekkariHeads_s.at(rng::RandomInt(0, gm::teekkariHeads_s.size()));
-    else face = gm::teekkariHeads.at(rng::RandomInt(0, gm::teekkariHeads.size()));
+        face = gm::teekkariHeads_s.at(rng::RandomInt(0, gm::teekkariHeads_s.size()-1));
+    else face = gm::teekkariHeads.at(rng::RandomInt(0, gm::teekkariHeads.size()-1));
     return {face, body, type};
 
 }
 
 
 gm::PersonData gm::RandomFuksi() {
-    gm::PersonFace face = fuksiHeads.at(rng::RandomInt(0, gm::fuksiHeads.size()));
-    gm::PersonBody body = fuksiBodies.at(rng::RandomInt(0, gm::fuksiBodies.size()));
+    gm::PersonFace face = fuksiHeads.at(rng::RandomInt(0, gm::fuksiHeads.size()-1));
+    gm::PersonBody body = fuksiBodies.at(rng::RandomInt(0, gm::fuksiBodies.size()-1));
     return {face, body, gm::GameObjectType::fuksi};
 }
 
@@ -214,6 +216,13 @@ std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, 
 
     // Block
     if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) return std::make_unique<Block>(game, type, x, y, rot);
+
+    // Teekkaris (add all these separately when they get their own classes and super powers)
+    if(type >= gm::GameObjectType::teekkari_ik && type <= gm::GameObjectType::teekkari_professor) return std::make_unique<Teekkari>(game, type, x, y, rot);
+
+    if(type == gm::GameObjectType::fuksi) return std::make_unique<Fuksi>(game, x, y, rot);
+
+
     if(type == gm::GameObjectType::cannon) return std::make_unique<Cannon>(game, type, x, y, rot);
     if(type == gm::GameObjectType::ground_obj) return std::make_unique<Ground>(game);
     else return std::unique_ptr<GameObject>(nullptr);

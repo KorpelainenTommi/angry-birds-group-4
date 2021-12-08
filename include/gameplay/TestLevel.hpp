@@ -21,6 +21,13 @@ Level TestLevel() {
     level.objectData.push_back({15,4.5,0,gm::block_wood1x1});
     level.highscores.push_back({"player1", 123456});
     level.highscores.push_back({"player2", 56});
+    level.startingTeekkaris.push_back(gm::GameObjectType::teekkari_professor);
+    level.startingTeekkaris.push_back(gm::GameObjectType::teekkari_tik);
+    level.startingTeekkaris.push_back(gm::GameObjectType::teekkari_sik);
+    level.startingTeekkaris.push_back(gm::GameObjectType::teekkari_sik);
+    level.startingTeekkaris.push_back(gm::GameObjectType::teekkari_ik);
+    level.startingTeekkaris.push_back(gm::GameObjectType::teekkari_inkubio);
+    level.startingTeekkaris.push_back(gm::GameObjectType::teekkari_tuta);
     return level;
 }
 

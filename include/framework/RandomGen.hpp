@@ -13,7 +13,7 @@ inline void InitializeRng() {
     rng::engine = std::mt19937{dev()};
 }
 
-//Int in range [min, max[
+//Int in range [min, max] (inclusive)
 inline unsigned int RandomInt(unsigned int min = 0, int max = std::numeric_limits<unsigned int>::max()) {
     std::uniform_int_distribution<std::default_random_engine::result_type> d(min, max);
     return d(engine);

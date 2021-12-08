@@ -15,26 +15,26 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot,
     float density = ph::personMass / totalVolume;
 
     //Mirroring
-    float m = (mirrored) ? 1.0F : -1.0F;
+    float m = (mirrored) ? -1.0F : 1.0F;
 
-    headX_ = x;
-    headY_ = y;
+    headX_ = x - m * 0.158878F * Person::headWidth;
+    headY_ = y + 0.44179F * Person::torsoHeight + 0.383333F * Person::headHeight;
     headRot_ = ph::rotToAng(rot);
-    
-    armRX_ = x;
-    armRY_ = y;
+
+    armRX_ = x + m * -0.32307F * Person::torsoWidth - m * 0.1764705F * Person::armWidth;
+    armRY_ = y + 0.18179F * Person::torsoHeight - 0.275F * Person::armHeight;
     armRRot_ = headRot_;
 
-    armLX_ = x;
-    armLY_ = y;
+    armLX_ = x + m * 0.32307F * Person::torsoWidth - m * 0.1764705F * Person::armWidth;
+    armLY_ = y + 0.18179F * Person::torsoHeight - 0.275F * Person::armHeight;
     armLRot_ = headRot_;
 
-    legRX_ = x;
-    legRY_ = y;
+    legRX_ = x + m * -0.26307F * Person::torsoWidth - m * -0.1864705F * Person::legWidth;
+    legRY_ = y - 0.28179F * Person::torsoHeight - 0.335F * Person::legHeight;
     legRRot_ = headRot_;
 
-    legLX_ = x;
-    legLY_ = y;
+    legLX_ = x + m * 0.26307F * Person::torsoWidth - m * 0.1864705F * Person::legWidth;
+    legLY_ = y - 0.28179F * Person::torsoHeight - 0.335F * Person::legHeight;
     legLRot_ = headRot_;
 
 
@@ -67,10 +67,11 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot,
     b2BodyDef armDefinition;
     armDefinition.type = b2BodyType::b2_dynamicBody;
     armDefinition.fixedRotation = false;
-    armDefinition.position = {x, y};
     armDefinition.angle = ph::rotToAng(rot);
 
+    armDefinition.position = {armRX_, armRY_};
     armRBody_ = game_.GetB2World().CreateBody(&armDefinition);
+    armDefinition.position = {armLX_, armLY_};
     armLBody_ = game_.GetB2World().CreateBody(&armDefinition);
 
     b2PolygonShape armShape;
@@ -91,10 +92,11 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot,
     b2BodyDef legDefinition;
     legDefinition.type = b2BodyType::b2_dynamicBody;
     legDefinition.fixedRotation = false;
-    legDefinition.position = {x, y};
     legDefinition.angle = ph::rotToAng(rot);
 
+    legDefinition.position = {legRX_, legRY_};
     legRBody_ = game_.GetB2World().CreateBody(&legDefinition);
+    legDefinition.position = {legLX_, legLY_};
     legLBody_ = game_.GetB2World().CreateBody(&legDefinition);
 
     b2PolygonShape legShape;
@@ -115,7 +117,7 @@ Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot,
     b2BodyDef headDefinition;
     headDefinition.type = b2BodyType::b2_dynamicBody;
     headDefinition.fixedRotation = false;
-    headDefinition.position = {x, y};
+    headDefinition.position = {headX_, headY_};
     headDefinition.angle = ph::rotToAng(rot);
 
     headBody_ = game_.GetB2World().CreateBody(&headDefinition);

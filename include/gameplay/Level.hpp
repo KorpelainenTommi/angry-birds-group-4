@@ -9,7 +9,7 @@
 
 /// The mode this level is played at
 enum LevelMode { normal, time_trial, endless };
-const std::array<std::string, 3> levelModeNames = {"normal", "time trial", "endless"};
+inline const std::vector<std::string> levelModeNames = {"normal", "time trial", "endless"};
 
 /// A struct defining the initial state of all objects at the start of a game
 struct Level {

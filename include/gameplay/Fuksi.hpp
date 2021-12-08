@@ -9,10 +9,12 @@
 
 class Fuksi : public Person {
 public:
-    Fuksi(Game& game, float x, float y, float rot) : Person(game, gm::GameObjectType::fuksi, x, y, rot, true, -6) {}
+    Fuksi(Game& game, float x, float y, float rot, gm::PersonData data) : Fuksi(game, x, y, rot) { data_ = data; }
+    Fuksi(Game& game, float x, float y, float rot) : Person(game, gm::GameObjectType::fuksi, x, y, rot, true, -6)
+    { data_ = gm::RandomFuksi(); hp_ = ph::fuksiHP; }
 
 protected:
-    
+
 
 
 private:
