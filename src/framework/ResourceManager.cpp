@@ -2,7 +2,8 @@
 #include <iostream>
 
 const std::pair<FontID, std::string> ResourceManager::fontPaths_[] = {
-    {FontID::source_serif, "data/fonts/source_serif.ttf"}
+    {FontID::source_serif, "data/fonts/source_serif.ttf"},
+    {FontID::consolas, "data/fonts/consolas.ttf"}
 };
 
 const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {

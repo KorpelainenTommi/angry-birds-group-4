@@ -70,7 +70,7 @@ private:
     ui::pfloat caretOffset_ = 0 VH;
     bool modified_ = false;
     ui::pfloat fontSize_ = ui::defaultFontSize;
-    FontID font_ = ui::defaultFont;
+    FontID font_ = ui::defaultMonospaceFont;
     sf::Color textColor_ = ui::textColor;
     ui::CropArea inputArea_;
     sf::Color caretColor_ = ui::inputCaretColor;

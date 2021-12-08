@@ -101,7 +101,7 @@ namespace ui {
     };
 
     const std::string appName = "AngryTeekkari";
-    const std::string appVersion = "alpha 1.1";
+    const std::string appVersion = "beta 3.7";
     const unsigned int appMinWidth = 266; //Currently unused
     const unsigned int appMinHeight = 200;
     const unsigned int targetFramerate = 180;
@@ -135,6 +135,7 @@ namespace ui {
     const sf::Color inputCaretColor = {255, 255, 255};*/
 
     const FontID defaultFont = FontID::source_serif;
+    const FontID defaultMonospaceFont = FontID::consolas;
 
     const float defaultAbsoluteFontSize = 16.0F;
     const ui::pfloat defaultFontSize = (100 * defaultAbsoluteFontSize / 1080) VH;
