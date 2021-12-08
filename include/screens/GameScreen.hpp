@@ -52,7 +52,7 @@ public:
     /**
      * Game should call this whenever the list of projectiles should be updated.
      */
-    void UpdateProjectileList(std::vector<SpriteID /*this can be changed*/>);
+    void UpdateProjectileList(std::vector<std::pair<SpriteID, std::string>>);
 
     /**
      * Editor should call this whenever the theoretical max score of the level changes.
@@ -203,7 +203,7 @@ private:
 
     void addList();
 
-    void addProjectileIcon(SpriteID icon);
+    void addProjectileIcon(SpriteID icon, const std::string& name);
 
     void clearIcons();
 

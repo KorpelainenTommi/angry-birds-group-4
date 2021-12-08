@@ -10,6 +10,14 @@ public:
     void SetSelectedElement(gm::GameObjectType t){
         std::cout << "selected " << t << std::endl;
     }
+
+    void AddProjectile(SpriteID icon){
+        std::cout << "added " << icon << std::endl;
+    }
+
+    void RemoveProjectile(std::size_t index){
+        std::cout << "removed " << index << std::endl;
+    }
 };
 
 #endif

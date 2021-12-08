@@ -428,9 +428,9 @@ ui::pfloat GameScreen::calcProjectileBarBodyHeight() const {
     return (ui::toVHFloat(projectileBarHeight_) - ui::toVHFloat(projectileBarSpacing_) * 2) VH;
 }
 
-void GameScreen::UpdateProjectileList(std::vector<SpriteID> projectiles){
+void GameScreen::UpdateProjectileList(std::vector<std::pair<SpriteID, std::string>> projectiles){
     clearIcons();
-    for(auto e: projectiles) addProjectileIcon(e);
+    for(auto e: projectiles) addProjectileIcon(e.first, e.second);
     if(projectiles.size() > 0) {
         auto last = std::reinterpret_pointer_cast<RoundIcon>(projectileList_->GetElements().cbegin()->second);
         selectProjectileIcon(last);
@@ -445,13 +445,14 @@ void GameScreen::clearIcons(){
     iconIndexes_.clear();
 }
 
-void GameScreen::addProjectileIcon(SpriteID icon){
+void GameScreen::addProjectileIcon(SpriteID icon, const std::string& name){
     auto i = std::make_shared<RoundIcon>(
         0 VH, 
         projectileBarSpacing_, 
         projectileBarIconSize_ / 2, 
         icon
     );
+    i->SetTitle(name);
     auto wi = std::weak_ptr<RoundIcon>(i);
     auto index = projectileList_->GetElements().size();
     i->SetMouseDownHandler([this, index, wi](){
