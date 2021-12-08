@@ -3,11 +3,13 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 #include <unordered_map>
 #include <box2d/b2_shape.h>
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_circle_shape.h>
 #include <framework/Resources.hpp>
+#include <string>
 
 
 class Game;
@@ -209,7 +211,13 @@ PersonData RandomFuksi();
 // Block properties
 
 enum BlockMaterial { wood, metal, glass, plastic, rubber, concrete };
+inline const std::vector<std::string> blockMaterialNames = {
+    "wood", "metal", "glass", "plastic", "rubber", "concrete"
+};
 enum BlockShape { block_1x1, block_2x1, block_2x2, block_ball, block_tri, block_plank, block_thickplank };
+inline const std::vector<std::string> blockShapeNames = {
+    "1x1", "2x1", "2x2", "ball", "triangle", "plank", "thick plank"
+};
 
 
 // Allocate and create shared base shapes for BlockShapeData to use

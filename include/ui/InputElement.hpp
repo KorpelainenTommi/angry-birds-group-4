@@ -68,7 +68,7 @@ private:
     size_t caretPos_ = 0;
     ui::pfloat textOffset_ = 0 VH;
     ui::pfloat caretOffset_ = 0 VH;
-    bool modified_ = false;
+    bool modified_ = true;
     ui::pfloat fontSize_ = ui::defaultFontSize;
     FontID font_ = ui::defaultMonospaceFont;
     sf::Color textColor_ = ui::textColor;

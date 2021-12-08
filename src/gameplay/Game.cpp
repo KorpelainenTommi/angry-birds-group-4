@@ -115,9 +115,9 @@ void Game::BeginContact(b2Contact* contact) {
 
 void Game::Update() {
     if(projectilesUpdated_) {
-        std::vector<SpriteID> uiSprites;
+        std::vector<std::pair<SpriteID, std::string>> uiSprites;
         for(const auto& t : teekkarisLeft_)
-            uiSprites.push_back(t.face.face);
+            uiSprites.push_back({t.face.face, "teemu teekkari"});
         screen_.UpdateProjectileList(uiSprites);
         chosenTeekkari_ = 0;
         projectilesUpdated_ = false;

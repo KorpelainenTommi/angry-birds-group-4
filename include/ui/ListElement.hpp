@@ -17,9 +17,7 @@ public:
         const ui::pfloat& width
     ): ColoredElement(top, left, height, width){}
 
-    virtual void Render(const RenderSystem&);
-
-    virtual void SetCropArea();
+    //virtual void Render(const RenderSystem&);
 
     /*virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
 
@@ -59,12 +57,39 @@ public:
      */
     void ClearElements();
 
+    virtual void SetPosition(ui::pfloat x, ui::pfloat y);
+
+    virtual void SetTop(ui::pfloat top);
+
+    virtual void SetLeft(ui::pfloat left);
+
+    virtual void SetSize(ui::pfloat w, ui::pfloat h);
+
+    virtual void SetHeight(ui::pfloat height);
+
+    virtual void SetWidth(ui::pfloat width);
+
+    virtual void OnWindowResize();
+
+    virtual void SetOffsetX(const ui::pfloat& ox);
+    virtual void SetOffsetX();
+
+    virtual void SetOffsetY(const ui::pfloat& oy);
+    virtual void SetOffsetY();
+
+    virtual void SetCropArea(const ui::CropArea& a);
+    virtual void SetCropArea();
+
 private:
     int nextId_ = INT_MIN;
     std::map<int, std::shared_ptr<Element>> elements_;
     ui::pfloat scrollOffset_;
     ui::pfloat spacing_ = 1 VH;
     float scrollMultiplier_ = 5000.0;
+
+    void updateValues();
+
+    ui::CropArea calcCropArea() const;
 };
 
 #endif

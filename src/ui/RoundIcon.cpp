@@ -15,6 +15,7 @@ void RoundIcon::Render(const RenderSystem& r){
         if(selected_) r.RenderOval(ui::highlightColor, sx, sy, sd, sd, cropArea_);
         r.RenderSprite(icon_, x, y, d, d);
     }
+    if(renderTitle) RenderTitle(r);
 }
 
 void RoundIcon::Select(){

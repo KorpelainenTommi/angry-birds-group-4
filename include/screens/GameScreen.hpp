@@ -2,7 +2,7 @@
 #define GAME_SCREEN_HPP
 
 #include <memory>
-#include <gameplay/Game.hpp>
+#include <gameplay/Editor.hpp>
 #include <gameplay/Level.hpp>
 #include <gameplay/Physics.hpp>
 #include <screens/Screen.hpp>
@@ -10,6 +10,7 @@
 #include <ui/TextLine.hpp>
 #include <gameplay/Person.hpp>
 #include <ui/InputElement.hpp>
+#include <ui/DivElement.hpp>
 
 class GameScreen : public Screen {
 public:
@@ -49,11 +50,19 @@ public:
     void OnScoreChange(int score);
 
     /**
-     * Game should call this whenever the the list of projectiles should be updated.
+     * Game should call this whenever the list of projectiles should be updated.
      */
-    void UpdateProjectileList(std::vector<SpriteID /*this can be changed*/>);
+    void UpdateProjectileList(std::vector<std::pair<SpriteID, std::string>>);
 
-    Game& GetGame(){return game_;}
+    /**
+     * Editor should call this whenever the theoretical max score of the level changes.
+     * (e.g. when new blocks are added or removed AND when the editor is created)
+     */
+    void UpdateTheoreticalMaxScore(int maxScore);
+
+    Game& GetGame();
+
+    Editor& GetEditor();
 
     bool IsInEditorMode() const {return editorMode_;}
 
@@ -109,6 +118,16 @@ public:
 
     void setSelectedGameMode(LevelMode m);
 
+    ui::pfloat calcEditorMaxScoreLabelTop() const;
+
+    ui::pfloat calcEditorRequiredScoreLabelTop() const;
+
+    ui::pfloat calcEditorRequiredScoreInputTop() const;
+
+    ui::pfloat calcEditorElementListTop() const;
+
+    ui::pfloat calcEditorElementListHeight() const;
+
 private:
     const ui::pfloat topLeftButtonSpacing_ = 1 VH;
     const ui::pfloat topLeftButtonSize_ = 4 VH;
@@ -126,8 +145,10 @@ private:
     const ui::pfloat editorPanelPadding_ = 1 VH;
     const ui::pfloat editorPanelSpacing_ = 1 VH;
     const ui::pfloat editorFontSize_ = ui::defaultFontSize;
+    const ui::pfloat editorElementListLineHeight_ = 4 VH;
+    const ui::pfloat editorElementListSpacing_ = 0.2 VH;
 
-    Game game_;
+    std::unique_ptr<Game> game_;
     Level level_;
     std::shared_ptr<TextLine> scoreLabel_;
     std::shared_ptr<TextLine> timeLabel_;
@@ -138,6 +159,9 @@ private:
     bool editorMode_;
     std::shared_ptr<InputElement> editorNameInput_;
     LevelMode selectedGameMode_ = LevelMode::normal;
+    std::shared_ptr<TextLine> editorMaxScoreLabel_;
+    std::shared_ptr<InputElement> editorRequiredScoreInput_;
+    std::shared_ptr<ListElement> editorElementList_;
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -179,7 +203,7 @@ private:
 
     void addList();
 
-    void addProjectileIcon(SpriteID icon);
+    void addProjectileIcon(SpriteID icon, const std::string& name);
 
     void clearIcons();
 
@@ -190,6 +214,20 @@ private:
     void addEditorNameInput();
 
     void addEditorGameModeDropDown();
+
+    void addEditorMaxScoreLabel();
+
+    void addEditorRequiredScoreLabel();
+
+    void addEditorRequiredScoreInput();
+
+    void addEditorElementList();
+
+    std::shared_ptr<DivElement> addEditorElementListLine(
+        SpriteID icon, const std::string& text, const std::function<void()> mouseDownHandler
+    );
+
+    void addBlocksToEditorElementList();
 };
 
 

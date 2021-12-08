@@ -38,7 +38,8 @@ bool Element::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh){
 }
 
 bool Element::OnMouseMove(float xw, float yh){
-    if(isInside(xw, yh) != mouseIn_){
+    bool isIn = isInside(xw, yh);
+    if(isIn != mouseIn_){
         mouseIn_ = !mouseIn_;
         if(mouseEnterHandler_ != NULL && mouseIn_){
             mouseEnterHandler_();
@@ -48,6 +49,13 @@ bool Element::OnMouseMove(float xw, float yh){
             mouseLeaveHandler_();
             return true;
         }
+    }
+    if(isIn && title_.size() > 0){
+        titleX_ = (xw * 100) VW;
+        titleY_ = (yh * 100 - ui::toVHFloat(titleFontSize_)) VH;
+        renderTitle = true;
+    }else if(renderTitle && !isIn){
+        renderTitle = false;
     }
     return false;
 }
@@ -62,6 +70,7 @@ bool Element::OnMouseScroll(float delta, float xw, float yh){
 
 void Element::OnWindowResize(){
     if(windowResizeHandler_ != NULL) windowResizeHandler_();
+    if(title_.size() > 0) titleW_ = 0 VW;
 }
 
 void Element::Blur(){
@@ -92,4 +101,9 @@ ui::pfloat Element::GetTop() const {
 
 ui::pfloat Element::GetLeft() const {
     return (toVWFloat(x_) + toVWFloat(offsetX_)) VW;
+}
+
+void Element::SetTitle(const std::string& s){
+    title_ = s;
+    titleW_ = 0 VW;
 }

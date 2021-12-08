@@ -3,9 +3,8 @@
 #include <iostream>
 
 int ListElement::InsertElement(std::shared_ptr<Element> element){
-    element->SetOffsetX(x_);
-    element->SetCropArea({GetTop(), GetLeft(), h_, w_});
     elements_[nextId_] = element;
+    updateValues();
     return nextId_++;
 }
 
@@ -15,23 +14,6 @@ void ListElement::RemoveElement(int id){
 
 std::shared_ptr<Element> ListElement::GetElement(int id){
     return elements_[id];
-}
-
-void ListElement::Render(const RenderSystem& r){
-    ColoredElement::Render(r);
-    float h = toVHFloat(GetTop());
-    float s = toVHFloat(spacing_);
-    for(const auto t: elements_){
-        auto e = t.second;
-        e->SetTop(h VH);
-        h += toVHFloat(e->GetHeight()) + s;
-    }
-}
-
-void ListElement::SetCropArea(){
-    cropped_ = false;
-    ui::CropArea ca = {GetTop(), GetLeft(), h_, w_};
-    for(auto t: elements_) t.second->SetCropArea(ca);
 }
 
 bool ListElement::OnMouseScroll(float delta, float xw, float yh){
@@ -70,4 +52,85 @@ const std::map<int, std::shared_ptr<Element>>& ListElement::GetElements() const 
 
 void ListElement::ClearElements(){
     elements_.clear();
+}
+
+void ListElement::updateValues(){
+    ui::CropArea ca = calcCropArea();
+    ui::pfloat offx = GetLeft();
+    float h = toVHFloat(GetTop());
+    float s = toVHFloat(spacing_);
+    for(const auto t: elements_){
+        auto e = t.second;
+        e->SetTop(h VH);
+        e->SetOffsetX(offx);
+        e->SetCropArea(ca);
+        h += toVHFloat(e->GetHeight()) + s;
+    }
+}
+
+ui::CropArea ListElement::calcCropArea() const {
+    if(cropped_) return ui::combineCropAreas(cropArea_, {GetTop(), GetLeft(), h_, w_});
+    return {GetTop(), GetLeft(), h_, w_};
+}   
+
+void ListElement::SetPosition(ui::pfloat x, ui::pfloat y){
+    Element::SetPosition(x, y);
+    updateValues();
+}
+
+void ListElement::SetTop(ui::pfloat top){
+    Element::SetTop(top);
+    updateValues();
+}
+
+void ListElement::SetLeft(ui::pfloat left){
+    Element::SetLeft(left);
+    updateValues();
+}
+
+void ListElement::SetSize(ui::pfloat w, ui::pfloat h){
+    Element::SetSize(w, h);
+    updateValues();
+}
+
+void ListElement::SetHeight(ui::pfloat height){
+    Element::SetHeight(height);
+    updateValues();
+}
+
+void ListElement::SetWidth(ui::pfloat width){
+    Element::SetWidth(width);
+    updateValues();
+}
+
+void ListElement::OnWindowResize(){
+    Element::OnWindowResize();
+    updateValues();
+}
+
+void ListElement::SetOffsetX(const ui::pfloat& ox){
+    Element::SetOffsetX(ox);
+    updateValues();
+}
+void ListElement::SetOffsetX(){
+    Element::SetOffsetX();
+    updateValues();
+}
+
+void ListElement::SetOffsetY(const ui::pfloat& oy){
+    Element::SetOffsetY(oy);
+    updateValues();
+}
+void ListElement::SetOffsetY(){
+    Element::SetOffsetY();
+    updateValues();
+}
+
+void ListElement::SetCropArea(const ui::CropArea& a){
+    Element::SetCropArea(a);
+    updateValues();
+}
+void ListElement::SetCropArea(){
+    Element::SetCropArea();
+    updateValues();
 }
