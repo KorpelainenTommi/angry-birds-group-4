@@ -14,12 +14,14 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addRightSideButton(2, "test level", [&app](){
         app.TransitionTo(std::make_unique<GameScreen>(app,TestLevel()));
     });
-    addRightSideButton(3, "Play", [&app, this](){
+    addRightSideButton(3, "Edit", [&app, this](){
+        app.TransitionTo(std::make_unique<GameScreen>(app, this->GetSelectedLevel(), true));
+    }, true);
+    addRightSideButton(4, "Play", [&app, this](){
         app.TransitionTo(std::make_unique<GameScreen>(app, this->GetSelectedLevel()));
     }, true);
 
     addScoreboard();
-    scoreboard_->SetText("  Some\n  text\n  here\n  to\n  try\n  this\n  out");
 }
 
 void MainMenu::Render(const RenderSystem& r){

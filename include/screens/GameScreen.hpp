@@ -15,7 +15,7 @@ class GameScreen : public Screen {
 public:
 
     /// Create a screen and start the Game with the selected level
-    GameScreen(Application& app, const Level& initialLevel);
+    GameScreen(Application& app, const Level& initialLevel, bool editorMode = false);
     
     virtual void Update();
 
@@ -28,6 +28,10 @@ public:
     virtual bool OnMouseScroll(float delta, float xw, float yh);
 
     virtual bool OnMouseMove(float x, float y);
+
+    virtual bool OnKeyDown(const sf::Event::KeyEvent&);
+
+    virtual bool OnKeyUp(const sf::Event::KeyEvent&);
     
     virtual ~GameScreen() = default;
 
@@ -50,6 +54,8 @@ public:
     void UpdateProjectileList(std::vector<SpriteID /*this can be changed*/>);
 
     Game& GetGame(){return game_;}
+
+    bool IsInEditorMode() const {return editorMode_;}
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -91,6 +97,18 @@ public:
 
     void selectProjectileIcon(std::shared_ptr<RoundIcon> i);
 
+    ui::pfloat calcEditorPanelLeft() const;
+
+    ui::pfloat calcEditorContentWidth() const;
+
+    ui::pfloat calcEditorContentLeft() const;
+
+    ui::pfloat calcEditorDropDownTop() const;
+
+    void addDropDownContents(std::shared_ptr<TextElement> e);
+
+    void setSelectedGameMode(LevelMode m);
+
 private:
     const ui::pfloat topLeftButtonSpacing_ = 1 VH;
     const ui::pfloat topLeftButtonSize_ = 4 VH;
@@ -101,9 +119,13 @@ private:
     const ui::pfloat victoryMessageWidth_ = 30 VW;
     const ui::pfloat victoryMessageStarSize_ = 5 VH;
     const ui::pfloat victoryMessageFontSize_ = ui::defaultFontSize;
-    const ui::pfloat projectileBarHeight = 50 VH;
-    const ui::pfloat projectileBarIconSize = 4 VH;
-    const ui::pfloat projectileBarSpacing = 1 VH;
+    const ui::pfloat projectileBarHeight_ = 50 VH;
+    const ui::pfloat projectileBarIconSize_ = 4 VH;
+    const ui::pfloat projectileBarSpacing_ = 1 VH;
+    const ui::pfloat editorPanelWidth_ = 20 VW;
+    const ui::pfloat editorPanelPadding_ = 1 VH;
+    const ui::pfloat editorPanelSpacing_ = 1 VH;
+    const ui::pfloat editorFontSize_ = ui::defaultFontSize;
 
     Game game_;
     Level level_;
@@ -113,6 +135,9 @@ private:
     std::vector<std::size_t> iconIndexes_;
     std::shared_ptr<RoundIcon> selectedIcon_;
     bool hasSelectedIcon_ = false;
+    bool editorMode_;
+    std::shared_ptr<InputElement> editorNameInput_;
+    LevelMode selectedGameMode_ = LevelMode::normal;
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -130,9 +155,11 @@ private:
 
     void addTopLeftButtons();
 
-    std::shared_ptr<TextLine> addTopRightLabel(unsigned char labelNumber, const std::string& text);
+    void addEditorTopLeftButtons();
 
-    std::shared_ptr<TextLine> addScoreLabel();
+    void addTopRightLabels();
+
+    std::shared_ptr<TextLine> addTopRightLabel(unsigned char labelNumber, const std::string& text);
 
     void addVictoryMessageStars(int score, int maxScore, std::vector<std::shared_ptr<Element>>& v);
 
@@ -155,6 +182,14 @@ private:
     void addProjectileIcon(SpriteID icon);
 
     void clearIcons();
+
+    void addEditorPanel();
+
+    void addEditorPanelBackground();
+
+    void addEditorNameInput();
+
+    void addEditorGameModeDropDown();
 };
 
 
