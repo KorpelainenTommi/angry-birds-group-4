@@ -71,13 +71,14 @@ enum GameObjectType {
     ball_plastic,
     ball_rubber,
     ball_concrete,
-
+    
+    /*
     block_woodTri,
     block_metalTri,
     block_glassTri,
     block_plasticTri,
     block_rubberTri,
-    block_concreteTri,
+    block_concreteTri,*/
 
     plank_wood,
     plank_metal,
@@ -109,7 +110,7 @@ enum GameObjectType {
 
 
     //Teekkaris
-    teekkari_teemu,
+    teekkari_ik,
     teekkari_tefy,
     teekkari_tik,
     teekkari_inkubio,
@@ -155,13 +156,54 @@ std::unique_ptr<GameObject> IDToObject(Game& game, GameObjectType type, float x,
 
 
 
-// All properties needed to spawn a unique Teekkari
-// A Teekkari can be spawned with GameObjectType as well, it will have a randomly generated TeekkariData
 
+//Face and sound of a Teekkari or Fuksi
+struct PersonFace {
+    SpriteID face = SpriteID::teekkari_head1;
+    SoundID grunt = SoundID::grunt1;
+    SoundID die = SoundID::teekkari_death1;
+    bool bType = false; //use tanned hands because the face is also tanned
 
-struct TeekkariData {
-
+    //just looks wrong if the face doesn't match the hands
 };
+
+//Body of a person
+struct PersonBody {
+    SpriteID torso = SpriteID::torso_blue;
+    SpriteID arm = SpriteID::arm_blue;
+    SpriteID leg = SpriteID::leg_blue;
+    SpriteID armb = SpriteID::armb_blue;
+};
+
+// All properties needed to spawn a unique Teekkari or Fuksi.
+// A Teekkari can be spawned with GameObjectType as well, it will have a randomly generated PersonData
+struct PersonData {
+    PersonFace face;
+    PersonBody body;
+    GameObjectType objType = GameObjectType::teekkari_ik;
+};
+
+
+/// List of teekkari heads to choose from
+extern const std::vector<PersonFace> teekkariHeads;
+
+/// List of teekkari heads with a different cap, because... well this is a really dumb way to accomplish this
+extern const std::vector<PersonFace> teekkariHeads_s;
+
+/// List of fuksi heads to choose from
+extern const std::vector<PersonFace> fuksiHeads;
+
+/// Lookup for teekkari bodies
+extern const std::unordered_map<GameObjectType, PersonBody> teekkariBodies;
+
+/// List of fuksi bodies
+extern const std::vector<gm::PersonBody> fuksiBodies;
+
+/// Return a random teekkari from a guild based on GameObjectType
+PersonData RandomTeekkari(GameObjectType type);
+
+/// Return a random fuksi
+PersonData RandomFuksi();
 
 
 // Block properties

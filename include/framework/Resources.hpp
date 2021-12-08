@@ -65,13 +65,14 @@ enum SpriteID {
     plastic_ball,
     rubber_ball,
     concrete_ball,
-
+    
+    /*
     wood_blockTri,
     metal_blockTri,
     glass_blockTri,
     plastic_blockTri,
     rubber_blockTri,
-    concrete_blockTri,
+    concrete_blockTri,*/
 
     wood_plank,
     metal_plank,
@@ -94,7 +95,7 @@ enum SpriteID {
     beer_can1,
     beer_can2,
 
-    sofa2x1,
+    sofa3x1,
     tnt,
 
 
@@ -105,38 +106,45 @@ enum SpriteID {
 
     //Teekkari parts
 
-    //Teemu teekkari
-    arm_lgray,
-    torso_lgray,
-    leg_lgray,
+    //IK
+    arm_blue,
+    armb_blue,
+    torso_blue,
+    leg_blue,
 
     //TEFY
     arm_lwhite,
+    armb_lwhite,
     torso_lwhite,
     leg_lwhite,
 
     //TIK
     arm_black,
+    armb_black,
     torso_black,
     leg_black,
 
     //INKUBIO
     arm_brown,
+    armb_brown,
     torso_brown,
     leg_brown,
 
     //TUTA
     arm_rainbow,
+    armb_rainbow,
     torso_rainbow,
     leg_rainbow,
 
     //SIK
     arm_white,
+    armb_white,
     torso_white,
     leg_white,
 
     //KIK
     arm_pink,
+    armb_pink,
     torso_pink,
     leg_pink,
 
@@ -145,9 +153,6 @@ enum SpriteID {
     professor_torso,
     professor_arm,
     professor_leg,
-
-    teekkari_cap,
-    teekkari_cap_sik,
 
 
     //Teekkari heads
@@ -161,7 +166,61 @@ enum SpriteID {
     teekkari_head8,
     teekkari_head9,
     teekkari_head10,
-    teekkari_head11,
+
+    teekkari_head1s,
+    teekkari_head2s,
+    teekkari_head3s,
+    teekkari_head4s,
+    teekkari_head5s,
+    teekkari_head6s,
+    teekkari_head7s,
+    teekkari_head8s,
+    teekkari_head9s,
+    teekkari_head10s,
+
+    //Fuksi parts
+
+    //IK
+    fuksi_arm_blue,
+    fuksi_armb_blue,
+    fuksi_torso_blue,
+    fuksi_leg_blue,
+
+    //TEFY
+    fuksi_arm_lwhite,
+    fuksi_armb_lwhite,
+    fuksi_torso_lwhite,
+    fuksi_leg_lwhite,
+
+    //TIK
+    fuksi_arm_black,
+    fuksi_armb_black,
+    fuksi_torso_black,
+    fuksi_leg_black,
+
+    //INKUBIO
+    fuksi_arm_brown,
+    fuksi_armb_brown,
+    fuksi_torso_brown,
+    fuksi_leg_brown,
+
+    //TUTA
+    fuksi_arm_rainbow,
+    fuksi_armb_rainbow,
+    fuksi_torso_rainbow,
+    fuksi_leg_rainbow,
+
+    //SIK
+    fuksi_arm_white,
+    fuksi_armb_white,
+    fuksi_torso_white,
+    fuksi_leg_white,
+
+    //KIK
+    fuksi_arm_pink,
+    fuksi_armb_pink,
+    fuksi_torso_pink,
+    fuksi_leg_pink,
 
 
     //Fuksi heads
@@ -172,6 +231,7 @@ enum SpriteID {
     fuksi_head5,
     fuksi_head6,
     fuksi_head7,
+    fuksi_head8,
 
 
     //Teekkari abilities
