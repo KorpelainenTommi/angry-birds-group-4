@@ -230,6 +230,8 @@ private:
     void addBlocksToEditorElementList();
 
     void addProjectilesToEditorElementList();
+
+    void addFuksiToEditorElementList();
 };
 
 

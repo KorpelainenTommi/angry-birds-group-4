@@ -433,8 +433,8 @@ ui::pfloat GameScreen::calcProjectileBarBodyHeight() const {
 void GameScreen::UpdateProjectileList(std::vector<std::pair<SpriteID, std::string>> projectiles){
     clearIcons();
     for(auto e: projectiles) addProjectileIcon(e.first, e.second);
-    if(projectiles.size() > 0) {
-        auto last = std::reinterpret_pointer_cast<RoundIcon>(projectileList_->GetElements().cbegin()->second);
+    if(!editorMode_ && projectiles.size() > 0) {
+        auto last = std::static_pointer_cast<RoundIcon>(projectileList_->GetElements().cbegin()->second);
         selectProjectileIcon(last);
     }
 }
@@ -458,8 +458,12 @@ void GameScreen::addProjectileIcon(SpriteID icon, const std::string& name){
     auto wi = std::weak_ptr<RoundIcon>(i);
     auto index = projectileList_->GetElements().size();
     i->SetMouseDownHandler([this, index, wi](){
-        this->GetGame().SelectProjectile(index);
-        this->selectProjectileIcon(wi.lock());
+        if(this->IsInEditorMode()){
+            this->GetEditor().RemoveProjectile(index);
+        }else{
+            this->GetGame().SelectProjectile(index);
+            this->selectProjectileIcon(wi.lock());
+        }
     });
     projectileList_->InsertElement(i);
     iconIndexes_.push_back(menu_.size());
@@ -483,6 +487,7 @@ void GameScreen::addEditorPanel(){
     addEditorElementList();
 
     addBlocksToEditorElementList();
+    addFuksiToEditorElementList();
     addProjectilesToEditorElementList();
 }
 
@@ -760,6 +765,15 @@ void GameScreen::addProjectilesToEditorElementList(){
             this->GetEditor().AddProjectile(type);
         });
     }
+}
+
+void GameScreen::addFuksiToEditorElementList(){
+    gm::GameObjectType type = gm::GameObjectType::fuksi;
+    std::string text = "Fuksi";
+    SpriteID icon = SpriteID::fuksi_head1;
+    addEditorElementListLine(icon, text, [type, this](){
+        this->GetEditor().SetSelectedElement(type);
+    });
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {
