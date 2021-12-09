@@ -79,6 +79,13 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
         const RenderSystem r = screen_.GetApplication().GetRenderSystem();
         if(dragObjectID_ == -1) return true;
         std::vector<sf::Sprite> sprites =  GetObject(dragObjectID_).GetSprites(r);
+        for(auto& s : sprites) {
+            if(r.CheckGround(s)) {
+                DestroyObject(dragObjectID_);
+                dragObjectID_ = -1;
+                return true;
+            }
+        }
         for(auto& obj : objects_) {
             if(dragObjectID_ != obj.first) {
                 for(auto& s : sprites) {
