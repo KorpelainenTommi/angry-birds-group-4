@@ -290,7 +290,7 @@ void GameScreen::addVictoryMessageNicknamePrompt(std::vector<std::shared_ptr<Ele
         calcVictoryMessageNicknamePromptTop(), 
         calcVictoryMessageContentLeft(), 
         victoryMessageFontSize_, 
-        calcVictoryMessageContentLeft(), 
+        calcVictoryMessageContentWidth(), 
         "Please give a nickname to save your score:"
     );
     t->SetRelativeFontSize(victoryMessageFontSize_);
