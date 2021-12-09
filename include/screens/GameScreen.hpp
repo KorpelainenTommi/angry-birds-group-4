@@ -67,12 +67,6 @@ public:
 
     bool IsInEditorMode() const {return editorMode_;}
 
-    void SetSelectedGameMode(LevelMode m);
-
-    void ShowTimeTrialOptions();
-
-    void HideTimeTrialOptions();
-
     bool SaveEditor();
 
     /**
@@ -139,6 +133,18 @@ public:
 
     ui::pfloat calcEditorElementListHeight() const;
 
+    ui::pfloat calcEditorPanelVisibilityButtonLeft() const;
+
+    void showTimeTrialOptions();
+
+    void hideTimeTrialOptions();
+
+    void setSelectedGameMode(LevelMode m);
+
+    void hideEditorPanel();
+
+    void showEditorPanel();
+
 private:
     const ui::pfloat topLeftButtonSpacing_ = 1 VH;
     const ui::pfloat topLeftButtonSize_ = 4 VH;
@@ -149,6 +155,7 @@ private:
     const ui::pfloat victoryMessageWidth_ = 30 VW;
     const ui::pfloat victoryMessageStarSize_ = 5 VH;
     const ui::pfloat victoryMessageFontSize_ = ui::defaultFontSize;
+    const ui::pfloat victoryMessageStarSpacing_ = 2 VW;
     const ui::pfloat projectileBarHeight_ = 50 VH;
     const ui::pfloat projectileBarIconSize_ = 8 VH;
     const ui::pfloat projectileBarSpacing_ = 1 VH;
@@ -177,6 +184,7 @@ private:
     std::vector<std::shared_ptr<Element>> timeTrialElements_;
     std::shared_ptr<InputElement> editorTimeInput_;
     std::shared_ptr<TextElement> editorGameModeDropDown_;
+    std::shared_ptr<DivElement> editorPanelDiv_;
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -251,6 +259,8 @@ private:
     void addProjectilesToEditorElementList();
 
     void addFuksiToEditorElementList();
+
+    void addEditorPanelVisibilityButton();
 };
 
 
