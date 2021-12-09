@@ -7,7 +7,7 @@ bool Element::isInside(float xw, float yh) const {
     float top = ui::toVHFloat(GetTop());
     float right = ui::toVWFloat(w_) + left;
     float bottom = ui::toVHFloat(h_) + top;
-    return xvw > left && xvw < right && yvh > top && yvh < bottom 
+    return visible_ && xvw > left && xvw < right && yvh > top && yvh < bottom 
         && isInsideCropArea(xvw, yvh);
 };
 
