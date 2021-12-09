@@ -79,6 +79,13 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
         const RenderSystem r = screen_.GetApplication().GetRenderSystem();
         if(dragObjectID_ == -1) return true;
         std::vector<sf::Sprite> sprites =  GetObject(dragObjectID_).GetSprites(r);
+        for(auto& s : sprites) {
+            if(r.CheckGround(s)) {
+                DestroyObject(dragObjectID_);
+                dragObjectID_ = -1;
+                return true;
+            }
+        }
         for(auto& obj : objects_) {
             if(dragObjectID_ != obj.first) {
                 for(auto& s : sprites) {
@@ -98,3 +105,34 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
     
 }
 
+
+Level Editor::GetLevel() const {
+    return level_;
+}
+
+void Editor::SaveLevel() {
+    level_.objectData.clear();
+    for(auto& obj : objects_) {
+        gm::GameObjectData data = {obj.second->GetX().f0,obj.second->GetY().f0,obj.second->GetRot().f0,obj.second->GetObjectType()};
+        level_.objectData.push_back(data);
+    }
+    level_.startingTeekkaris.clear();
+    for(auto& teekkari : teekkarisLeft_) {
+        level_.startingTeekkaris.push_back(teekkari.objType);
+    }
+}
+
+bool Editor::OnKeyDown(const sf::Event::KeyEvent& key){
+    if(key.code == sf::Keyboard::Up && dragObjectID_ != -1) {
+        float rot = GetObject(dragObjectID_).GetRot().f0;
+        GetObject(dragObjectID_).SetRotation(rot + 10.0F);
+        GetObject(dragObjectID_).Record();
+    }
+    else if(key.code == sf::Keyboard::Down && dragObjectID_ != -1){
+        float rot = GetObject(dragObjectID_).GetRot().f0;
+        GetObject(dragObjectID_).SetRotation(rot - 10.0F);
+        GetObject(dragObjectID_).Record();
+    }
+    else return false;
+    return true;
+}

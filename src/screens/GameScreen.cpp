@@ -163,7 +163,7 @@ bool GameScreen::SaveEditor(){
             return false;
         }
     }
-
+    GetEditor().SaveLevel();
     Level lev = GetEditor().GetLevel();
     lev.levelName = name;
     lev.levelMode = selectedGameMode_;
