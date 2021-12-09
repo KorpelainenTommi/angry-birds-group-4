@@ -236,3 +236,51 @@ All the objects needed for the game to work are implemented in some way. Now the
 2. Aleksi Rintanen: LevelEditor and testlevels
 3. Ilari Tulkki: Continuing work on UI
 4. Joonas Palmulaakso: Effects and explosions
+
+
+
+# Meeting 09.12.2021 18::20
+
+**Participants**: 
+Tommi Korpelainen
+Aleksi Rintanen
+Ilari Tulkki
+Joonas Palmulaakso
+
+## Summary of works
+1. Tommi Korpelainen
+   
+   Basically finished Fuksis, Game ending, Teekkari abilities and some effects
+
+2. Aleksi Rintanen
+
+   Restricting camera bounds, changes to Game, adding some methods to RenderSystem, implementing Editor
+
+3. Ilari Tulkki
+ 
+   Finished GameScreen, EditorScreen and other UI
+   
+4. Joonas Palmulaakso
+
+   Changes to file saving and loading, animated effects, explosion force to physics effects
+
+
+## Challenges
+
+
+
+## Actions
+1. Tommi Korpelainen is going to finish Teekkaris and create more assets (textures and sounds)
+2. Aleksi Rintanen is going finish the Editor (it still has some bugs and missing features)
+3. Ilari Tulkki is going to finish Editor UI (it needs to do some checks)
+4. Joonas Palmulaakso is going to implement last methods for file saving as well as error handling
+
+## Project status 
+Game is playable, now it just needs to be finished, and maybe some extra gameplay features (tnt, pickups)
+
+### TODOs
+In addition to things listed in Actions
+1. Tommi Korpelainen: Framework and Game documentation / UML
+2. Aleksi Rintanen: Editor, Doxygen
+2. Ilari Tulkki: Editor UI, UI UML
+3. Joonas Palmulaakso: Creating some sample levels
