@@ -52,7 +52,7 @@ public:
     void Alert(std::string text, const std::function<void()> callBack);
     void Alert(std::string text);
 
-    void ClickSound() const;
+    void PlayClickSound() const;
 
     void DequeueMessage();
 

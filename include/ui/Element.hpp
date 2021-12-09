@@ -66,6 +66,12 @@ public:
 
     /**
      * This will be called if OnMouseDown returned true.
+     * Screen uses this to check if it should play click sound.
+     */
+    bool ClickSoundShouldBePlayed() const;
+
+    /**
+     * This will be called if OnMouseDown returned true.
      */
     virtual void ExecuteOnMouseDown();
 

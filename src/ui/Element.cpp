@@ -25,6 +25,10 @@ bool Element::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
     return false;
 }
 
+bool Element::ClickSoundShouldBePlayed() const {
+    return mouseDownHandler_ != NULL;
+}
+
 void Element::ExecuteOnMouseDown(){
     if(mouseDownHandler_ != NULL) mouseDownHandler_();
 }
