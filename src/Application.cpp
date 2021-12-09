@@ -43,18 +43,23 @@ void Application::Resize(unsigned int width, unsigned int height) {
     unsigned int w = width;
     unsigned int h = height;
 
-    if(w < ui::appMinWidth) w = ui::appMinWidth;
-    if(h < ui::appMinHeight) h = ui::appMinHeight;
+    bool modified = false;
+
+    if(w < ui::appMinWidth) { w = ui::appMinWidth; modified = true; }
+    if(h < ui::appMinHeight) { h = ui::appMinHeight; modified = true; }
 
     float aspectRatio = 1.0F * w / h;
+    if(aspectRatio < 1.0F) { h = w; modified = true; }
 
-    if(aspectRatio < 1.0F) aspectRatio = 1.0F;
+    if(modified) { 
+        window_.setSize({w, h});
+        auto v = window_.getSize();
+        w = v.x;
+        h = v.y;
+    }
 
-    //window_.setSize();
-    //window_.getSize();
-
-    if(isFullScreen_) window_.create(sf::VideoMode(width, height), ui::appName, sf::Style::Default);
-    window_.setView(sf::View({0.0F, 0.0F, (float)width, (float)height}));
+    if(isFullScreen_) window_.create(sf::VideoMode(w, h), ui::appName, sf::Style::Default);
+    window_.setView(sf::View({0.0F, 0.0F, (float)w, (float)h}));
     UpdateView();
     isFullScreen_ = false;
 

@@ -137,6 +137,10 @@ public:
 
     void SetTitle(const std::string& s);
 
+    bool IsVisible() const;
+    virtual void Hide();
+    virtual void Show();
+
 protected:
 
     ui::pfloat x_;
@@ -146,6 +150,7 @@ protected:
     ui::pfloat offsetX_ = 0 VW;
     ui::pfloat offsetY_ = 0 VH;
     bool captureFocus_ = false;
+    bool visible_ = true;
 
     std::function<void()> mouseDownHandler_ = NULL;
     std::function<void()> mouseUpHandler_ = NULL;

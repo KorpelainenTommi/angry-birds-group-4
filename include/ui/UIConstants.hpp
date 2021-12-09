@@ -102,8 +102,8 @@ namespace ui {
 
     const std::string appName = "AngryTeekkari";
     const std::string appVersion = "beta 3.7";
-    const unsigned int appMinWidth = 266; //Currently unused
-    const unsigned int appMinHeight = 200;
+    const unsigned int appMinWidth = 400; //Currently unused
+    const unsigned int appMinHeight = 400;
     const unsigned int targetFramerate = 180;
     const float targetFrametime = 1.0F / targetFramerate;
 

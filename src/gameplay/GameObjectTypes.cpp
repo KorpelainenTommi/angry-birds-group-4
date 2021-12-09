@@ -166,12 +166,12 @@ const std::map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
 // Materials
 
 const std::unordered_map<gm::BlockMaterial, gm::BlockMaterialData> gm::materialProperties = {
-    { gm::BlockMaterial::wood, { gm::BlockMaterial::wood, 200, 0.3F, 0, 1, 1, SoundID::wood_hit, SoundID::wood_crack }},
-    { gm::BlockMaterial::metal, { gm::BlockMaterial::metal, 900, 0.2F, 0, 5.0F, 0.1F, SoundID::metal_hit, SoundID::metal_crack }},
-    { gm::BlockMaterial::glass, { gm::BlockMaterial::glass, 400, 0.15F, 0.12F, 0.25F, 2.5F, SoundID::glass_hit, SoundID::glass_crack }},
-    { gm::BlockMaterial::plastic, { gm::BlockMaterial::plastic, 150, 0.23F, 0.18F, 2, 2, SoundID::plastic_hit, SoundID::plastic_crack }},
-    { gm::BlockMaterial::rubber, { gm::BlockMaterial::rubber, 180, 0.18F, 0.6F, 2, 4, SoundID::rubber_hit, SoundID::rubber_crack }},
-    { gm::BlockMaterial::concrete, { gm::BlockMaterial::concrete, 1000, 0.88F, 0, 0.4F, 0.4F, SoundID::concrete_hit, SoundID::concrete_crack }}
+    { gm::BlockMaterial::wood, { gm::BlockMaterial::wood, 200, 0.3F, 0, 1, 1, SoundID::wood_hit, SoundID::wood_crack, SpriteID::particles_wood }},
+    { gm::BlockMaterial::metal, { gm::BlockMaterial::metal, 900, 0.2F, 0, 5.0F, 0.1F, SoundID::metal_hit, SoundID::metal_crack, SpriteID::particles_metal }},
+    { gm::BlockMaterial::glass, { gm::BlockMaterial::glass, 400, 0.15F, 0.12F, 0.25F, 2.5F, SoundID::glass_hit, SoundID::glass_crack, SpriteID::particles_glass }},
+    { gm::BlockMaterial::plastic, { gm::BlockMaterial::plastic, 150, 0.23F, 0.18F, 2, 2, SoundID::plastic_hit, SoundID::plastic_crack, SpriteID::particles_plastic }},
+    { gm::BlockMaterial::rubber, { gm::BlockMaterial::rubber, 180, 0.18F, 0.6F, 2, 4, SoundID::rubber_hit, SoundID::rubber_crack, SpriteID::particles_rubber }},
+    { gm::BlockMaterial::concrete, { gm::BlockMaterial::concrete, 1000, 0.88F, 0, 0.4F, 0.4F, SoundID::concrete_hit, SoundID::concrete_crack, SpriteID::particles_concrete }}
 };
 
 
@@ -243,7 +243,6 @@ std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, 
     
     //Fuksi
     if(type == gm::GameObjectType::fuksi) return std::make_unique<Fuksi>(game, x, y, rot);
-
 
     if(type == gm::GameObjectType::cannon) return std::make_unique<Cannon>(game, type, x, y, rot);
     if(type == gm::GameObjectType::ground_obj) return std::make_unique<Ground>(game);

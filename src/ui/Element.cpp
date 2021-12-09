@@ -107,3 +107,13 @@ void Element::SetTitle(const std::string& s){
     title_ = s;
     titleW_ = 0 VW;
 }
+
+bool Element::IsVisible() const {
+    return visible_;
+}
+void Element::Hide(){
+    visible_ = false;
+}
+void Element::Show(){
+    visible_ = true;
+}

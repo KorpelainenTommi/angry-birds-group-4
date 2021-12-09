@@ -281,7 +281,7 @@ void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfl
 
 // game sprite
 
-void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
+void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color) const {
     
     sf::Sprite sp = resourceManager_.GetSprite(id);
     float spw = sp.getLocalBounds().width;
@@ -296,6 +296,7 @@ void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfl
     sp.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);
     sp.rotate(rot.Lerp(ALPHA));
     sp.scale(WW * ww / spw, WW * hw / sph);
+    sp.setColor(color);
 
     CameraDraw(sp, camera);
 

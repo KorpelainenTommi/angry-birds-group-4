@@ -102,10 +102,19 @@ namespace ph {
     const float explosionDecay = 0.69314718F; //ln(2), half the power at 1 meter, fourth at 2...
 
     /// Impulses below this treshold don't call PhysObject OnCollision
-    const float collisionTreshold = 40.0F;
+    const float collisionTreshold = 12.0F;
+
+    /// Impulses below this don't cause damage
+    const float damageTreshold = 40.0F;
+
+    /// The minimum amount of time to wait between hitsounds
+    const float soundCooldown = 0.1F;
 
     /// A scaling factor applied to velocity when determining damage
     const float damageScaling = 0.1F;
+
+    /// A particle will fade before despawning, start fading f seconds before despawn
+    const float particleFadeTime = 0.5F;
 
     /// Force of a cannon shot at maximum force
     const float cannonMaxForce = 5000;
@@ -123,7 +132,7 @@ namespace ph {
     const float teekkariHP = 8000;
 
     /// HP of a Fuksi
-    const float fuksiHP = 100;
+    const float fuksiHP = 400;
 
     /// Score from a Fuksi
     const int fuksiScore = 1000;

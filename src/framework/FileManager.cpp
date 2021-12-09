@@ -132,7 +132,9 @@ bool FileManager::LoadLevel(Level& level, const std::string& path) const {
         }
 
         if (lineData[0] == "NAME"){
-            level.levelName = lineData[1];
+            level.levelName = "";
+            for(size_t i = 1; i < lineData.size(); i++) level.levelName += (i == lineData.size() - 1) ? lineData.at(i) : lineData.at(i) + ' ';
+
         }   else if (lineData[0] == "MODE"){
             int num = std::stoi(lineData[1]);
             LevelMode mode = static_cast<LevelMode>(num);

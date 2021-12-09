@@ -135,13 +135,14 @@ enum GameObjectType {
     //Fuksi (all fuksis are functionally identical, only different in appearance)
     fuksi,
     
+    //Physics particle
+    phys_particle,
+
     //Teekkari abilities (those that have spawnable components)
     ability_cow,
     ability_wrench,
     ability_integral,
 
-    //Physics particle
-    phys_particle,
 
 
     ground_obj
@@ -251,6 +252,7 @@ struct BlockMaterialData {
     float pointsPerMass;
     SoundID hitSound;
     SoundID breakSound;
+    SpriteID particle;
 };
 
 struct BlockShapeData {

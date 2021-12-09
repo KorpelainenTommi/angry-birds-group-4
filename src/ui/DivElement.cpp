@@ -95,3 +95,12 @@ void DivElement::SetCropArea(){
     Element::SetCropArea();
     updateValues();
 }
+
+void DivElement::Hide(){
+    visible_ = false;
+    for(auto t: elements_) t.second->Hide();
+}
+void DivElement::Show(){
+    visible_ = true;
+    for(auto t: elements_) t.second->Show();
+}

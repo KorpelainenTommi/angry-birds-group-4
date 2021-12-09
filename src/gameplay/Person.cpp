@@ -5,7 +5,7 @@
 #include <box2d/b2_circle_shape.h>
 #include <box2d/b2_revolute_joint.h>
 #include <SFML/System/Vector2.hpp>
-
+#include <framework/RandomGen.hpp>
 #include <iostream>
 
 
@@ -309,6 +309,17 @@ void Person::Update() {
         this->OnDeath();
         game_.DestroyObject(gameID_); return;
     }
+}
+
+void Person::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
+    
+    PhysObject::OnCollision(velocity, other, contact);
+    if(game_.GetTime() - lastHitSound_ > ph::soundCooldown) {
+        lastHitSound_ = game_.GetTime();
+        SoundID sounds[] = { SoundID::thud1, SoundID::thud2, SoundID::thud3 };
+        game_.GetAudioSystem().PlaySound(sounds[rng::RandomInt(0, 2)], velocity.LengthSquared() / ph::damageTreshold);
+    }
+
 }
 
 void Person::Render(const RenderSystem& r) {

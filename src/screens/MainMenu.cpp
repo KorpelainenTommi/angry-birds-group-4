@@ -11,13 +11,26 @@ MainMenu::MainMenu(Application& app): Screen(app){
     generateLevels();
 
     addRightSideButton(1, "Exit", [&app](){app.Exit();});
-    addRightSideButton(2, "test level", [&app](){
-        app.TransitionTo(std::make_unique<GameScreen>(app,TestLevel()));
+    addRightSideButton(2, "Create new", [&app](){
+        app.TransitionTo(std::make_unique<GameScreen>(app, Level(), true));
     });
-    addRightSideButton(3, "Edit", [&app, this](){
+    addRightSideButton(3, "Delete", [&app, this](){
+        this->Confirm("Delete " + this->GetSelectedLevel().levelName, [this](bool b){
+            if(b){
+                //this->GetApplication().GetFileManager()
+                this->Alert("not implemented in file manager");
+            }
+        });
+    }, true);
+    addRightSideButton(4, "Create from", [&app, this](){
+        Level copy = this->GetSelectedLevel();
+        copy.levelPath = "";
+        app.TransitionTo(std::make_unique<GameScreen>(app, copy, true));
+    }, true);
+    addRightSideButton(5, "Edit", [&app, this](){
         app.TransitionTo(std::make_unique<GameScreen>(app, this->GetSelectedLevel(), true));
     }, true);
-    addRightSideButton(4, "Play", [&app, this](){
+    addRightSideButton(6, "Play", [&app, this](){
         app.TransitionTo(std::make_unique<GameScreen>(app, this->GetSelectedLevel()));
     }, true);
 

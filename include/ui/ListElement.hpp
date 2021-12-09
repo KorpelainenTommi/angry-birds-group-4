@@ -80,6 +80,9 @@ public:
     virtual void SetCropArea(const ui::CropArea& a);
     virtual void SetCropArea();
 
+    virtual void Hide();
+    virtual void Show();
+
 private:
     int nextId_ = INT_MIN;
     std::map<int, std::shared_ptr<Element>> elements_;

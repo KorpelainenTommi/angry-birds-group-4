@@ -28,7 +28,7 @@ protected:
     gm::BlockData blockData_;
     gm::BlockShapeData shapeData_;
     gm::BlockMaterialData materialData_;
-
+    float lastHitSound_ = 0.0F;
 
     virtual void OnDeath();
 };

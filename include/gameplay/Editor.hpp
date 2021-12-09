@@ -15,6 +15,7 @@ public:
     void AddProjectile(gm::GameObjectType t);
     
     /// remove the element at the given idex in projectile list and call GameScreen::UpdateProjectileList()
+
     void RemoveProjectile(std::size_t index);
     
     
@@ -22,11 +23,14 @@ public:
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
     
+    Level GetLevel() const {return level_;}
+    
 private:
     gm::GameObjectType selectedElement_;
     int dragObjectID_ = -1;
     ph::tfloat dragX_;
     ph::tfloat dragY_;
+
 };
 
 #endif

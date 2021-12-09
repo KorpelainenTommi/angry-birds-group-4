@@ -1,3 +1,4 @@
+#include <framework/Resources.hpp>
 #include <screens/Screen.hpp>
 #include <ui/MessageBox.hpp>
 #include <ui/Button.hpp>
@@ -10,15 +11,15 @@ void Screen::Render(const RenderSystem& r){
         windowHeight_ = ui::windowHeight;
         for(const auto& e : menu_){
             e->OnWindowResize();
-            e->Render(r);
+            if(e->IsVisible()) e->Render(r);
         }
         if(messages_.size() > 0) for(const auto& e: messages_.front()){
             e->OnWindowResize();
-            e->Render(r);
+            if(e->IsVisible()) e->Render(r);
         }
     }else{
-        for(const auto& e : menu_) e->Render(r);
-        if(messages_.size() > 0) for(const auto& e: messages_.front()) e->Render(r);
+        for(const auto& e : menu_) if(e->IsVisible()) e->Render(r);
+        if(messages_.size() > 0) for(const auto& e: messages_.front()) if(e->IsVisible()) e->Render(r);
     }
 }
 
@@ -124,6 +125,10 @@ void Screen::Alert(std::string text, const std::function<void()> callBack){
 
 void Screen::Alert(std::string text){
     Alert(text, NULL);
+}
+
+void Screen::ClickSound() const {
+    app_.GetAudioSystem().PlaySound(SoundID::ui_click);
 }
 
 void Screen::DequeueMessage(){
