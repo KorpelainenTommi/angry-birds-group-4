@@ -15,6 +15,8 @@ enum SpriteID {
     ui_button_cancel,
     ui_button_ok,
     ui_button_save,
+    ui_button_right,
+    ui_button_left,
     ui_star,
     ui_missing_star,
 
