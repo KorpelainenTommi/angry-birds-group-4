@@ -10,6 +10,7 @@
 #include <ui/RoundIcon.hpp>
 #include <ui/TextElement.hpp>
 #include <sstream>
+#include <exception>
 
 #include <iostream>
 
@@ -90,6 +91,18 @@ protected:
         std::stringstream ss;
         ss << v;
         return ss.str();
+    }
+
+    int parseInt(std::string s) const {
+        int i = std::stoi(s);
+        if(getString(i) != s) throw std::invalid_argument("");
+        return i;
+    }
+
+    bool isEmpty(std::string s) const {
+        std::size_t len = s.size();
+        for(std::size_t i = 0; i < len; i++) if(s[i] != ' ') return false;
+        return true;
     }
 
     /**

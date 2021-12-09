@@ -66,9 +66,13 @@ public:
 
     bool IsInEditorMode() const {return editorMode_;}
 
+    void SetSelectedGameMode(LevelMode m);
+
     void ShowTimeTrialOptions();
 
     void HideTimeTrialOptions();
+
+    bool SaveEditor();
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -119,8 +123,6 @@ public:
     ui::pfloat calcEditorDropDownTop() const;
 
     void addDropDownContents(std::shared_ptr<TextElement> e);
-
-    void setSelectedGameMode(LevelMode m);
 
     ui::pfloat calcEditorMaxScoreLabelTop() const;
 
@@ -173,6 +175,7 @@ private:
     bool timeTrial_ = false;
     std::vector<std::shared_ptr<Element>> timeTrialElements_;
     std::shared_ptr<InputElement> editorTimeInput_;
+    std::shared_ptr<TextElement> editorGameModeDropDown_;
 
     /**
      * button number is the number of the button from left starting from 1.
