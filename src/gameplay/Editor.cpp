@@ -121,3 +121,18 @@ void Editor::SaveLevel() {
         level_.startingTeekkaris.push_back(teekkari.objType);
     }
 }
+
+bool Editor::OnKeyDown(const sf::Event::KeyEvent& key){
+    if(key.code == sf::Keyboard::Up && dragObjectID_ != -1) {
+        float rot = GetObject(dragObjectID_).GetRot().f0;
+        GetObject(dragObjectID_).SetRotation(rot + 10.0F);
+        GetObject(dragObjectID_).Record();
+    }
+    else if(key.code == sf::Keyboard::Down && dragObjectID_ != -1){
+        float rot = GetObject(dragObjectID_).GetRot().f0;
+        GetObject(dragObjectID_).SetRotation(rot - 10.0F);
+        GetObject(dragObjectID_).Record();
+    }
+    else return false;
+    return true;
+}

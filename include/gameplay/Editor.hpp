@@ -22,6 +22,7 @@ public:
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
+    virtual bool OnKeyDown(const sf::Event::KeyEvent&);
     
     Level GetLevel() const;
     
