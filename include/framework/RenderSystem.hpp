@@ -73,6 +73,9 @@ public:
     
     
     bool IntersectWithSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, sf::Sprite sprite) const;
+    
+    bool CheckGround(sf::Sprite s) const;
+    
 private:
 
     //Allow Application to set these values

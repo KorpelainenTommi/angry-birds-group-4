@@ -326,3 +326,7 @@ bool RenderSystem::IntersectWithSprite(SpriteID id, ph::tfloat x, ph::tfloat y, 
     sp.scale(h.f0/sph,h.f0/sph);
     return sp.getGlobalBounds().intersects(sprite.getGlobalBounds());
 }
+bool RenderSystem::CheckGround(sf::Sprite s) const {
+    sf::FloatRect ground = sf::FloatRect(-ph::fullscreenPlayArea/2,-ph::fullscreenPlayArea,ph::fullscreenPlayArea,ph::fullscreenPlayArea);
+    return ground.intersects(s.getGlobalBounds());
+}
