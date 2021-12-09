@@ -132,7 +132,7 @@ namespace ph {
     const float teekkariHP = 8000;
 
     /// HP of a Fuksi
-    const float fuksiHP = 400;
+    const float fuksiHP = 200;
 
     /// Score from a Fuksi
     const int fuksiScore = 1000;
