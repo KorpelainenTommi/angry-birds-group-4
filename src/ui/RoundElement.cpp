@@ -8,7 +8,7 @@ bool RoundElement::isInside(float xw, float yh) const {
     float rvh = ui::toVHFloat(r_);
     float cxvh = getCenterVHFloatX(rvh);
     float cyvh = getCenterVHFloatY(rvh);
-    if(distance(cxvh, cyvh, xvh, yvh) <= rvh && isInsideCropArea(xvw, yvh)) return true;
+    if(visible_ && distance(cxvh, cyvh, xvh, yvh) <= rvh && isInsideCropArea(xvw, yvh)) return true;
     return false;
 }
 
