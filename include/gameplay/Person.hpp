@@ -19,12 +19,15 @@ public:
     virtual void Record();
     virtual void Update();
 
+    virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact);
     virtual void Impulse(const b2Vec2& f);
 
 protected:
 
     // Data defining the look and sound of this person
     gm::PersonData data_;
+
+    float lastHitSound_ = 0.0F;
 
     inline static const float restitution = 0.3F;
 

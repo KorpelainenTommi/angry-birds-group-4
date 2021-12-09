@@ -1,3 +1,4 @@
+#include <framework/Resources.hpp>
 #include <screens/Screen.hpp>
 #include <ui/MessageBox.hpp>
 #include <ui/Button.hpp>
@@ -124,6 +125,10 @@ void Screen::Alert(std::string text, const std::function<void()> callBack){
 
 void Screen::Alert(std::string text){
     Alert(text, NULL);
+}
+
+void Screen::ClickSound() const {
+    app_.GetAudioSystem().PlaySound(SoundID::ui_click);
 }
 
 void Screen::DequeueMessage(){

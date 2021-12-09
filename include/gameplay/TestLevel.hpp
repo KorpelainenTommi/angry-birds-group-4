@@ -14,6 +14,7 @@ Level TestLevel() {
     Level level = {};
     level.levelName = "TESTLEVEL";
     level.perfectScore = 4000;
+    level.levelMode = LevelMode::time_trial;
     level.objectData.push_back({15,0.5,0,gm::block_wood2x1});
     level.objectData.push_back({15,1.5,0,gm::block_metal2x1});
     level.objectData.push_back({15,2.5,0,gm::block_glass2x1});

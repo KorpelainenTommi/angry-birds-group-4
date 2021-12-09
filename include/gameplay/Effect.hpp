@@ -1,6 +1,8 @@
-#include <include/gameplay/GameObjectTypes.hpp>
-#include <include/gameplay/GameObject.hpp>
-#include <include/gameplay/Physics.hpp>
+#ifndef EFFECT_HPP
+#define EFFECT_HPP
+#include <gameplay/GameObjectTypes.hpp>
+#include <gameplay/GameObject.hpp>
+#include <gameplay/Physics.hpp>
 
 class Effect : public GameObject {
 public:
@@ -26,3 +28,5 @@ private:
     float starting_time;
     float duration_;
 };
+
+#endif

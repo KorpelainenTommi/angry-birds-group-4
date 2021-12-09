@@ -3,12 +3,33 @@
 
 const std::pair<FontID, std::string> ResourceManager::fontPaths_[] = {
     {FontID::source_serif, "data/fonts/source_serif.ttf"},
-    {FontID::consolas, "data/fonts/consolas.ttf"}
+    {FontID::consolas, "data/fonts/consolas.ttf"},
+    {FontID::magneto, "data/fonts/magneto.ttf"}
 };
 
 const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
     {SoundID::ui_click, "data/audio/ui_click.wav"},
+
+    {SoundID::wood_hit, "data/audio/wood_hit.wav"},
+    {SoundID::wood_crack, "data/audio/wood_crack.wav"},
+    {SoundID::metal_hit, "data/audio/metal_hit.wav"},
+    {SoundID::metal_crack, "data/audio/metal_crack.wav"},
+    {SoundID::glass_hit, "data/audio/glass_hit.wav"},
+    {SoundID::glass_crack, "data/audio/glass_crack.wav"},
+    {SoundID::plastic_hit, "data/audio/plastic_hit.wav"},
+    {SoundID::plastic_crack, "data/audio/plastic_crack.wav"},
+    {SoundID::rubber_hit, "data/audio/rubber_hit.wav"},
+    {SoundID::rubber_crack, "data/audio/rubber_crack.wav"},
+    {SoundID::concrete_hit, "data/audio/concrete_hit.wav"},
+    {SoundID::concrete_crack, "data/audio/concrete_crack.wav"},
+
+    {SoundID::thud1, "data/audio/thud1.wav"},
+    {SoundID::thud2, "data/audio/thud2.wav"},
+    {SoundID::thud3, "data/audio/thud3.wav"},
+
+
     {SoundID::nice, "data/audio/nice.wav"}
+
 };
 
 const std::pair<int, std::string> ResourceManager::texturePaths_[] = {

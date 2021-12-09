@@ -20,7 +20,7 @@ public:
     /* Render a sprite in screen independent coordinates (meters). This is useful for game objects.
      * The shape is defined by the sprite itself.
      */
-    void RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera) const;
+    void RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color = sf::Color(255, 255, 255)) const;
 
     /// Render a sprite in relative coordinates. This is useful for UI
     void RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const sf::Color& color = sf::Color(255, 255, 255)) const;
