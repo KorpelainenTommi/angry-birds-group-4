@@ -45,7 +45,7 @@ public:
      */
     void OnGameCompleted(int score, int requiredMaxScore);
 
-    void OnGameLost();
+    void OnGameLost(const std::string& reason = "Level failed!");
 
     void OnScoreChange(int score);
 

@@ -40,6 +40,19 @@ void Application::Fullscreen() {
 
 void Application::Resize(unsigned int width, unsigned int height) {
 
+    unsigned int w = width;
+    unsigned int h = height;
+
+    if(w < ui::appMinWidth) w = ui::appMinWidth;
+    if(h < ui::appMinHeight) h = ui::appMinHeight;
+
+    float aspectRatio = 1.0F * w / h;
+
+    if(aspectRatio < 1.0F) aspectRatio = 1.0F;
+
+    //window_.setSize();
+    //window_.getSize();
+
     if(isFullScreen_) window_.create(sf::VideoMode(width, height), ui::appName, sf::Style::Default);
     window_.setView(sf::View({0.0F, 0.0F, (float)width, (float)height}));
     UpdateView();

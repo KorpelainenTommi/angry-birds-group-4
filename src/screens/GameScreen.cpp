@@ -177,7 +177,7 @@ std::shared_ptr<TextLine> GameScreen::addTopRightLabel(
     return e;
 }
 
-void GameScreen::OnGameLost(){
+void GameScreen::OnGameLost(const std::string& reason){
     if(editorMode_) return;
     game_->Pause();
     std::vector<std::shared_ptr<Element>> v;
@@ -190,7 +190,7 @@ void GameScreen::OnGameLost(){
         this->DequeueMessage();
         this->Exit();
     }, SpriteID::ui_button_exit, messageBoxHeight_, messageBoxWidth_));
-    v.push_back(generateConfirmText("Level failed!"));
+    v.push_back(generateConfirmText(reason));
     messages_.push(v);
 }
 

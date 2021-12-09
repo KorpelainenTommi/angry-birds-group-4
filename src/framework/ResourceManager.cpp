@@ -19,7 +19,9 @@ const std::pair<int, std::string> ResourceManager::texturePaths_[] = {
     {4, "data/textures/buttons.png"},
     {5, "data/textures/stars.png"},
     {6, "data/textures/fuksi_bodies.png"},
-    {7, "data/textures/fuksi_heads.png"}
+    {7, "data/textures/fuksi_heads.png"},
+    {8, "data/textures/background0.jpg"},
+    {9, "data/textures/ground0.jpg"}
 };
 
 const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
@@ -70,6 +72,13 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::tnt, 0, {0, 356, 64, 64}},
     {SpriteID::sofa3x1, 0, {64, 356, 192, 64}},
 
+    {SpriteID::particles_dust, 0, {0, 420, 32, 32}},
+    {SpriteID::particles_wood, 0, {32, 420, 32, 32}},
+    {SpriteID::particles_metal, 0, {64, 420, 32, 32}},
+    {SpriteID::particles_glass, 0, {96, 420, 32, 32}},
+    {SpriteID::particles_plastic, 0, {128, 420, 32, 32}},
+    {SpriteID::particles_rubber, 0, {160, 420, 32, 32}},
+    {SpriteID::particles_concrete, 0, {192, 420, 32, 32}},
 
     //Teekkari bodies
     {SpriteID::torso_blue, 1, {0, 0, 130, 156}},
@@ -188,7 +197,14 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::ui_missing_star, 5, {257, 0, 256, 256}},
     
     {SpriteID::cannon_base, 0, {0, 654, 214, 114}},
-    {SpriteID::cannon_head, 0, {214, 501, 137, 267}}
+    {SpriteID::cannon_head, 0, {214, 501, 137, 267}},
+
+    {SpriteID::background_field, 8, {0, 0, 1440, 957}},
+
+
+    {SpriteID::cow, 3, {0, 0, 200, 150}},
+    {SpriteID::wrench, 3, {200, 0, 100, 32}}
+
 
 };
 

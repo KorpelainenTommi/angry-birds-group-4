@@ -259,7 +259,7 @@ enum SpriteID {
     
     //Block break particles
     particles_dust, //Generic ground hit
-    partices_wood,
+    particles_wood,
     particles_metal,
     particles_glass,
     particles_plastic,

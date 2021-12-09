@@ -96,6 +96,9 @@ public:
 
     /// Create a new GameObject with specified type, at this location and rotation
     int CreateObject(gm::GameObjectType type, float x = 0, float y = 0, float rot = 0);
+    
+    /// Create a Teekkari from data
+    int CreateTeekkari(gm::PersonData data, float x = 0, float y = 0, float rot = 0);
 
     /// Destroy the object with specified id
     void DestroyObject(int id);
@@ -127,6 +130,8 @@ public:
 
     /// Get a reference to a b2World to add rigidbodies
     b2World& GetB2World();
+
+    GameScreen& GetScreen();
 
     /// Callback for Box2D contacts
     virtual void BeginContact(b2Contact* contact);

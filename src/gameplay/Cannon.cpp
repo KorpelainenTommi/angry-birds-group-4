@@ -59,7 +59,7 @@ bool Cannon::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
 
     gm::PersonData teekkari;
     if(game_.TakeProjectile(teekkari)) {
-        int id = game_.AddObject(std::make_unique<Teekkari>(game_, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, rot_pipe_, teekkari));
+        int id = game_.CreateTeekkari(teekkari, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, rot_pipe_);
         Teekkari& t = (Teekkari&)game_.GetObject(id);
         t.Impulse({dir.x * relativeDistance_ * ph::cannonMaxForce, dir.y * relativeDistance_ * ph::cannonMaxForce});
         return true;

@@ -6,6 +6,7 @@
 #include <gameplay/PhysObject.hpp>
 #include <gameplay/GameObjectTypes.hpp>
 #include <framework/RandomGen.hpp>
+#include <gameplay/Teekkari.hpp>
 #include <math.h>
 #include <iostream>
 
@@ -77,6 +78,22 @@ int Game::CreateObject(gm::GameObjectType type, float x, float y, float rot) {
     return AddObject(std::move(obj));
 }
 
+int Game::CreateTeekkari(gm::PersonData data, float x, float y, float rot) {
+    std::unique_ptr<Teekkari> obj;
+    switch(data.objType) {
+        case gm::GameObjectType::teekkari_ik: obj = std::make_unique<IKTeekkari>(*this, x, y, rot, data); break;
+        case gm::GameObjectType::teekkari_sik: obj = std::make_unique<SIKTeekkari>(*this, x, y, rot, data); break;
+        case gm::GameObjectType::teekkari_tefy: obj = std::make_unique<TEFYTeekkari>(*this, x, y, rot, data); break;
+        case gm::GameObjectType::teekkari_tuta: obj = std::make_unique<TUTATeekkari>(*this, x, y, rot, data); break;
+        case gm::GameObjectType::teekkari_tik: obj = std::make_unique<TIKTeekkari>(*this, x, y, rot, data); break;
+        case gm::GameObjectType::teekkari_inkubio: obj = std::make_unique<INKUBIOTeekkari>(*this, x, y, rot, data); break;
+        case gm::GameObjectType::teekkari_kik: obj = std::make_unique<KIKTeekkari>(*this, x, y, rot, data); break;
+        case gm::GameObjectType::teekkari_professor: obj = std::make_unique<Professor>(*this, x, y, rot, data); break;
+        default: obj = std::make_unique<IKTeekkari>(*this, x, y, rot, data); break;
+    }
+    return AddObject(std::move(obj));
+}
+
 
 void Game::DestroyObject(int id) {
     objects_.erase(id);
@@ -139,12 +156,14 @@ void Game::Update() {
         (it++)->second->Update();
     }
 
+    bool timeLimitReached = (level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0 && GetTime() > level_.timeLimit);
+
     //Don't add anything after this. Fuksi and Teekkari checks might end the level
-    if(checkForFinish_) {
+    if(checkForFinish_ || timeLimitReached) {
         checkForFinish_ = false;
         bool b = CheckFuksiCount();
         if(!b) b = CheckTeekkariCount();
-        if(!b && level_.levelMode == LevelMode::time_trial && GetTime() > level_.timeLimit) screen_.OnGameLost();
+        if(!b && timeLimitReached) screen_.OnGameLost("Out of time");
     }
 }
 
@@ -208,10 +227,10 @@ bool Game::CheckFuksiCount() {
             auto levels = screen_.GetApplication().GetFileManager().ListEndless();
             LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
         }
-        else if(level_.levelMode == LevelMode::time_trial) {
-            float timeLeft = level_.timeLimit - GetTime();
+        else if(level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0) {
+            float timeLeft = (float)(level_.timeLimit - GetTime()) / level_.timeLimit;
             int p = (int)roundf(timeLeft * points_);
-            screen_.OnGameCompleted(p, level_.timeLimit * level_.perfectScore);
+            screen_.OnGameCompleted(p, level_.perfectScore);
         }
         else screen_.OnGameCompleted(points_, level_.perfectScore);
     }
@@ -219,8 +238,10 @@ bool Game::CheckFuksiCount() {
 }
 
 void Game::Render(const RenderSystem& r) {
-    
     //Render all objects in render order
+    float parallax = 0.5F;
+    r.RenderSprite(level_.backgroundImage, parallax * camera_.x, 0.3F * ph::fullscreenPlayArea + parallax * camera_.y, 0.66458333F * ph::fullscreenPlayArea * 1.5F, 0, camera_);
+
     for(auto& obj : objects_) {
         obj.second->Render(r);
     }
@@ -234,7 +255,7 @@ bool Game::OnMouseMove(float xw, float yh) {
         cameraGrabY_ = yh;
         Camera c = GetCamera();
         c.x -= ph::fullscreenPlayArea * c.zoom * (cameraGrabX_.f1 - cameraGrabX_.f0);
-        c.y += ph::fullscreenPlayArea * c.zoom * (cameraGrabY_.f1 - cameraGrabY_.f0);
+        c.y += ph::fullscreenPlayArea * c.zoom * (cameraGrabY_.f1 - cameraGrabY_.f0) / ui::aspectRatio;
         SetCameraPos(c.x, c.y);
         cameraGrabX_.Record();
         cameraGrabY_.Record();
@@ -250,9 +271,11 @@ bool Game::OnMouseMove(float xw, float yh) {
 
 bool Game::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
 
+    bool b = false;
     for(auto& obj : objects_) {
-        if(obj.second->OnMouseDown(button, xw, yh)) return true;
+        if(obj.second->OnMouseDown(button, xw, yh)) b = true;
     }
+    if(b) return true;
     
     if(button == sf::Mouse::Button::Middle) {
         movingCamera_ = true;
@@ -293,8 +316,8 @@ bool Game::OnMouseScroll(float delta, float xw, float yh) {
 unsigned int Game::GetTicks() const { return time_; };
 float Game::GetTime() const { return time_ * ph::timestep; }
 float Game::GetTimeForUI() const {
-    //TODO: modify this to give decreasing time in time trial game mode
-    return GetTime();
+    if(level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0) return level_.timeLimit - GetTime();
+    else return GetTime();
 }
 
 
@@ -313,6 +336,7 @@ void Game::AddPoints(int p) { points_ += p; screen_.OnScoreChange(points_); }
 
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
+GameScreen& Game::GetScreen() { return screen_; }
 
 bool Game::CannonDisabled() const { return isPaused_ || teekkarisLeft_.empty(); }
 bool Game::IsPaused() const { return isPaused_; }

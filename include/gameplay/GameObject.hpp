@@ -45,6 +45,7 @@ public:
     virtual ph::tfloat GetX() const { return x_; }
     virtual ph::tfloat GetY() const { return y_; }
     virtual ph::tfloat GetRot() const { return rot_; }
+    gm::GameObjectType GetObjectType() const { return objectType_; }
 
 
     virtual void Render(const RenderSystem&) = 0;

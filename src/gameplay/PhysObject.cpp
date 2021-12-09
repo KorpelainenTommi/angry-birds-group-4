@@ -26,6 +26,9 @@ void PhysObject::Explosion(const b2Vec2& center, float magnitude) {
     Impulse(direction);
 }
 
+void PhysObject::DealDamage(float damage) {
+    hp_ -= damage;
+}
 
 float PhysObject::GetHP() const { return hp_; }
 float PhysObject::GetMass() const { return mainBody_->GetMass(); }

@@ -5,8 +5,8 @@
 #include <gameplay/Ground.hpp>
 #include <gameplay/Teekkari.hpp>
 #include <gameplay/Fuksi.hpp>
+#include <iostream>
 #include <math.h>
-
 
 
 const std::vector<gm::PersonFace> gm::teekkariHeads = { 
@@ -223,18 +223,32 @@ int gm::GetObjectScore(gm::GameObjectType type) {
 
 std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, float x, float y, float rot) {
 
-    // TODO: make this cleaner, easier to do once all basic types are added
-
     // Block
     if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) return std::make_unique<Block>(game, type, x, y, rot);
 
-    // Teekkaris (add all these separately when they get their own classes and super powers)
-    if(type >= gm::GameObjectType::teekkari_ik && type <= gm::GameObjectType::teekkari_professor) return std::make_unique<Teekkari>(game, type, x, y, rot);
+    //Teekkaris
+    if(type >= gm::GameObjectType::teekkari_ik && type <= gm::GameObjectType::teekkari_professor) {
+        switch(type) {
+            case gm::GameObjectType::teekkari_ik: return std::make_unique<IKTeekkari>(game, x, y, rot);
+            case gm::GameObjectType::teekkari_sik: return std::make_unique<SIKTeekkari>(game, x, y, rot);
+            case gm::GameObjectType::teekkari_tefy: return std::make_unique<TEFYTeekkari>(game, x, y, rot);
+            case gm::GameObjectType::teekkari_tuta: return std::make_unique<TUTATeekkari>(game, x, y, rot);
+            case gm::GameObjectType::teekkari_tik: return std::make_unique<TIKTeekkari>(game, x, y, rot);
+            case gm::GameObjectType::teekkari_inkubio: return std::make_unique<INKUBIOTeekkari>(game, x, y, rot);
+            case gm::GameObjectType::teekkari_kik: return std::make_unique<KIKTeekkari>(game, x, y, rot);
+            case gm::GameObjectType::teekkari_professor: return std::make_unique<Professor>(game, x, y, rot);
+            default: return std::make_unique<IKTeekkari>(game, x, y, rot);
+        }
+    }
+    
+    //Fuksi
     if(type == gm::GameObjectType::fuksi) return std::make_unique<Fuksi>(game, x, y, rot);
 
 
     if(type == gm::GameObjectType::cannon) return std::make_unique<Cannon>(game, type, x, y, rot);
     if(type == gm::GameObjectType::ground_obj) return std::make_unique<Ground>(game);
-    else return std::unique_ptr<GameObject>(nullptr);
+
+    std::cout << "Unknown game object spawn attempt: " << type << std::endl;
+    return std::unique_ptr<GameObject>(nullptr);
 
 }

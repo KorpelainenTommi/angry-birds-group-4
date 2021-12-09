@@ -61,7 +61,8 @@ public:
     /// Add explosive force away from center
     virtual void Explosion(const b2Vec2& center, float magnitude);
 
-
+    /// Explicitly deal damage to this objects hp
+    virtual void DealDamage(float damage);
 
     virtual float GetHP() const;
     virtual float GetMass() const;

@@ -140,6 +140,9 @@ enum GameObjectType {
     ability_wrench,
     ability_integral,
 
+    //Physics particle
+    phys_particle,
+
 
     ground_obj
 
