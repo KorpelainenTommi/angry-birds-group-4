@@ -73,6 +73,9 @@ bool FileManager::SaveLevel(const Level& level) const {
 
 
 void FileManager::PrintGameObjectData(std::ofstream& file, const gm::GameObjectData& data) const {
+    if(data.type == gm::cannon || data.type == gm::ground_obj){
+        return;
+    }
     file << "DATA " << data.x << " " << data.y << " " << data.rot << " " << data.type << "\n";
 }
 
@@ -122,58 +125,60 @@ bool FileManager::LoadLevel(Level& level, const std::string& path) const {
         return false;
     }
     std::string line;
-    while(std::getline(file, line)){
-        std::istringstream ss(line);
-        std::vector<std::string> lineData;
-        std::string temp;
+    try{
+        while(std::getline(file, line)){
+            std::istringstream ss(line);
+            std::vector<std::string> lineData;
+            std::string temp;
 
-        while (std::getline(ss, temp, ' ')){
-            lineData.push_back(temp);
+            while (std::getline(ss, temp, ' ')){
+                lineData.push_back(temp);
+            }
+
+            if (lineData[0] == "NAME"){
+                level.levelName = "";
+                for(size_t i = 1; i < lineData.size(); i++) level.levelName += (i == lineData.size() - 1) ? lineData.at(i) : lineData.at(i) + ' ';
+
+            }   else if (lineData[0] == "MODE"){
+                int num = std::stoi(lineData[1]);
+                LevelMode mode = static_cast<LevelMode>(num);
+                level.levelMode = mode;
+                
+            }   else if (lineData[0] == "TIME"){
+                int num = std::stoi(lineData[1]);
+                level.timeLimit = num;
+                
+            }   else if (lineData[0] == "MAXSCORE"){
+                int num = std::stoi(lineData[1]);
+                level.perfectScore = num;
+            
+            }   else if (lineData[0] == "DATA"){
+                gm::GameObjectData object;
+                object.x = std::stof(lineData[1]);
+                object.y = std::stof(lineData[2]);
+                object.rot = std::stof(lineData[3]);
+                object.type = static_cast<gm::GameObjectType>(std::stoi(lineData[4]));
+                level.objectData.push_back(object);
+
+            }   else if (lineData[0] == "HIGH"){
+                std::pair<std::string, int> pair;
+                pair.first = lineData[1];
+                pair.second = std::stoi(lineData[2]);
+                level.highscores.push_back(pair);
+
+            }   else if (lineData[0] == "BACKGROUND"){
+                level.backgroundImage = static_cast<SpriteID>(stoi(lineData[1]));
+                
+            }   else if (lineData[0] == "END"){
+                level.levelPath = path;
+                file.close();
+                return true;
+
+            }   else if (lineData[0] == "START"){
+                level.startingTeekkaris.push_back(static_cast<gm::GameObjectType>(std::stoi(lineData[1])));
+            }
         }
-
-        if (lineData[0] == "NAME"){
-            level.levelName = "";
-            for(size_t i = 1; i < lineData.size(); i++) level.levelName += (i == lineData.size() - 1) ? lineData.at(i) : lineData.at(i) + ' ';
-
-        }   else if (lineData[0] == "MODE"){
-            int num = std::stoi(lineData[1]);
-            LevelMode mode = static_cast<LevelMode>(num);
-            level.levelMode = mode;
-            
-        }   else if (lineData[0] == "TIME"){
-            int num = std::stoi(lineData[1]);
-            level.timeLimit = num;
-            
-        }   else if (lineData[0] == "MAXSCORE"){
-            int num = std::stoi(lineData[1]);
-            level.perfectScore = num;
-        
-        }   else if (lineData[0] == "DATA"){
-            gm::GameObjectData object;
-            object.x = std::stof(lineData[1]);
-            object.y = std::stof(lineData[2]);
-            object.rot = std::stof(lineData[3]);
-            object.type = static_cast<gm::GameObjectType>(std::stoi(lineData[4]));
-            level.objectData.push_back(object);
-
-        }   else if (lineData[0] == "HIGH"){
-            std::pair<std::string, int> pair;
-            pair.first = lineData[1];
-            pair.second = std::stoi(lineData[2]);
-            level.highscores.push_back(pair);
-
-        }   else if (lineData[0] == "BACKGROUND"){
-            level.backgroundImage = static_cast<SpriteID>(stoi(lineData[1]));
-            
-        }   else if (lineData[0] == "END"){
-            level.levelPath = path;
-            file.close();
-            return true;
-
-        }   else if (lineData[0] == "START"){
-            level.startingTeekkaris.push_back(static_cast<gm::GameObjectType>(std::stoi(lineData[1])));
-        }
-    }
+    } catch (...) {return false;}
     file.close();
     return false; //Didn't end in END line, so propably some problems in file
 }
