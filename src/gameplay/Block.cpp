@@ -53,3 +53,17 @@ void Block::OnDeath() {
 
     //Spawn some particles
 }
+
+bool Block::ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) {
+    return r.ContainsCoordinates(blockData_.sprite, x_, y_, shapeData_.height, rot_, mouseCoords);
+}
+std::vector<sf::Sprite> Block::GetSprites(const RenderSystem& r) {
+    std::vector<sf::Sprite> s;
+    s.push_back(r.MakeSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_));
+    return s;
+    
+}
+bool Block::checkIntersection(sf::Sprite s, const RenderSystem& r) {
+    return r.IntersectWithSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_, s);
+    
+}

@@ -4,7 +4,6 @@
 #include <framework/RenderSystem.hpp>
 #include <utility>
 
-
 void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) const {
 
     //Create copies of the current view
@@ -300,4 +299,29 @@ void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfl
 
     CameraDraw(sp, camera);
 
+}
+
+bool RenderSystem::ContainsCoordinates(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, sf::Vector2f mouseCoords) const {
+    return MakeSprite(id, x, y, h, rot).getGlobalBounds().contains(mouseCoords);
+}
+
+sf::Sprite RenderSystem::MakeSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot) const {
+    sf::Sprite sp = resourceManager_.GetSprite(id);
+    float spw = sp.getLocalBounds().width;
+    float sph = sp.getLocalBounds().height;
+    sp.setOrigin(spw / 2, sph / 2);
+    sp.setPosition(x.f0, y.f0);
+    sp.rotate(rot.f0);
+    sp.scale(h.f0/sph,h.f0/sph);
+    return sp;
+}
+bool RenderSystem::IntersectWithSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, sf::Sprite sprite) const {
+    sf::Sprite sp = resourceManager_.GetSprite(id);
+    float spw = sp.getLocalBounds().width;
+    float sph = sp.getLocalBounds().height;
+    sp.setOrigin(spw / 2, sph / 2);
+    sp.setPosition(x.f0, y.f0);
+    sp.rotate(rot.f0);
+    sp.scale(h.f0/sph,h.f0/sph);
+    return sp.getGlobalBounds().intersects(sprite.getGlobalBounds());
 }

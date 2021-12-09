@@ -11,6 +11,7 @@
 #include <gameplay/Person.hpp>
 #include <ui/InputElement.hpp>
 #include <ui/DivElement.hpp>
+class Editor;
 
 class GameScreen : public Screen {
 public:

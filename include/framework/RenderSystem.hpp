@@ -66,8 +66,13 @@ public:
 
     /// Get the screen space coordinates of this world position when translated with a Camera
     sf::Vector2f GetRelativeCoords(sf::Vector2f coords, const Camera& camera) const;
-
-
+    
+    bool ContainsCoordinates(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, sf::Vector2f mouseCoords) const;
+    
+    sf::Sprite MakeSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot) const;
+    
+    
+    bool IntersectWithSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, sf::Sprite sprite) const;
 private:
 
     //Allow Application to set these values

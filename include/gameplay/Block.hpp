@@ -20,6 +20,9 @@ public:
 
     /// Do additional things when colliding
     virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact);
+    virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r);
+    virtual std::vector<sf::Sprite> GetSprites(const RenderSystem& r);
+    virtual bool checkIntersection(sf::Sprite s, const RenderSystem& r);
 
 protected:
     gm::BlockData blockData_;
