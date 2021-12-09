@@ -483,6 +483,7 @@ void GameScreen::addEditorPanel(){
     addEditorElementList();
 
     addBlocksToEditorElementList();
+    addProjectilesToEditorElementList();
 }
 
 void GameScreen::addEditorPanelBackground(){
@@ -746,6 +747,17 @@ void GameScreen::addBlocksToEditorElementList(){
         SpriteID icon = t.second.sprite;
         addEditorElementListLine(icon, text, [type, this](){
             this->GetEditor().SetSelectedElement(type);
+        });
+    }
+}
+
+void GameScreen::addProjectilesToEditorElementList(){
+    for(auto p: gm::teekkaris){
+        gm::GameObjectType type = p;
+        std::string text = gm::teekkariBodies.at(p).guildName;
+        SpriteID icon = SpriteID::teekkari_head1;
+        addEditorElementListLine(icon, text, [type, this](){
+            this->GetEditor().AddProjectile(type);
         });
     }
 }
