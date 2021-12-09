@@ -10,15 +10,15 @@ void Screen::Render(const RenderSystem& r){
         windowHeight_ = ui::windowHeight;
         for(const auto& e : menu_){
             e->OnWindowResize();
-            e->Render(r);
+            if(e->IsVisible()) e->Render(r);
         }
         if(messages_.size() > 0) for(const auto& e: messages_.front()){
             e->OnWindowResize();
-            e->Render(r);
+            if(e->IsVisible()) e->Render(r);
         }
     }else{
-        for(const auto& e : menu_) e->Render(r);
-        if(messages_.size() > 0) for(const auto& e: messages_.front()) e->Render(r);
+        for(const auto& e : menu_) if(e->IsVisible()) e->Render(r);
+        if(messages_.size() > 0) for(const auto& e: messages_.front()) if(e->IsVisible()) e->Render(r);
     }
 }
 

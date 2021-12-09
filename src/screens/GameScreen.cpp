@@ -484,6 +484,8 @@ void GameScreen::addEditorPanel(){
     addEditorMaxScoreLabel();
     addEditorRequiredScoreLabel();
     addEditorRequiredScoreInput();
+    addEditorTimeLimitLabel();
+    addEditorTimeLimitInput();
     addEditorElementList();
 
     addBlocksToEditorElementList();
@@ -579,6 +581,8 @@ void GameScreen::addDropDownContents(std::shared_ptr<TextElement> e){
         o->SetMouseDownHandler([this, i, e](){
             this->setSelectedGameMode((LevelMode)i);
             e->SetText(" game mode: " + levelModeNames[i]);
+            if(i == LevelMode::time_trial) this->ShowTimeTrialOptions();
+            else this->HideTimeTrialOptions();
         });
         auto wo = std::weak_ptr<TextElement>(o);
         o->SetMouseEnterHandler([wo](){wo.lock()->SetBackgroundColor(ui::highlightColor);});
@@ -663,6 +667,7 @@ void GameScreen::addEditorRequiredScoreInput(){
         calcEditorContentWidth()
     );
     editorRequiredScoreInput_->SetFontSize(editorFontSize_);
+    editorRequiredScoreInput_->SetText(getString(level_.perfectScore));
     auto w = std::weak_ptr<InputElement>(editorRequiredScoreInput_);
     editorRequiredScoreInput_->SetWindowResizeHandler([this, w](){
         auto i = w.lock();
@@ -677,6 +682,61 @@ void GameScreen::addEditorRequiredScoreInput(){
 
 ui::pfloat GameScreen::calcEditorRequiredScoreInputTop() const {
     return (ui::toVHFloat(calcEditorRequiredScoreLabelTop()) + ui::toVHFloat(editorFontSize_)) VH;
+}
+
+void GameScreen::addEditorTimeLimitLabel(){
+    auto e = std::make_shared<TextLine>(
+        calcEditorTimeLimitLabelTop(), 
+        calcEditorContentLeft(), 
+        editorFontSize_, 
+        calcEditorContentWidth(), 
+        " time limit in seconds:"
+    );
+    e->SetRelativeFontSize(editorFontSize_);
+    e->Hide();
+    auto we = std::weak_ptr<TextLine>(e);
+    e->SetWindowResizeHandler([this, we](){
+        auto e = we.lock();
+        e->SetPosition(
+            this->calcEditorContentLeft(), 
+            this->calcEditorTimeLimitLabelTop()
+        );
+        e->SetWidth(this->calcEditorContentWidth());
+    });
+    timeTrialElements_.push_back(e);
+    menu_.push_back(e);
+}
+
+ui::pfloat GameScreen::calcEditorTimeLimitLabelTop() const {
+    return (ui::toVHFloat(calcEditorRequiredScoreInputTop()) 
+        + ui::toVHFloat(editorFontSize_) * 2 + ui::toVHFloat(editorPanelSpacing_)) VH;
+}
+
+void GameScreen::addEditorTimeLimitInput(){
+    editorTimeInput_ = std::make_shared<InputElement>(
+        calcEditorTimeLimitInputTop(), 
+        calcEditorContentLeft(), 
+        editorFontSize_ * 2, 
+        calcEditorContentWidth()
+    );
+    editorTimeInput_->SetFontSize(editorFontSize_);
+    editorTimeInput_->SetText(getString(level_.timeLimit));
+    editorTimeInput_->Hide();
+    auto w = std::weak_ptr<InputElement>(editorTimeInput_);
+    editorTimeInput_->SetWindowResizeHandler([this, w](){
+        auto i = w.lock();
+        i->SetPosition(
+            this->calcEditorContentLeft(), 
+            this->calcEditorTimeLimitInputTop()
+        );
+        i->SetWidth(this->calcEditorContentWidth());
+    });
+    timeTrialElements_.push_back(editorTimeInput_);
+    menu_.push_back(editorTimeInput_);
+}
+
+ui::pfloat GameScreen::calcEditorTimeLimitInputTop() const {
+    return (ui::toVHFloat(calcEditorTimeLimitLabelTop()) + ui::toVHFloat(editorFontSize_)) VH;
 }
 
 void GameScreen::addEditorElementList(){
@@ -704,8 +764,8 @@ void GameScreen::addEditorElementList(){
 }
 
 ui::pfloat GameScreen::calcEditorElementListTop() const {
-    return (ui::toVHFloat(calcEditorRequiredScoreInputTop()) + ui::toVHFloat(editorFontSize_) * 2 
-        + ui::toVHFloat(editorPanelSpacing_)) VH;
+    return (ui::toVHFloat(timeTrial_ ? calcEditorTimeLimitInputTop() : calcEditorRequiredScoreInputTop()) 
+        + ui::toVHFloat(editorFontSize_) * 2 + ui::toVHFloat(editorPanelSpacing_)) VH;
 }
 
 ui::pfloat GameScreen::calcEditorElementListHeight() const {
@@ -774,6 +834,18 @@ void GameScreen::addFuksiToEditorElementList(){
     addEditorElementListLine(icon, text, [type, this](){
         this->GetEditor().SetSelectedElement(type);
     });
+}
+
+void GameScreen::ShowTimeTrialOptions(){
+    timeTrial_ = true;
+    for(auto e: timeTrialElements_) e->Show();
+    editorElementList_->OnWindowResize();
+}
+
+void GameScreen::HideTimeTrialOptions(){
+    timeTrial_ = false;
+    for(auto e: timeTrialElements_) e->Hide();
+    editorElementList_->OnWindowResize();
 }
 
 bool GameScreen::OnMouseScroll(float delta, float xw, float yh) {

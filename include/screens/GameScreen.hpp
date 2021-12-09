@@ -66,6 +66,10 @@ public:
 
     bool IsInEditorMode() const {return editorMode_;}
 
+    void ShowTimeTrialOptions();
+
+    void HideTimeTrialOptions();
+
     /**
      * button number is the number of the button from left starting from 1.
      */
@@ -124,6 +128,10 @@ public:
 
     ui::pfloat calcEditorRequiredScoreInputTop() const;
 
+    ui::pfloat calcEditorTimeLimitLabelTop() const;
+
+    ui::pfloat calcEditorTimeLimitInputTop() const;
+
     ui::pfloat calcEditorElementListTop() const;
 
     ui::pfloat calcEditorElementListHeight() const;
@@ -162,6 +170,9 @@ private:
     std::shared_ptr<TextLine> editorMaxScoreLabel_;
     std::shared_ptr<InputElement> editorRequiredScoreInput_;
     std::shared_ptr<ListElement> editorElementList_;
+    bool timeTrial_ = false;
+    std::vector<std::shared_ptr<Element>> timeTrialElements_;
+    std::shared_ptr<InputElement> editorTimeInput_;
 
     /**
      * button number is the number of the button from left starting from 1.
@@ -220,6 +231,10 @@ private:
     void addEditorRequiredScoreLabel();
 
     void addEditorRequiredScoreInput();
+
+    void addEditorTimeLimitLabel();
+
+    void addEditorTimeLimitInput();
 
     void addEditorElementList();
 

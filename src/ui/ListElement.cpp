@@ -134,3 +134,12 @@ void ListElement::SetCropArea(){
     Element::SetCropArea();
     updateValues();
 }
+
+void ListElement::Hide(){
+    visible_ = false;
+    for(auto t: elements_) t.second->Hide();
+}
+void ListElement::Show(){
+    visible_ = true;
+    for(auto t: elements_) t.second->Show();
+}

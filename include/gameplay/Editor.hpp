@@ -23,6 +23,8 @@ public:
     void RemoveProjectile(std::size_t index){
         std::cout << "removed " << index << std::endl;
     }
+
+    Level GetLevel() const {return level_;}
 };
 
 #endif
