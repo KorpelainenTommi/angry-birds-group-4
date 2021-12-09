@@ -92,6 +92,7 @@ void Block::OnDeath() {
     ss << points;
     textP.SetText(ss.str());
 
+
 }
 bool Block::ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) {
     return r.ContainsCoordinates(blockData_.sprite, x_, y_, shapeData_.height, rot_, mouseCoords);
