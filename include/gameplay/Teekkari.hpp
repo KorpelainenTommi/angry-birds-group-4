@@ -122,7 +122,7 @@ public:
         b2FixtureDef fixture;
         b2FixtureUserData userData;
         userData.data = this;
-        fixture.density = metalData.density;
+        fixture.density = metalData.density * 0.04F;
         fixture.friction = metalData.friction;
         fixture.restitution = metalData.restitution;
         fixture.filter.groupIndex = -5;
@@ -132,7 +132,7 @@ public:
 
         hp_ = 10;
 
-        Angular(900.0F);
+        Angular(40.0F);
 
         Record();
     }
@@ -163,7 +163,7 @@ protected:
         //Deal extra damage to wood
         if(gm::GetObjectGroup(other.GetObjectType()) == gm::GameObjectGroup::block) {
             if(gm::blockTypes.at(other.GetObjectType()).material == gm::BlockMaterial::wood) {
-                other.DealDamage(200);
+                other.DealDamage(1000);
             }
         }
     }
@@ -254,7 +254,7 @@ protected:
         if(abilityUsed_ && wrenchesShot_ < 3 && game_.GetTime() - lastShotTime_ > shootingInterval_) {
             int id = game_.AddObject(std::make_unique<AbilityWrench>(game_, x_ + targetDir.x * 0.5F, y_ + targetDir.y * 0.5F, 0.0F));
             AbilityWrench& wrench = (AbilityWrench&)game_.GetObject(id);
-            wrench.Impulse({5000.0F * targetDir.x, 5000.0F * targetDir.y});
+            wrench.Impulse({250.0F * targetDir.x, 250.0F * targetDir.y});
             lastShotTime_ = game_.GetTime();
             wrenchesShot_++;
         }
