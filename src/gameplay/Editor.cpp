@@ -105,3 +105,19 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
     
 }
 
+
+Level Editor::GetLevel() const {
+    return level_;
+}
+
+void Editor::SaveLevel() {
+    level_.objectData.clear();
+    for(auto& obj : objects_) {
+        gm::GameObjectData data = {obj.second->GetX().f0,obj.second->GetY().f0,obj.second->GetRot().f0,obj.second->GetObjectType()};
+        level_.objectData.push_back(data);
+    }
+    level_.startingTeekkaris.clear();
+    for(auto& teekkari : teekkarisLeft_) {
+        level_.startingTeekkaris.push_back(teekkari.objType);
+    }
+}

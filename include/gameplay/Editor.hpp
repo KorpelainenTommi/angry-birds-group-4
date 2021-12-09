@@ -23,7 +23,9 @@ public:
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
     
-    Level GetLevel() const {return level_;}
+    Level GetLevel() const;
+    
+    void SaveLevel();
     
 private:
     gm::GameObjectType selectedElement_;
