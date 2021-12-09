@@ -120,10 +120,11 @@ void GameScreen::addEditorTopLeftButtons(){
         auto sb = startButton.lock();
         if(sb->GetIcon() == SpriteID::ui_button_resume){
             sb->SetIcon(SpriteID::ui_button_restart);
-            //resume editor here
+            this->GetEditor().Resume();
         }else{
             sb->SetIcon(SpriteID::ui_button_resume);
-            //restart and pause Editor here
+            this->GetEditor().Restart();
+            this->GetEditor().Pause();
         }
     });
     addTopLeftButton(3, [this](){
