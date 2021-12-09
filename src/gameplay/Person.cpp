@@ -345,3 +345,35 @@ void Person::Render(const RenderSystem& r) {
 float Person::GetMass() const { return ph::personMass; }
 void Person::Impulse(const b2Vec2& f)
 { headBody_->ApplyLinearImpulseToCenter(f, true); mainBody_->ApplyLinearImpulseToCenter(f, true); }
+
+bool Person::ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) {
+    SpriteID arm = data_.face.bType ? data_.body.armb : data_.body.arm;
+    return r.ContainsCoordinates(arm, armLX_, armLY_, armHeight, armLRot_, mouseCoords)
+            || r.ContainsCoordinates(data_.body.leg, legLX_, legLY_, legHeight, legLRot_, mouseCoords)
+            || r.ContainsCoordinates(data_.body.torso, x_, y_, torsoHeight, rot_, mouseCoords)
+            || r.ContainsCoordinates(data_.body.leg, legRX_, legRY_, legHeight, legRRot_, mouseCoords)
+            || r.ContainsCoordinates(arm, armRX_, armRY_, armHeight, armRRot_, mouseCoords)
+            || r.ContainsCoordinates(data_.face.face, headX_, headY_, headHeight, headRot_, mouseCoords);
+}
+std::vector<sf::Sprite> Person::GetSprites(const RenderSystem& r) {
+    SpriteID arm = data_.face.bType ? data_.body.armb : data_.body.arm;
+    std::vector<sf::Sprite> s;
+    s.push_back(r.MakeSprite(arm, armLX_, armLY_, armHeight, armLRot_));
+    s.push_back(r.MakeSprite(data_.body.leg, legLX_, legLY_, legHeight, legLRot_));
+    s.push_back(r.MakeSprite(data_.body.torso, x_, y_, torsoHeight, rot_));
+    s.push_back(r.MakeSprite(data_.body.leg, legRX_, legRY_, legHeight, legRRot_));
+    s.push_back(r.MakeSprite(arm, armRX_, armRY_, armHeight, armRRot_));
+    s.push_back(r.MakeSprite(data_.face.face, headX_, headY_, headHeight, headRot_));
+    return s;
+    
+}
+bool Person::checkIntersection(sf::Sprite s, const RenderSystem& r) {
+    SpriteID arm = data_.face.bType ? data_.body.armb : data_.body.arm;
+    return r.IntersectWithSprite(arm, armLX_, armLY_, armHeight, armLRot_, s)
+            || r.IntersectWithSprite(data_.body.leg, legLX_, legLY_, legHeight, legLRot_, s)
+            || r.IntersectWithSprite(data_.body.torso, x_, y_, torsoHeight, rot_, s)
+            || r.IntersectWithSprite(data_.body.leg, legRX_, legRY_, legHeight, legRRot_, s)
+            || r.IntersectWithSprite(arm, armRX_, armRY_, armHeight, armRRot_, s)
+            || r.IntersectWithSprite(data_.face.face, headX_, headY_, headHeight, headRot_, s);
+    
+}

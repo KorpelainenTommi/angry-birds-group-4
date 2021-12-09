@@ -21,7 +21,9 @@ public:
 
     virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact);
     virtual void Impulse(const b2Vec2& f);
-
+    virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r);
+    virtual std::vector<sf::Sprite> GetSprites(const RenderSystem& r);
+    virtual bool checkIntersection(sf::Sprite s, const RenderSystem& r);
 protected:
 
     // Data defining the look and sound of this person
