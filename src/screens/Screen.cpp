@@ -36,6 +36,7 @@ bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
         for(std::size_t i = m.size(); i > 0;){
             if(m[--i]->OnMouseDown(button, xw, yh)){
                 setFocusedElement(m[i]);
+                if(m[i]->ClickSoundShouldBePlayed()) PlayClickSound();
                 m[i]->ExecuteOnMouseDown();
                 return true;
             }
@@ -44,6 +45,7 @@ bool Screen::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh){
     for(std::size_t i = menu_.size(); i > 0;){
         if(menu_[--i]->OnMouseDown(button, xw, yh)){
             setFocusedElement(menu_[i]);
+            if(menu_[i]->ClickSoundShouldBePlayed()) PlayClickSound();
             menu_[i]->ExecuteOnMouseDown();
             return true;
         }
@@ -127,7 +129,7 @@ void Screen::Alert(std::string text){
     Alert(text, NULL);
 }
 
-void Screen::ClickSound() const {
+void Screen::PlayClickSound() const {
     app_.GetAudioSystem().PlaySound(SoundID::ui_click);
 }
 
