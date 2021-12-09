@@ -13,8 +13,8 @@ public:
         std::cout << "selected " << t << std::endl;
     }
 
-    void AddProjectile(gm::GameObjectType projectile){
-        //std::cout << "added " << icon << std::endl;
+    void AddProjectile(gm::GameObjectType t){
+        std::cout << "added " << t << std::endl;
     }
 
     void RemoveProjectile(std::size_t index){

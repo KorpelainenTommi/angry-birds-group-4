@@ -228,6 +228,8 @@ private:
     );
 
     void addBlocksToEditorElementList();
+
+    void addProjectilesToEditorElementList();
 };
 
 
