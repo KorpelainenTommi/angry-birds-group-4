@@ -283,7 +283,8 @@ ui::pfloat GameScreen::calcVictoryMessageStarTop() const {
 }
 
 ui::pfloat GameScreen::calcVictoryMessageStarLeft(char starNumber) const {
-    return (50 + ui::toVWFloat(victoryMessageStarSize_) * (starNumber - 2.5)) VW;
+    return (50 + ui::toVWFloat(victoryMessageStarSize_) * (starNumber - 2.5) 
+        + ui::toVWFloat(victoryMessageStarSpacing_) * (starNumber - 2)) VW;
 }
 
 void GameScreen::addVictoryMessageScore(int score, std::vector<std::shared_ptr<Element>>& v){
