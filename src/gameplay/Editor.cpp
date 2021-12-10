@@ -57,13 +57,13 @@ bool Editor::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
     for(auto& obj : objects_) {
         if(obj.second->ContainsCoordinates(sf::Vector2f(xPos,yPos), r)) id = obj.first;
     }
-    if(button == sf::Mouse::Button::Left) {
+    if(button == sf::Mouse::Button::Left && isPaused_) {
         if((dragObjectID_ = id) == -1) {
             dragObjectID_ = CreateObject(selectedElement_, xPos, yPos, 0);
         }
 
     }
-    else if(button == sf::Mouse::Button::Right) {
+    else if(button == sf::Mouse::Button::Right && isPaused_) {
         DestroyObject(id);
 
     }
@@ -75,7 +75,7 @@ bool Editor::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
 
 
 bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
-    if(button == sf::Mouse::Button::Left) {
+    if(button == sf::Mouse::Button::Left && isPaused_) {
         const RenderSystem r = screen_.GetApplication().GetRenderSystem();
         if(dragObjectID_ == -1) return true;
         std::vector<sf::Sprite> sprites =  GetObject(dragObjectID_).GetSprites(r);
@@ -135,4 +135,9 @@ bool Editor::OnKeyDown(const sf::Event::KeyEvent& key){
     }
     else return false;
     return true;
+}
+
+void Editor::Resume() {
+    SaveLevel();
+    Game::Resume();
 }

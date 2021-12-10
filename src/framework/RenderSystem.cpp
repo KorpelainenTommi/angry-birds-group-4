@@ -311,9 +311,9 @@ sf::Sprite RenderSystem::MakeSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph:
     float spw = sp.getLocalBounds().width;
     float sph = sp.getLocalBounds().height;
     sp.setOrigin(spw / 2, sph / 2);
-    sp.setPosition(x.f0, y.f0);
-    sp.rotate(rot.f0);
-    sp.scale(h.f0/sph,h.f0/sph);
+    sp.setPosition(x.f1, y.f1);
+    sp.rotate(rot.f1);
+    sp.scale(h.f1/sph,h.f1/sph);
     return sp;
 }
 bool RenderSystem::IntersectWithSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, sf::Sprite sprite) const {
@@ -321,9 +321,9 @@ bool RenderSystem::IntersectWithSprite(SpriteID id, ph::tfloat x, ph::tfloat y, 
     float spw = sp.getLocalBounds().width;
     float sph = sp.getLocalBounds().height;
     sp.setOrigin(spw / 2, sph / 2);
-    sp.setPosition(x.f0, y.f0);
-    sp.rotate(rot.f0);
-    sp.scale(h.f0/sph,h.f0/sph);
+    sp.setPosition(x.f1, y.f1);
+    sp.rotate(rot.f1);
+    sp.scale(h.f1/sph,h.f1/sph);
     return sp.getGlobalBounds().intersects(sprite.getGlobalBounds());
 }
 bool RenderSystem::CheckGround(sf::Sprite s) const {

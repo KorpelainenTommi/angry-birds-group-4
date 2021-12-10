@@ -70,7 +70,7 @@ public:
     void Pause();
 
     /// UI uses this to continue physics simulation after pausing it
-    void Resume();
+    virtual void Resume();
 
     void Restart();
 

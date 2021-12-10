@@ -18,6 +18,7 @@ public:
 
     void RemoveProjectile(std::size_t index);
     
+    virtual void Resume();
     
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
