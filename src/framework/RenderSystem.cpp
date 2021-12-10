@@ -37,6 +37,19 @@ sf::Vector2f RenderSystem::GetRelativeCoords(sf::Vector2f coords, const Camera& 
     return sf::Vector2f(((float)pixels.x)/WW,((float)pixels.y)/HH);
 }
 
+//Ignores rotation for now
+sf::Vector2f RenderSystem::GetAbsCoords(sf::Vector2f coords, const Camera& camera) const {
+
+    float cw = camera.zoom * ph::fullscreenPlayArea;
+    float ch = cw / ui::aspectRatio;
+
+    float xOfs = (coords.x - 0.5F) * cw;
+    float yOfs = (0.5F - coords.y) * ch;
+
+    return sf::Vector2f(camera.x + xOfs, camera.y + yOfs);
+
+}
+
 
 void RenderSystem::RenderRelative(sf::Shape& shape, const sf::Color& color, 
 ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {

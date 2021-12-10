@@ -1,4 +1,5 @@
 #include <gameplay/Editor.hpp>
+#include <box2d/b2_body.h>
 #include <iostream>
 
 Editor::Editor(GameScreen &s, Level level): Game(s, level) {
@@ -64,9 +65,11 @@ bool Editor::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
 
     }
     else if(button == sf::Mouse::Button::Right && isPaused_) {
-        levelMaxScore_ -= gm::GetObjectScore(GetObject(id).GetObjectType());
-        screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
-        DestroyObject(id);
+        if(id != -1) {
+            levelMaxScore_ -= gm::GetObjectScore(GetObject(id).GetObjectType());
+            screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
+            DestroyObject(id);
+        }
     }
     else {
         return Game::OnMouseDown(button, xw, yh);
@@ -80,6 +83,7 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
         const RenderSystem r = screen_.GetApplication().GetRenderSystem();
         if(dragObjectID_ == -1) return true;
         std::vector<sf::Sprite> sprites =  GetObject(dragObjectID_).GetSprites(r);
+        std::vector<b2Body*> bodies = GetObject(dragObjectID_).GetPhysBodies();
         for(auto& s : sprites) {
             if(r.CheckGround(s)) {
                 DestroyObject(dragObjectID_);
@@ -89,8 +93,8 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
         }
         for(auto& obj : objects_) {
             if(dragObjectID_ != obj.first) {
-                for(auto& s : sprites) {
-                    if(obj.second->checkIntersection(s,r)) {
+                for(auto b : bodies) {
+                    if(obj.second->CheckIntersection(b)) {
                         DestroyObject(dragObjectID_);
                         dragObjectID_ = -1;
                         return true;

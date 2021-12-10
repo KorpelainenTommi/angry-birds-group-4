@@ -3,9 +3,12 @@
 #include <gameplay/Block.hpp>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_shape.h>
+#include <box2d/b2_body.h>
+#include <box2d/b2_api.h>
 #include <ui/UIConstants.hpp>
 #include <sstream>
 #include <cmath>
+#include <iostream>
 
 Block::Block(Game& game, gm::GameObjectType type, float x, float y, float rot) : 
     PhysObject(game, type, x, y, rot), blockData_(gm::blockTypes.at(type)), shapeData_(gm::shapeProperties.at(blockData_.shape)),
@@ -94,16 +97,33 @@ void Block::OnDeath() {
 
 
 }
+
 bool Block::ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) {
-    return r.ContainsCoordinates(blockData_.sprite, x_, y_, shapeData_.height, rot_, mouseCoords);
+
+    auto absCoords = mouseCoords;
+    return mainBody_->GetFixtureList()[0].TestPoint({absCoords.x, absCoords.y});
+
 }
+
 std::vector<sf::Sprite> Block::GetSprites(const RenderSystem& r) {
     std::vector<sf::Sprite> s;
     s.push_back(r.MakeSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_));
     return s;
     
 }
-bool Block::checkIntersection(sf::Sprite s, const RenderSystem& r) {
+
+bool Block::CheckIntersection(sf::Sprite s, const RenderSystem& r) {
     return r.IntersectWithSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_, s);
     
+}
+
+
+std::vector<b2Body*> Block::GetPhysBodies() {
+    std::vector<b2Body*> vec;
+    vec.push_back(mainBody_);
+    return vec;
+}
+
+bool Block::CheckIntersection(b2Body* other) {
+    return b2TestOverlap(mainBody_->GetFixtureList()[0].GetShape(), 0, other->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), other->GetTransform());
 }

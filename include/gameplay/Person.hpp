@@ -33,7 +33,11 @@ public:
     virtual void Impulse(const b2Vec2& f);
     virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r);
     virtual std::vector<sf::Sprite> GetSprites(const RenderSystem& r);
-    virtual bool checkIntersection(sf::Sprite s, const RenderSystem& r);
+    virtual bool CheckIntersection(sf::Sprite s, const RenderSystem& r);
+
+    virtual std::vector<b2Body*> GetPhysBodies();
+    virtual bool CheckIntersection(b2Body* other);
+
 protected:
 
     // Data defining the look and sound of this person

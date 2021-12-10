@@ -5,6 +5,7 @@
 #include <gameplay/Game.hpp>
 #include <gameplay/Physics.hpp>
 #include <gameplay/GameObjectTypes.hpp>
+#include <box2d/b2_body.h>
 #include <vector>
 /// Base class for gameobjects
 class GameObject : public UpdateListener {
@@ -52,7 +53,11 @@ public:
     
     virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) { return false; }
     virtual std::vector<sf::Sprite> GetSprites(const RenderSystem& r) { return std::vector<sf::Sprite>(); }
-    virtual bool checkIntersection(sf::Sprite s, const RenderSystem& r) { return false; }
+    virtual bool CheckIntersection(sf::Sprite s, const RenderSystem& r) { return false; }
+
+    virtual std::vector<b2Body*> GetPhysBodies() { return std::vector<b2Body*>(); }
+    virtual bool CheckIntersection(b2Body* other) { return false; }
+
 protected:
 
     //Allow Game to modify gameID_ when taking ownership of an object
