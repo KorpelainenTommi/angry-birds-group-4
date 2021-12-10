@@ -62,10 +62,12 @@ std::string FileManager::GenerateFilepath(const std::string folder) const {
 
 }
 
-bool FileManager::SaveLevel(const Level& level) const {
+bool FileManager::SaveLevel(Level& level) const {
     std::string path = level.levelPath;
-    if(path.empty())
+    if(path.empty()) {
         path = (level.levelMode == LevelMode::endless) ? GenerateFilepath(endlessPath) : GenerateFilepath(levelPath);
+        level.levelPath = path;
+    }
     return SaveLevel(level, path);
 }
 

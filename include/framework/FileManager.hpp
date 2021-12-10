@@ -32,7 +32,7 @@ public:
     std::vector<Level> ListEndless() const;
 
     /// Save a level. If the level already existed, this will overwrite it
-    bool SaveLevel(const Level& level) const;
+    bool SaveLevel(Level& level) const;
 
     /// Delete a level
     void DeleteLevel(const Level& level) const;
