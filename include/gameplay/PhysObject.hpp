@@ -60,12 +60,19 @@ public:
 
     /// Add explosive force away from center
     virtual void Explosion(const b2Vec2& center, float magnitude);
+    
+    /// Deal explosive damage, that decays with distance
+    void PhysObject::ExplosionDamage(const b2Vec2& center, float damage);
 
     /// Explicitly deal damage to this objects hp
     virtual void DealDamage(float damage);
 
     virtual float GetHP() const;
     virtual float GetMass() const;
+
+    virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r);
+    virtual std::vector<b2Body*> GetPhysBodies();
+    virtual bool CheckIntersection(b2Body* other);
 
 
 

@@ -98,12 +98,6 @@ void Block::OnDeath() {
 
 }
 
-bool Block::ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) {
-
-    auto absCoords = mouseCoords;
-    return mainBody_->GetFixtureList()[0].TestPoint({absCoords.x, absCoords.y});
-
-}
 
 std::vector<sf::Sprite> Block::GetSprites(const RenderSystem& r) {
     std::vector<sf::Sprite> s;
@@ -115,15 +109,4 @@ std::vector<sf::Sprite> Block::GetSprites(const RenderSystem& r) {
 bool Block::CheckIntersection(sf::Sprite s, const RenderSystem& r) {
     return r.IntersectWithSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_, s);
     
-}
-
-
-std::vector<b2Body*> Block::GetPhysBodies() {
-    std::vector<b2Body*> vec;
-    vec.push_back(mainBody_);
-    return vec;
-}
-
-bool Block::CheckIntersection(b2Body* other) {
-    return b2TestOverlap(mainBody_->GetFixtureList()[0].GetShape(), 0, other->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), other->GetTransform());
 }

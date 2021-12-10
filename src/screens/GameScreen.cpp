@@ -120,7 +120,7 @@ void GameScreen::addEditorTopLeftButtons(){
         auto sb = startButton.lock();
         if(sb->GetIcon() == SpriteID::ui_button_resume){
             sb->SetIcon(SpriteID::ui_button_restart);
-            this->GetEditor().Resume();
+            this->GetEditor().Play();
         }else{
             sb->SetIcon(SpriteID::ui_button_resume);
             this->GetEditor().Restart();
@@ -163,8 +163,19 @@ bool GameScreen::SaveEditor(){
             return false;
         }
     }
+
+    if(GetEditor().NoFuksis()) {
+        Alert("Level must contain at least 1 Fuksi");
+        return false;
+    }
+
+    if(selectedGameMode_ != LevelMode::endless && GetEditor().NoTeekkaris()) {
+        Alert("Level must contain at least one starting Teekkari");
+        return false;
+    }
+
     GetEditor().SaveLevel();
-    Level lev = GetEditor().GetLevel();
+    Level& lev = GetEditor().GetLevel();
     lev.levelName = name;
     lev.levelMode = selectedGameMode_;
     lev.perfectScore = score;

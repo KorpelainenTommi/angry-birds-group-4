@@ -110,6 +110,9 @@ public:
     /// Get a reference to the GameObject with this id
     GameObject& GetObject(int id);
 
+    /// Get a list of all objects
+    std::vector<GameObject*> GetObjects();
+
 
     /// Get the time in ticks
     unsigned int GetTicks() const;

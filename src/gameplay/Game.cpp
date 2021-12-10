@@ -59,6 +59,16 @@ GameObject& Game::GetObject(int id) {
     return *objects_[id];
 }
 
+std::vector<GameObject*> Game::GetObjects() {
+
+    std::vector<GameObject*> vec;
+    for(const auto& p : objects_) {
+        vec.push_back(p.second.get());
+    }
+    return vec;
+
+}
+
 int Game::AddObject(std::unique_ptr<GameObject> obj) {
     int id;
     switch (gm::GetObjectGroup(obj->objectType_)) {
@@ -167,7 +177,8 @@ void Game::Update() {
             if(NoFuksis()) {
                 if(level_.levelMode == LevelMode::endless) {
                     auto levels = screen_.GetApplication().GetFileManager().ListEndless();
-                    LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
+                    if(levels.empty()) screen_.OnGameCompleted(points_, level_.perfectScore);
+                    else LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
                 }
                 else if(level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0) {
                     float timeLeft = (float)(level_.timeLimit - GetTime()) / level_.timeLimit;

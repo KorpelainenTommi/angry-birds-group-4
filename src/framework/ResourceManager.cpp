@@ -34,6 +34,9 @@ const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
     {SoundID::cannon_load, "data/audio/cannon_load.wav"},
     {SoundID::cannon_shot, "data/audio/cannon_shot.wav"},
 
+    {SoundID::tnt_explode1, "data/audio/tnt_explode1.wav"},
+    {SoundID::tnt_explode2, "data/audio/tnt_explode2.wav"},    
+
     {SoundID::cow_moo, "data/audio/cow_moo.wav"},
     {SoundID::cow_death, "data/audio/cow_death.wav"},
 
@@ -57,9 +60,8 @@ const std::pair<int, std::string> ResourceManager::texturePaths_[] = {
     {5, "data/textures/stars.png"},
     {6, "data/textures/fuksi_bodies.png"},
     {7, "data/textures/fuksi_heads.png"},
-    {8, "data/textures/background0.jpg"},
-    {9, "data/textures/ground0.jpg"},
-    {10, "data/textures/explosion0.png"},
+    {8, "data/textures/background.jpg"},
+    {10, "data/textures/explosion.png"},
     {11, "data/textures/poof.png"}
 };
 
@@ -250,7 +252,7 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
 };
 
 const ResourceManager::AnimationMapping ResourceManager::animationMaps_[] = {
-    {AnimationID::explosion, 10, {88, 88}, {0, 0, 616, 352}},
+    {AnimationID::explosion, 10, {88, 88}, {0, 0, 616, 264}},
     {AnimationID::cannon_explosion, 3, {156, 138}, {0, 492, 312, 276}},
     {AnimationID::particles_poof, 11, {128, 128}, {0, 0, 512, 512}},
     {AnimationID::matrix_bug, 3, {128, 128}, {384, 640, 384, 128}}

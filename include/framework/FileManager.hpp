@@ -40,7 +40,7 @@ public:
 private:
 
     const std::string levelPath = "data/levels/";
-    const std::string endlessPath = "data/levels/endless";
+    const std::string endlessPath = "data/levels/endless/";
 
     /// Generate a unique filepath for a level file
     std::string GenerateFilepath(const std::string folder) const;

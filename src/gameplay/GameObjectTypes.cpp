@@ -5,6 +5,7 @@
 #include <gameplay/Ground.hpp>
 #include <gameplay/Teekkari.hpp>
 #include <gameplay/Fuksi.hpp>
+#include <gameplay/Tnt.hpp>
 #include <iostream>
 #include <cmath>
 
@@ -158,7 +159,10 @@ const std::map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
     { gm::GameObjectType::thickplank_glass, { "large glass plank", SpriteID::glass_thickplank, gm::BlockMaterial::glass, gm::BlockShape::block_thickplank } },
     { gm::GameObjectType::thickplank_plastic, { "large plastic plank", SpriteID::plastic_thickplank, gm::BlockMaterial::plastic, gm::BlockShape::block_thickplank } },
     { gm::GameObjectType::thickplank_rubber, { "large rubber plank", SpriteID::rubber_thickplank, gm::BlockMaterial::rubber, gm::BlockShape::block_thickplank } },
-    { gm::GameObjectType::thickplank_concrete, { "large concrete plank", SpriteID::concrete_thickplank, gm::BlockMaterial::concrete, gm::BlockShape::block_thickplank } }
+    { gm::GameObjectType::thickplank_concrete, { "large concrete plank", SpriteID::concrete_thickplank, gm::BlockMaterial::concrete, gm::BlockShape::block_thickplank } },
+
+    //Props
+    { gm::GameObjectType::prop_tnt, { "tnt", SpriteID::tnt, gm::BlockMaterial::wood, gm::BlockShape::block_1x1 } }
 
 };
 
@@ -224,7 +228,11 @@ int gm::GetObjectScore(gm::GameObjectType type) {
 std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, float x, float y, float rot) {
 
     // Block
-    if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) return std::make_unique<Block>(game, type, x, y, rot);
+    if(type >= gm::GameObjectType::block_wood1x1 && type < gm::GameObjectType::cannon) {
+
+        if(type == gm::GameObjectType::prop_tnt) return std::make_unique<Tnt>(game, x, y, rot);
+        else return std::make_unique<Block>(game, type, x, y, rot);
+    }
 
     //Teekkaris
     if(type >= gm::GameObjectType::teekkari_ik && type <= gm::GameObjectType::teekkari_professor) {

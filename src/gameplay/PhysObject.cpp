@@ -26,6 +26,15 @@ void PhysObject::Explosion(const b2Vec2& center, float magnitude) {
     Impulse(direction);
 }
 
+void PhysObject::ExplosionDamage(const b2Vec2& center, float damage) {
+    b2Vec2 pos(x_, y_);
+    b2Vec2 direction = pos - center;
+    float distance = direction.Normalize();
+
+    float decay = std::exp(-ph::explosionDecay * distance);
+    DealDamage(decay * damage);
+}
+
 void PhysObject::DealDamage(float damage) {
     hp_ -= damage;
 }
@@ -95,4 +104,22 @@ void PhysObject::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2
     float dotV = std::abs(v.x * v2.x + v.y * v2.y);
     if(dotV > 0.5F && velocity.LengthSquared() > ph::damageTreshold) hp_ -= ph::damageScaling * velocity.Length() * 0.5F * (GetMass() + other.GetMass());
 
+}
+
+
+bool PhysObject::ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) {
+
+    auto absCoords = mouseCoords;
+    return mainBody_->GetFixtureList()[0].TestPoint({absCoords.x, absCoords.y});
+
+}
+
+std::vector<b2Body*> PhysObject::GetPhysBodies() {
+    std::vector<b2Body*> vec;
+    vec.push_back(mainBody_);
+    return vec;
+}
+
+bool PhysObject::CheckIntersection(b2Body* other) {
+    return b2TestOverlap(mainBody_->GetFixtureList()[0].GetShape(), 0, other->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), other->GetTransform());
 }

@@ -112,7 +112,7 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
 }
 
 
-Level Editor::GetLevel() const {
+Level& Editor::GetLevel() {
     return level_;
 }
 
@@ -143,8 +143,20 @@ bool Editor::OnKeyDown(const sf::Event::KeyEvent& key){
     return true;
 }
 
-void Editor::Resume() {
+
+
+void Editor::Restart() {
+    playMode_ = false;
+    Game::Restart();
+}
+
+void Editor::Play() {
     SaveLevel();
-    screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
-    Game::Resume();
+    playMode_ = true;
+    isPaused_ = false;
+}
+
+void Editor::Resume() {
+    if(playMode_) isPaused_ = false;
+    else isPaused_ = true;
 }

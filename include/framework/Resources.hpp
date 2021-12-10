@@ -338,7 +338,8 @@ enum SoundID {
     can_break,
 
     sofa_spring,
-    tnt_explode,
+    tnt_explode1,
+    tnt_explode2,
 
 
     //Cannon sounds
