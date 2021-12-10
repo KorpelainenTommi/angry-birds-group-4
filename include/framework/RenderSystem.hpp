@@ -20,13 +20,16 @@ public:
     /* Render a sprite in screen independent coordinates (meters). This is useful for game objects.
      * The shape is defined by the sprite itself.
      */
-    void RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color = sf::Color(255, 255, 255)) const;
+    void RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot,
+    const Camera& camera, const sf::Color& color = sf::Color(255, 255, 255)) const;
 
     /// Render a sprite in relative coordinates. This is useful for UI
-    void RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const sf::Color& color = sf::Color(255, 255, 255)) const;
+    void RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h,
+    const sf::Color& color = sf::Color(255, 255, 255)) const;
 
     /// Render a sprite in relative coordinates, but restrict drawing to a cropped portion
-    void RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea, const sf::Color& color = sf::Color(255, 255, 255)) const;
+    void RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h,
+    const ui::CropArea& cropArea, const sf::Color& color = sf::Color(255, 255, 255)) const;
 
     /// Render a single color rectangle in screen independent coordinates
     void RenderRect(const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const;
@@ -61,8 +64,9 @@ public:
     /// Render a single color oval in relative coordinates, but restrict drawing to a cropped portion
     void RenderOval(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const;
 
-    /// Not yet implemented, but can be done later
-    void RenderAnimation(AnimationID id, int frame, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {}
+    /// Render a frame from an animation
+    void RenderAnimation(AnimationID id, int frame, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot,
+    const Camera& camera, const sf::Color& color = sf::Color(255, 255, 255)) const;
 
     /// Get the screen space coordinates of this world position when translated with a Camera
     sf::Vector2f GetRelativeCoords(sf::Vector2f coords, const Camera& camera) const;
@@ -102,13 +106,16 @@ private:
     void CameraDraw(const sf::Drawable& shape, const Camera& camera) const;
 
     /// Resolve the pixel coordinates of this Shape, then draw it
-    void RenderRelative(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const;
+    void RenderRelative(sf::Shape& shape, const sf::Color& color,
+    ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const;
 
     /// Resolve the pixel coordinates of this Shape drawn with this CropArea
-    void RenderRelativeCrop(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const;
+    void RenderRelativeCrop(sf::Shape& shape, const sf::Color& color,
+    ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const;
     
     /// Resolve the camera position of this Shape, then translate it with a camera and draw it
-    void RenderAbs(sf::Shape& shape, const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const;
+    void RenderAbs(sf::Shape& shape, const sf::Color& color,
+    ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const;
     
 };
 

@@ -7,7 +7,7 @@
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_body.h>
 #include <string>
-#include <math.h>
+#include <cmath>
 
 class PhysParticle : public PhysObject {
 public:
@@ -45,7 +45,7 @@ public:
             opacity = t / ph::particleFadeTime;
             opacity *= opacity;
         }
-        r.RenderSprite(sprite_, x_, y_, size_, rot_, game_.GetCamera(), sf::Color(255, 255, 255, (int)roundf(opacity * 255)));
+        r.RenderSprite(sprite_, x_, y_, size_, rot_, game_.GetCamera(), sf::Color(255, 255, 255, (int)std::roundf(opacity * 255)));
     }
 
     virtual void Update() {
@@ -101,7 +101,7 @@ public:
             opacity = t / ph::particleFadeTime;
             opacity *= opacity;
         }
-        r.RenderText(text_, x_, y_, size_, rot_, game_.GetCamera(), sf::Color(color_.r, color_.g, color_.b, (int)roundf(opacity * 255)), FontID::magneto);
+        r.RenderText(text_, x_, y_, size_, rot_, game_.GetCamera(), sf::Color(color_.r, color_.g, color_.b, (int)std::roundf(opacity * 255)), FontID::magneto);
     }
 
     virtual void Update() {

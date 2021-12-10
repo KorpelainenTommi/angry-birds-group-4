@@ -63,7 +63,7 @@
 
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <math.h>
+#include <cmath>
 
 
 
@@ -105,13 +105,13 @@ namespace ph {
     const float collisionTreshold = 12.0F;
 
     /// Impulses below this don't cause damage
-    const float damageTreshold = 40.0F;
+    const float damageTreshold = 30.0F;
 
     /// The minimum amount of time to wait between hitsounds
     const float soundCooldown = 0.1F;
 
     /// A scaling factor applied to velocity when determining damage
-    const float damageScaling = 0.1F;
+    const float damageScaling = 0.18F;
 
     /// A particle will fade before despawning, start fading f seconds before despawn
     const float particleFadeTime = 0.5F;
@@ -137,8 +137,8 @@ namespace ph {
     /// Score from a Fuksi
     const int fuksiScore = 1000;
 
-    /// Mathematical constant pi
-    const float pi = 3.14159265F;
+    /// Mathematical constant pi (with max precision that float allows)
+    const float pi = 3.141592741F;
 
     /// Convert from Box2D angle (radians) to SFML rotation (degrees)
     inline float angToRot(float ang) { return -180 * ang / pi; }

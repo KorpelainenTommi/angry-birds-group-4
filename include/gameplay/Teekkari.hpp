@@ -6,6 +6,7 @@
 #include <gameplay/GameObjectTypes.hpp>
 #include <gameplay/PhysObject.hpp>
 #include <framework/RandomGen.hpp>
+#include <gameplay/Effect.hpp>
 #include <gameplay/Physics.hpp>
 #include <gameplay/Person.hpp>
 #include <box2d/b2_body.h>
@@ -78,6 +79,8 @@ public:
         Angular(rng::RandomInt(0, 1) ? (10000 + rng::RandomF() * 10000) : (-10000 - rng::RandomF() * 10000));
         Impulse({0, 14000.0F});
 
+        game_.GetAudioSystem().PlaySound(SoundID::cow_moo);
+
         Record();
     }
 
@@ -97,6 +100,12 @@ protected:
         //Moo
         //Spawn smoke
 
+        game_.GetAudioSystem().PlaySound(SoundID::cow_death);
+        game_.GetAudioSystem().PlaySound(SoundID::poof);
+        game_.AddObject(std::make_unique<Effect>(game_, AnimationID::particles_poof,
+        x_, y_, 0.0F, 2.0F, 60.0F, 0.2666666F));
+        
+        game_.CheckLevelEnd();
     }
 };
 
@@ -130,11 +139,14 @@ public:
         fixture.userData = userData;
         mainBody_->CreateFixture(&fixture);
 
-        hp_ = 10;
+        hp_ = 1;
 
         Angular(40.0F);
 
         Record();
+
+        game_.GetAudioSystem().PlaySound(SoundID::wrench_swish);
+
     }
 
     virtual void Render(const RenderSystem& r) {
@@ -150,13 +162,15 @@ protected:
     float creationTime_;
     virtual void OnDeath() {
 
-        //Moo
-        //Spawn smoke
+        game_.GetAudioSystem().PlaySound(SoundID::metal_hit);
+        game_.CheckLevelEnd();
+
     }
 
     virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
 
         PhysObject::OnCollision(velocity, other, contact);
+        hp_ = 0;
 
         //Collision sound
 
@@ -220,6 +234,14 @@ public:
     TIKTeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
 protected:
     virtual void Ability(float x, float y) {
+
+        game_.GetAudioSystem().PlaySound(SoundID::glitch_sound);
+        game_.AddObject(std::make_unique<Effect>(game_, AnimationID::matrix_bug,
+        x_, y_, 0.0F, 1.0F, 60.0F, 0.1F));
+        SetX(x_ + 8.0F);
+        game_.AddObject(std::make_unique<Effect>(game_, AnimationID::matrix_bug,
+        x_, y_, 0.0F, 1.0F, 60.0F, 0.1F));
+
 
     }
 };

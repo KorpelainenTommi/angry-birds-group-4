@@ -347,9 +347,14 @@ enum SoundID {
 
 
     //Teekkari sounds
+    poof,
     thud1,
     thud2,
     thud3,
+
+    smack1,
+    smack2,
+    smack3,
 
     grunt1,
     grunt2,
@@ -377,11 +382,13 @@ enum SoundID {
 
 
     //Teekkari abilities
-    gravity_shift,
+    gravity_shiftup,
+    gravity_shiftdown,
     glitch_sound,
     hand_whoosh,
     wrench_swish,
     cow_moo,
+    cow_death,
     thunder_static,
     thunder_strike,
     professor_oneliner,

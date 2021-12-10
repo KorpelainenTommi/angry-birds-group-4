@@ -6,7 +6,10 @@
 #include <box2d/b2_revolute_joint.h>
 #include <SFML/System/Vector2.hpp>
 #include <framework/RandomGen.hpp>
+#include <gameplay/Effect.hpp>
+#include <memory>
 #include <iostream>
+#include <cmath>
 
 
 Person::Person(Game& game, gm::GameObjectType type, float x, float y, float rot, bool mirrored, int collisionGroup) : 
@@ -259,6 +262,143 @@ void Person::Record() {
 
 }
 
+void Person::SetX(float x) {
+
+    float ofs = x - x_;
+
+    GameObject::SetX(x);
+
+    float y = mainBody_->GetPosition().y;
+    float a = mainBody_->GetAngle();
+    mainBody_->SetTransform({x, y}, a);
+
+    float armRX = armRBody_->GetPosition().x;
+    float armRY = armRBody_->GetPosition().y;
+    float armRA = armRBody_->GetAngle();
+    armRBody_->SetTransform({armRX+ofs, armRY}, armRA);
+
+    float armLX = armLBody_->GetPosition().x;
+    float armLY = armLBody_->GetPosition().y;
+    float armLA = armLBody_->GetAngle();
+    armLBody_->SetTransform({armLX+ofs, armLY}, armLA);
+
+    float legRX = legRBody_->GetPosition().x;
+    float legRY = legRBody_->GetPosition().y;
+    float legRA = legRBody_->GetAngle();
+    legRBody_->SetTransform({legRX+ofs, legRY}, legRA);
+
+    float legLX = legLBody_->GetPosition().x;
+    float legLY = legLBody_->GetPosition().y;
+    float legLA = legLBody_->GetAngle();
+    legLBody_->SetTransform({legLX+ofs, legLY}, legLA);
+
+    float headX = headBody_->GetPosition().x;
+    float headY = headBody_->GetPosition().y;
+    float headA = headBody_->GetAngle();
+    headBody_->SetTransform({headX+ofs, headY}, headA);
+
+    headX_ = headX_ + ofs;
+    armRX_ = armRX_ + ofs;
+    armLX_ = armLX_ + ofs;
+    legRX_ = legRX_ + ofs;
+    legLX_ = legLX_ + ofs;
+}
+
+void Person::SetY(float y) {
+
+    float ofs = y - y_;
+
+    GameObject::SetY(y);
+
+    float x = mainBody_->GetPosition().x;
+    float a = mainBody_->GetAngle();
+    mainBody_->SetTransform({x, y}, a);
+
+    float armRX = armRBody_->GetPosition().x;
+    float armRY = armRBody_->GetPosition().y;
+    float armRA = armRBody_->GetAngle();
+    armRBody_->SetTransform({armRX, armRY+ofs}, armRA);
+
+    float armLX = armLBody_->GetPosition().x;
+    float armLY = armLBody_->GetPosition().y;
+    float armLA = armLBody_->GetAngle();
+    armLBody_->SetTransform({armLX, armLY+ofs}, armLA);
+
+    float legRX = legRBody_->GetPosition().x;
+    float legRY = legRBody_->GetPosition().y;
+    float legRA = legRBody_->GetAngle();
+    legRBody_->SetTransform({legRX, legRY+ofs}, legRA);
+
+    float legLX = legLBody_->GetPosition().x;
+    float legLY = legLBody_->GetPosition().y;
+    float legLA = legLBody_->GetAngle();
+    legLBody_->SetTransform({legLX, legLY+ofs}, legLA);
+
+    float headX = headBody_->GetPosition().x;
+    float headY = headBody_->GetPosition().y;
+    float headA = headBody_->GetAngle();
+    headBody_->SetTransform({headX, headY+ofs}, headA);
+
+    headY_ = headY_ + ofs;
+    armRY_ = armRY_ + ofs;
+    armLY_ = armLY_ + ofs;
+    legRY_ = legRY_ + ofs;
+    legLY_ = legLY_ + ofs;
+}
+
+void Person::SetRotation(float rot) {
+
+    float r = rot - ph::angToRot(mainBody_->GetAngle());
+    GameObject::SetRotation(rot);
+
+    b2Vec2 headOfs = headBody_->GetPosition() - mainBody_->GetPosition();
+    b2Vec2 armROfs = armRBody_->GetPosition() - mainBody_->GetPosition();
+    b2Vec2 armLOfs = armLBody_->GetPosition() - mainBody_->GetPosition();
+    b2Vec2 legROfs = legRBody_->GetPosition() - mainBody_->GetPosition();
+    b2Vec2 legLOfs = legLBody_->GetPosition() - mainBody_->GetPosition();
+
+    float a = ph::rotToAng(r);
+
+    float headA = headBody_->GetAngle() + a;
+    float armRA = armRBody_->GetAngle() + a;
+    float armLA = armLBody_->GetAngle() + a;
+    float legRA = legRBody_->GetAngle() + a;
+    float legLA = legLBody_->GetAngle() + a;
+
+    sf::Vector2f headP = ph::rotateVector(headOfs.x, headOfs.y, r) + sf::Vector2f(x_, y_);
+    sf::Vector2f armRP = ph::rotateVector(armROfs.x, armROfs.y, r) + sf::Vector2f(x_, y_);
+    sf::Vector2f armLP = ph::rotateVector(armLOfs.x, armLOfs.y, r) + sf::Vector2f(x_, y_);
+    sf::Vector2f legRP = ph::rotateVector(legROfs.x, legROfs.y, r) + sf::Vector2f(x_, y_);
+    sf::Vector2f legLP = ph::rotateVector(legLOfs.x, legLOfs.y, r) + sf::Vector2f(x_, y_);
+
+    b2Vec2 p = mainBody_->GetPosition();
+    mainBody_->SetTransform(p, ph::rotToAng(rot));
+    headBody_->SetTransform({headP.x, headP.y}, headA);
+    armRBody_->SetTransform({armRP.x, armRP.y}, headA);
+    armLBody_->SetTransform({armLP.x, armLP.y}, headA);
+    legRBody_->SetTransform({legRP.x, legRP.y}, headA);
+    legLBody_->SetTransform({legLP.x, legLP.y}, headA);
+
+    headX_ = headP.x;
+    armRX_ = armRP.x;
+    armLX_ = armLP.x;
+    legRX_ = legRP.x;
+    legLX_ = legLP.x;
+
+    headY_ = headP.y;
+    armRY_ = armRP.y;
+    armLY_ = armLP.y;
+    legRY_ = legRP.y;
+    legLY_ = legLP.y;
+
+    headRot_ = ph::angToRot(headA);
+    armRRot_ = ph::angToRot(armRA);
+    armLRot_ = ph::angToRot(armLA);
+    legRRot_ = ph::angToRot(legRA);
+    legLRot_ = ph::angToRot(legLA);
+
+}
+
 void Person::Update() {
     //Record previous state
     this->Record();
@@ -307,6 +447,11 @@ void Person::Update() {
 
     if(offscreen || zerohp) { 
         this->OnDeath();
+
+        game_.GetAudioSystem().PlaySound(SoundID::poof);
+        game_.AddObject(std::make_unique<Effect>(game_, AnimationID::particles_poof,
+        x_, y_, 0.0F, 2.0F, 60.0F, 0.2666666F));
+
         game_.DestroyObject(gameID_); return;
     }
 }
@@ -317,7 +462,16 @@ void Person::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Cont
     if(game_.GetTime() - lastHitSound_ > ph::soundCooldown) {
         lastHitSound_ = game_.GetTime();
         SoundID sounds[] = { SoundID::thud1, SoundID::thud2, SoundID::thud3 };
-        game_.GetAudioSystem().PlaySound(sounds[rng::RandomInt(0, 2)], velocity.LengthSquared() / ph::damageTreshold);
+        SoundID sounds2[] = { SoundID::smack1, SoundID::smack2, SoundID::smack3 };
+        b2Vec2 v = {(other.GetObjectType() == gm::GameObjectType::ground_obj) ? 0 : other.GetX() - x_, other.GetY() - y_};
+        b2Vec2 v2 = velocity;
+        v.Normalize();
+        v2.Normalize();
+        float dotV = std::abs(v.x * v2.x + v.y * v2.y);
+        if(dotV > 0.5F) {
+            if(dotV * velocity.LengthSquared() < ph::damageTreshold * 2) game_.GetAudioSystem().PlaySound(sounds[rng::RandomInt(0, 2)], velocity.LengthSquared() / ph::damageTreshold);
+            else game_.GetAudioSystem().PlaySound(sounds2[rng::RandomInt(0, 2)], 1.0F);
+        }
     }
 
 }
@@ -377,3 +531,4 @@ bool Person::checkIntersection(sf::Sprite s, const RenderSystem& r) {
             || r.IntersectWithSprite(data_.face.face, headX_, headY_, headHeight, headRot_, s);
     
 }
+

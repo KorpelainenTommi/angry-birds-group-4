@@ -19,7 +19,7 @@ void PhysObject::Explosion(const b2Vec2& center, float magnitude) {
     b2Vec2 direction = pos - center;
     float distance = direction.Normalize();
 
-    float decay = exp(-ph::explosionDecay * distance);
+    float decay = std::exp(-ph::explosionDecay * distance);
     direction.x = direction.x * magnitude * decay;
     direction.y = direction.y * magnitude * decay;
 
@@ -86,7 +86,13 @@ void PhysObject::SetPosition(float x, float y) {
     mainBody_->SetTransform({x, y}, a);
 }
 
-void PhysObject::OnCollision(const b2Vec2& relativeVelocity, PhysObject& other, const b2Contact& contact) {
-    if(relativeVelocity.LengthSquared() > ph::damageTreshold) hp_ -= ph::damageScaling * relativeVelocity.Length() * 0.5F * (GetMass() + other.GetMass());
+void PhysObject::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
+
+    b2Vec2 v = {(other.GetObjectType() == gm::GameObjectType::ground_obj) ? 0 : other.GetX() - x_, other.GetY() - y_};
+    b2Vec2 v2 = velocity;
+    v.Normalize();
+    v2.Normalize();
+    float dotV = std::abs(v.x * v2.x + v.y * v2.y);
+    if(dotV > 0.5F && velocity.LengthSquared() > ph::damageTreshold) hp_ -= ph::damageScaling * velocity.Length() * 0.5F * (GetMass() + other.GetMass());
 
 }

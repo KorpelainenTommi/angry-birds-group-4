@@ -1,4 +1,3 @@
-#include <math.h>
 #include <Application.hpp>
 #include <ui/UIConstants.hpp>
 #include <screens/MainMenu.hpp>

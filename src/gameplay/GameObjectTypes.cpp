@@ -6,7 +6,7 @@
 #include <gameplay/Teekkari.hpp>
 #include <gameplay/Fuksi.hpp>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 
 const std::vector<gm::PersonFace> gm::teekkariHeads = { 
@@ -215,7 +215,7 @@ int gm::GetObjectScore(gm::GameObjectType type) {
         gm::BlockData bd = blockTypes.at(type);
         gm::BlockShapeData shapeData = shapeProperties.at(bd.shape);
         gm::BlockMaterialData materialData = materialProperties.at(bd.material);
-        return (int)roundf(shapeData.volume * materialData.density * materialData.pointsPerMass);
+        return (int)std::roundf(shapeData.volume * materialData.density * materialData.pointsPerMass);
     }
     else if(type == gm::GameObjectType::fuksi) return ph::fuksiScore;
     else return 0;
