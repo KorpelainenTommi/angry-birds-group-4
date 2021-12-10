@@ -199,6 +199,8 @@ protected:
     int points_;
     unsigned int time_ = 0; //Game ticks since starting => number of update calls
 
+    int levelMaxScore_ = 0;
+
     b2World world_;
     
     /// Notify UI of the changes to projectiles

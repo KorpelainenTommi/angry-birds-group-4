@@ -370,6 +370,7 @@ void Game::Restart() {
     isPaused_ = false;
     time_ = 0;
     points_ = 0;
+    levelMaxScore_ = level_.CalculateMaxScore();
     chosenTeekkari_ = 0;
     screen_.OnScoreChange(0);
     LoadLevel(level_);
