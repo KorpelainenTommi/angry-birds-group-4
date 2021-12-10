@@ -27,7 +27,23 @@ const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
     {SoundID::thud2, "data/audio/thud2.wav"},
     {SoundID::thud3, "data/audio/thud3.wav"},
 
+    {SoundID::smack1, "data/audio/smack1.wav"},
+    {SoundID::smack2, "data/audio/smack2.wav"},
+    {SoundID::smack3, "data/audio/smack3.wav"},
 
+    {SoundID::cannon_load, "data/audio/cannon_load.wav"},
+    {SoundID::cannon_shot, "data/audio/cannon_shot.wav"},
+
+    {SoundID::cow_moo, "data/audio/cow_moo.wav"},
+    {SoundID::cow_death, "data/audio/cow_death.wav"},
+
+    {SoundID::wrench_swish, "data/audio/wrench_swish.wav"},
+    {SoundID::glitch_sound, "data/audio/glitch_sound.wav"},
+
+    {SoundID::gravity_shiftup, "data/audio/gravity_shiftup.wav"},
+    {SoundID::gravity_shiftdown, "data/audio/gravity_shiftdown.wav"},
+
+    {SoundID::poof, "data/audio/poof.wav"},
     {SoundID::nice, "data/audio/nice.wav"}
 
 };
@@ -42,7 +58,9 @@ const std::pair<int, std::string> ResourceManager::texturePaths_[] = {
     {6, "data/textures/fuksi_bodies.png"},
     {7, "data/textures/fuksi_heads.png"},
     {8, "data/textures/background0.jpg"},
-    {9, "data/textures/ground0.jpg"}
+    {9, "data/textures/ground0.jpg"},
+    {10, "data/textures/explosion0.png"},
+    {11, "data/textures/poof.png"}
 };
 
 const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
@@ -231,6 +249,12 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
 
 };
 
+const ResourceManager::AnimationMapping ResourceManager::animationMaps_[] = {
+    {AnimationID::explosion, 10, {88, 88}, {0, 0, 616, 352}},
+    {AnimationID::cannon_explosion, 3, {156, 138}, {0, 492, 312, 276}},
+    {AnimationID::particles_poof, 11, {128, 128}, {0, 0, 512, 512}},
+    {AnimationID::matrix_bug, 3, {128, 128}, {384, 640, 384, 128}}
+};
 
 ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(fileManager) {
 
@@ -283,6 +307,27 @@ ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(
         else sprites_[spMap.spriteID] = sf::Sprite(missingTexture_, {0, 0, 128, 128});
     }
 
+    //Map textures to animations
+    for(const auto& aMap : animationMaps_) {
+        if(textures_.find(aMap.textureID) != textures_.end()){
+            std::vector<sf::Sprite> vec;
+            int w = aMap.areaRect.width / aMap.spriteSize.first;
+            int h = aMap.areaRect.height / aMap.spriteSize.second;
+            int count = w * h;
+            for(int i = 0; i < count; i++) {
+                sf::IntRect rect = {
+                    aMap.areaRect.left + aMap.spriteSize.first * (i % w),
+                    aMap.areaRect.top + aMap.spriteSize.second * (i / w),
+                    aMap.spriteSize.first, aMap.spriteSize.second
+                };
+                vec.push_back(sf::Sprite(textures_[aMap.textureID], rect));
+            }
+
+            animations_[aMap.animationID] = vec;
+        }
+        else animations_[aMap.animationID] = {sf::Sprite(missingTexture_, {0, 0, 128, 128})};
+    }
+
     std::cout << "-----Resource loading done-----\n\n" << std::endl;
 }
 
@@ -290,3 +335,11 @@ ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(
 const sf::Font& ResourceManager::GetFont(FontID id) { return fonts_[id]; }
 const sf::SoundBuffer& ResourceManager::GetSound(SoundID id) { return audio_[id]; }
 const sf::Sprite& ResourceManager::GetSprite(SpriteID id) { return sprites_[id]; }
+
+const sf::Sprite& ResourceManager::GetAnimation(AnimationID id, int frame) {
+
+    size_t sz = animations_[id].size();
+    size_t idx = frame % sz;
+    return animations_[id][idx];
+
+}

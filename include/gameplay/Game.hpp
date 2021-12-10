@@ -167,6 +167,16 @@ public:
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseScroll(float delta, float xw, float yh);
+
+
+    /// Check the amount of fuksis in the level. Return true if there are none
+    bool NoFuksis();
+
+    /// Check the amount of teekkaris left. Return true if there are none
+    bool NoTeekkaris();
+
+    /// Checks if there are active teekkaris, or active abilities in the level
+    bool NoActivity();
     
 protected:
     GameScreen& screen_;
@@ -201,12 +211,6 @@ protected:
     
     /// Set the camera inside world's bounds
     void CheckCameraBounds();
-
-    /// Check the amount of fuksis in the level, and end the level if 0
-    bool CheckFuksiCount();
-
-    /// Check the amount of teekkaris left, and end the level if 0
-    bool CheckTeekkariCount();
 
 };
 

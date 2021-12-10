@@ -18,6 +18,16 @@ public:
     virtual float GetMass() const;
     virtual void Record();
     virtual void Update();
+    
+    virtual void SetX(float x);
+
+    virtual void SetY(float y);
+
+    virtual void SetRotation(float rot);
+
+    
+    //SetPosition is same as GameObject::SetPosition
+
 
     virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact);
     virtual void Impulse(const b2Vec2& f);

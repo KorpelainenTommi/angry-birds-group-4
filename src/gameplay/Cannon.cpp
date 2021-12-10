@@ -1,6 +1,7 @@
 #include <gameplay/Cannon.hpp>
 #include <gameplay/Block.hpp>
 #include <gameplay/Teekkari.hpp>
+#include <gameplay/Effect.hpp>
 #include <iostream>
 
 Cannon::Cannon(Game& game, gm::GameObjectType type, float x, float y, float rot) :
@@ -43,6 +44,7 @@ bool Cannon::OnMouseMove(float xw, float yh) {
 bool Cannon::OnMouseDown(const sf::Mouse::Button& e, float x, float y){
     if(e != sf::Mouse::Button::Left || game_.CannonDisabled()) return false;
     isActive_ = true;
+    game_.GetAudioSystem().PlaySound(SoundID::cannon_load);
     OnMouseMove(x,y);
     return true;
 }
@@ -53,15 +55,24 @@ bool Cannon::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
     isActive_ = false;
 
     //Shoot selected teekkari
-    
+
+
     float angleRad = ph::rotToAng(rot_pipe_);
     b2Vec2 dir = { -std::sin(angleRad), std::cos(angleRad) };
 
     gm::PersonData teekkari;
     if(game_.TakeProjectile(teekkari)) {
-        int id = game_.CreateTeekkari(teekkari, x_pipe_+dir.x*sizeh_, y_pipe_+dir.y*sizeh_, rot_pipe_);
+        
+        int id = game_.CreateTeekkari(teekkari, x_pipe_+dir.x*sizeh_*1.8F, y_pipe_+dir.y*sizeh_*1.8F, rot_pipe_);
         Teekkari& t = (Teekkari&)game_.GetObject(id);
         t.Impulse({dir.x * relativeDistance_ * ph::cannonMaxForce, dir.y * relativeDistance_ * ph::cannonMaxForce});
+        
+        //Effects
+        game_.GetAudioSystem().PlaySound(SoundID::cannon_shot);
+
+        game_.AddObject(std::make_unique<Effect>(game_, AnimationID::cannon_explosion,
+        x_pipe_+dir.x*sizeh_*2.0F, y_pipe_+dir.y*sizeh_*2.0F, rot_pipe_-90, 2.0F, 60.0F, 0.0666666F));
+
         return true;
     } else return false;
 }

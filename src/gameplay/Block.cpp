@@ -5,7 +5,7 @@
 #include <box2d/b2_shape.h>
 #include <ui/UIConstants.hpp>
 #include <sstream>
-#include <math.h>
+#include <cmath>
 
 Block::Block(Game& game, gm::GameObjectType type, float x, float y, float rot) : 
     PhysObject(game, type, x, y, rot), blockData_(gm::blockTypes.at(type)), shapeData_(gm::shapeProperties.at(blockData_.shape)),
@@ -65,8 +65,8 @@ void Block::OnDeath() {
         float a = 2.0F * ph::pi * rng::RandomF();
         float u = rng::RandomF() + rng::RandomF();
         float r = (u > 1) ? 2 - u : u;
-        float x = shapeData_.height * r * cosf(a);
-        float y = shapeData_.height * r * sinf(a);
+        float x = shapeData_.height * r * std::cosf(a);
+        float y = shapeData_.height * r * std::sinf(a);
         int id = game_.AddObject(std::make_unique<PhysParticle>(game_, x_ + x, y_ + y, ph::angToRot(a)));
         PhysParticle& p = (PhysParticle&)game_.GetObject(id);
 
@@ -82,10 +82,10 @@ void Block::OnDeath() {
     int id = game_.AddObject(std::make_unique<TextParticle>(game_, x_, y_, 0.0F));
     TextParticle& textP = (TextParticle&)game_.GetObject(id);
     textP.SetSize(1.0F);
-    int r = (int)roundf(255 * points / 1400.0F);
+    int r = (int)std::roundf(255 * points / 1400.0F);
     if(r > 255) r = 255;
     int g = (2000 - points);
-    g = (int)roundf(255 * g / 2000.0F);
+    g = (int)std::roundf(255 * g / 2000.0F);
     if(g > 255) g = 255;
     textP.SetColor(sf::Color(r, g, 0, 255));
     std::stringstream ss;

@@ -3,6 +3,7 @@
 #include <gameplay/Physics.hpp>
 #include <framework/RenderSystem.hpp>
 #include <utility>
+#include <iostream>
 
 void RenderSystem::CameraDraw(const sf::Drawable& shape, const Camera& camera) const {
 
@@ -37,7 +38,8 @@ sf::Vector2f RenderSystem::GetRelativeCoords(sf::Vector2f coords, const Camera& 
 }
 
 
-void RenderSystem::RenderRelative(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
+void RenderSystem::RenderRelative(sf::Shape& shape, const sf::Color& color, 
+ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
     //Map VW and VH to range [0,1]
     float xx = 0.01F * x * (x.p ? WW : HH);
     float yy = 0.01F * y * (y.p ? WW : HH);
@@ -49,7 +51,8 @@ void RenderSystem::RenderRelative(sf::Shape& shape, const sf::Color& color, ui::
     window_.draw(shape);
 }
 
-void RenderSystem::RenderRelativeCrop(sf::Shape& shape, const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
+void RenderSystem::RenderRelativeCrop(sf::Shape& shape, const sf::Color& color,
+ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
     sf::View view = window_.getView();
     sf::View v = view;
 
@@ -88,7 +91,8 @@ void RenderSystem::RenderRelativeCrop(sf::Shape& shape, const sf::Color& color, 
     window_.setView(view);
 }
 
-void RenderSystem::RenderAbs(sf::Shape& shape, const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
+void RenderSystem::RenderAbs(sf::Shape& shape, const sf::Color& color,
+ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     //Interpolate between last, and current physics position (so we get an inbetween)
     float xw = x.Lerp(ALPHA) / ph::fullscreenPlayArea;
     float yw = y.Lerp(ALPHA) / ph::fullscreenPlayArea;
@@ -109,33 +113,38 @@ void RenderSystem::RenderRect(const sf::Color& color, ui::pfloat x, ui::pfloat y
     RenderRelative(rect, color, x, y, w, h);
 }
 
-void RenderSystem::RenderRect(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
+void RenderSystem::RenderRect(const sf::Color& color,
+ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
     sf::RectangleShape rect({1, 1});
     RenderRelativeCrop(rect, color, x, y, w, h, cropArea);
 }
 
 //game rectangle
 
-void RenderSystem::RenderRect(const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
+void RenderSystem::RenderRect(const sf::Color& color,
+ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     sf::RectangleShape rect({1, 1});
     RenderAbs(rect, color, x, y, w, h, rot, camera);
 }
 
 //relative oval
 
-void RenderSystem::RenderOval(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
+void RenderSystem::RenderOval(const sf::Color& color,
+ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h) const {
     sf::CircleShape circ(0.5F);
     RenderRelative(circ, color, x, y, w, h);
 }
 
-void RenderSystem::RenderOval(const sf::Color& color, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
+void RenderSystem::RenderOval(const sf::Color& color,
+ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea) const {
     sf::CircleShape circ(0.5F);
     RenderRelativeCrop(circ, color, x, y, w, h, cropArea);
 }
 
 //game oval
 
-void RenderSystem::RenderOval(const sf::Color& color, ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
+void RenderSystem::RenderOval(const sf::Color& color,
+ph::tfloat x, ph::tfloat y, ph::tfloat w, ph::tfloat h, ph::tfloat rot, const Camera& camera) const {
     sf::CircleShape circ(0.5F);
     RenderAbs(circ, color, x, y, w, h, rot, camera);
 }
@@ -143,7 +152,8 @@ void RenderSystem::RenderOval(const sf::Color& color, ph::tfloat x, ph::tfloat y
 
 // relative text
 
-void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const sf::Color& color, FontID id, ui::TextAlign textAlign) const {
+void RenderSystem::RenderText(const std::string& text,
+ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const sf::Color& color, FontID id, ui::TextAlign textAlign) const {
     float xx = 0.01F * x * (x.p ? WW : HH);
     float yy = 0.01F * y * (y.p ? WW : HH);
     float ww = 0.01F * w * (w.p ? WW : HH);
@@ -159,7 +169,7 @@ void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat 
     window_.draw(t);
 }
 
-void RenderSystem::RenderText(const std::string& text, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h,
+void RenderSystem::RenderText(const std::string& text,ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h,
 const ui::CropArea& cropArea, const sf::Color& color, FontID id, ui::TextAlign textAlign) const {
     sf::View view = window_.getView();
     sf::View v = view;
@@ -212,7 +222,8 @@ ui::pfloat RenderSystem::MeasureText(const std::string& text, ui::pfloat h, ui::
 
 //game text
 
-void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color, FontID id) const {
+void RenderSystem::RenderText(const std::string& text, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot,
+const Camera& camera, const sf::Color& color, FontID id) const {
 
     float xw = x.Lerp(ALPHA) / ph::fullscreenPlayArea;
     float yw = y.Lerp(ALPHA) / ph::fullscreenPlayArea;
@@ -242,7 +253,8 @@ void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfl
     window_.draw(sp);
 }
 
-void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h, const ui::CropArea& cropArea, const sf::Color& color) const {
+void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfloat w, ui::pfloat h,
+const ui::CropArea& cropArea, const sf::Color& color) const {
     sf::Sprite sp = resourceManager_.GetSprite(id);
     sf::View view = window_.getView();
     sf::View v = view;
@@ -281,7 +293,8 @@ void RenderSystem::RenderSprite(SpriteID id, ui::pfloat x, ui::pfloat y, ui::pfl
 
 // game sprite
 
-void RenderSystem::RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color) const {
+void RenderSystem::RenderSprite(SpriteID id,
+ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color) const {
     
     sf::Sprite sp = resourceManager_.GetSprite(id);
     float spw = sp.getLocalBounds().width;
@@ -329,4 +342,26 @@ bool RenderSystem::IntersectWithSprite(SpriteID id, ph::tfloat x, ph::tfloat y, 
 bool RenderSystem::CheckGround(sf::Sprite s) const {
     sf::FloatRect ground = sf::FloatRect(-ph::fullscreenPlayArea/2,-ph::fullscreenPlayArea,ph::fullscreenPlayArea,ph::fullscreenPlayArea);
     return ground.intersects(s.getGlobalBounds());
+}
+
+void RenderSystem::RenderAnimation(AnimationID id, int frame,
+ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot, const Camera& camera, const sf::Color& color) const {
+    
+    sf::Sprite sp = resourceManager_.GetAnimation(id, frame);
+    float spw = sp.getLocalBounds().width;
+    float sph = sp.getLocalBounds().height;
+    sp.setOrigin(spw / 2, sph / 2);
+
+    float xw = x.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float yw = y.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float hw = h.Lerp(ALPHA) / ph::fullscreenPlayArea;
+    float ww = hw * (spw / sph);
+
+    sp.setPosition(0.5F * WW + xw * WW, 0.5F * HH - yw * WW);
+    sp.rotate(rot.Lerp(ALPHA));
+    sp.scale(WW * ww / spw, WW * hw / sph);
+    sp.setColor(color);
+
+    CameraDraw(sp, camera);
+
 }

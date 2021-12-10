@@ -7,7 +7,7 @@
 #include <gameplay/GameObjectTypes.hpp>
 #include <framework/RandomGen.hpp>
 #include <gameplay/Teekkari.hpp>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 Game::Game(GameScreen& gameScreen) : screen_(gameScreen), world_({0, -ph::gravity}) {
@@ -161,9 +161,24 @@ void Game::Update() {
     //Don't add anything after this. Fuksi and Teekkari checks might end the level
     if(checkForFinish_ || timeLimitReached) {
         checkForFinish_ = false;
-        bool b = CheckFuksiCount();
-        if(!b) b = CheckTeekkariCount();
-        if(!b && timeLimitReached) screen_.OnGameLost("Out of time");
+        if(timeLimitReached) screen_.OnGameLost("Out of time!");
+        else {
+            if(NoFuksis()) {
+                if(level_.levelMode == LevelMode::endless) {
+                    auto levels = screen_.GetApplication().GetFileManager().ListEndless();
+                    LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
+                }
+                else if(level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0) {
+                    float timeLeft = (float)(level_.timeLimit - GetTime()) / level_.timeLimit;
+                    int p = (int)std::roundf(timeLeft * points_);
+                    screen_.OnGameCompleted(p, level_.perfectScore);
+                }
+                else screen_.OnGameCompleted(points_, level_.perfectScore);
+            }
+            else if(NoActivity() && NoTeekkaris()) {
+                screen_.OnGameLost("Level failed!");
+            }
+        }
     }
 }
 
@@ -195,25 +210,8 @@ void Game::CheckLevelEnd() {
     checkForFinish_ = true;
 }
 
-bool Game::CheckTeekkariCount() {
-    if(teekkarisLeft_.empty()) {
-        bool noActiveTeekkaris = true;
-        for(const auto& o : objects_) {
-            if(std::find(gm::teekkaris.begin(), gm::teekkaris.end(), o.second->objectType_) != gm::teekkaris.end()) {
-                noActiveTeekkaris = false;
-                break;
-            }
-        }
 
-        if(noActiveTeekkaris) {
-            screen_.OnGameLost();
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Game::CheckFuksiCount() {
+bool Game::NoFuksis() {
     bool noFuksis = true;
     for(const auto& o : objects_) {
         if(o.second->objectType_ == gm::GameObjectType::fuksi) {
@@ -221,20 +219,34 @@ bool Game::CheckFuksiCount() {
             break;
         }
     }
-
-    if(noFuksis) {
-        if(level_.levelMode == LevelMode::endless) {
-            auto levels = screen_.GetApplication().GetFileManager().ListEndless();
-            LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
-        }
-        else if(level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0) {
-            float timeLeft = (float)(level_.timeLimit - GetTime()) / level_.timeLimit;
-            int p = (int)roundf(timeLeft * points_);
-            screen_.OnGameCompleted(p, level_.perfectScore);
-        }
-        else screen_.OnGameCompleted(points_, level_.perfectScore);
-    }
     return noFuksis;
+}
+
+bool Game::NoTeekkaris() {
+    return teekkarisLeft_.empty();
+}
+
+bool Game::NoActivity() {
+
+    bool noTeekkaris = true;
+    for(const auto& o : objects_) {
+        if(std::find(gm::teekkaris.begin(), gm::teekkaris.end(), o.second->objectType_) != gm::teekkaris.end()) {
+            noTeekkaris = false;
+            break;
+        }
+    }
+
+    bool noActivity = true;
+    for(const auto& o : objects_) {
+        auto t = o.second->objectType_;
+        if(t == gm::GameObjectType::ability_cow ||
+           t == gm::GameObjectType::ability_wrench) {
+               noActivity = false;
+               break;
+        }
+    }
+
+    return noTeekkaris && noActivity;
 }
 
 void Game::Render(const RenderSystem& r) {

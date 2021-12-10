@@ -138,6 +138,9 @@ enum GameObjectType {
     //Physics particle
     phys_particle,
 
+    //Animation
+    anim_effect,
+
     //Teekkari abilities (those that have spawnable components)
     ability_cow,
     ability_wrench,
