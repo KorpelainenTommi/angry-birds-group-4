@@ -119,8 +119,10 @@ Level& Editor::GetLevel() {
 void Editor::SaveLevel() {
     level_.objectData.clear();
     for(auto& obj : objects_) {
-        gm::GameObjectData data = {obj.second->GetX().f0,obj.second->GetY().f0,obj.second->GetRot().f0,obj.second->GetObjectType()};
-        level_.objectData.push_back(data);
+        if(obj.second->GetObjectType() != gm::GameObjectType::ground_obj && obj.second->GetObjectType() != gm::GameObjectType::cannon) {
+            gm::GameObjectData data = {obj.second->GetX().f0,obj.second->GetY().f0,obj.second->GetRot().f0,obj.second->GetObjectType()};
+            level_.objectData.push_back(data);            
+        }
     }
     level_.startingTeekkaris.clear();
     for(auto& teekkari : teekkarisLeft_) {
