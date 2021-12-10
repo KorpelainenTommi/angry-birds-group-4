@@ -2,8 +2,7 @@
 #include <Application.hpp>
 #include <screens/GameScreen.hpp>
 
-//development
-#include <gameplay/TestLevel.hpp>
+
 
 MainMenu::MainMenu(Application& app): Screen(app){
     addList();
@@ -17,8 +16,8 @@ MainMenu::MainMenu(Application& app): Screen(app){
     addRightSideButton(3, "Delete", [&app, this](){
         this->Confirm("Delete " + this->GetSelectedLevel().levelName, [this](bool b){
             if(b){
-                //this->GetApplication().GetFileManager()
-                this->Alert("not implemented in file manager");
+                this->GetApplication().GetFileManager().DeleteLevel(this->GetSelectedLevel());
+                app_.TransitionTo(std::make_unique<MainMenu>(this->GetApplication()));
             }
         });
     }, true);
@@ -54,7 +53,6 @@ ui::pfloat MainMenu::calcListElementWidth() const {
 
 void MainMenu::generateLevels(){
     auto list = app_.GetFileManager().ListLevels();
-    list.push_back(TestLevel());
     for(auto e: list) addLevel(e);
 }
 

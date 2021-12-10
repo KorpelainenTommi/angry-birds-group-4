@@ -69,7 +69,14 @@ bool FileManager::SaveLevel(const Level& level) const {
     return SaveLevel(level, path);
 }
 
-
+void FileManager::DeleteLevel(const Level& level) const {
+    try {
+        std::filesystem::remove(level.levelPath);
+    }
+    catch(const std::filesystem::filesystem_error& err) {
+       std::cout << "Error in filesystem: " << err.what() << std::endl;
+    }    
+}
 
 
 void FileManager::PrintGameObjectData(std::ofstream& file, const gm::GameObjectData& data) const {
