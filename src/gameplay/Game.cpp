@@ -34,6 +34,7 @@ void Game::LoadLevel(Level level) {
     ClearObjects();
     IDCounter_ = {};
     
+    levelMaxScore_ = level_.CalculateMaxScore();
     //Create ground and cannon
     CreateObject(gm::GameObjectType::ground_obj);
     CreateObject(gm::GameObjectType::cannon, ph::cannonX);
@@ -361,3 +362,9 @@ void Game::Restart() {
     screen_.OnScoreChange(0);
     LoadLevel(level_);
 }
+
+int Game::GetMaxScore() {
+    return levelMaxScore_;
+}
+
+

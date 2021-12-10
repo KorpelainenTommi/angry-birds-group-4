@@ -64,8 +64,9 @@ bool Editor::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
 
     }
     else if(button == sf::Mouse::Button::Right && isPaused_) {
+        levelMaxScore_ -= gm::GetObjectScore(GetObject(id).GetObjectType());
+        screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
         DestroyObject(id);
-
     }
     else {
         return Game::OnMouseDown(button, xw, yh);
@@ -97,7 +98,8 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
                 }
             }
         }
-        
+        levelMaxScore_ += gm::GetObjectScore(GetObject(dragObjectID_).GetObjectType());
+        screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
         dragObjectID_ = -1;
         
     }
@@ -139,5 +141,6 @@ bool Editor::OnKeyDown(const sf::Event::KeyEvent& key){
 
 void Editor::Resume() {
     SaveLevel();
+    screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
     Game::Resume();
 }

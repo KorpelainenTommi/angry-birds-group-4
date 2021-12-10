@@ -20,7 +20,7 @@ GameScreen::GameScreen(
     game_ = editorMode ? 
         std::make_unique<Editor>(*this, initialLevel) : 
         std::make_unique<Game>(*this, initialLevel);
-    UpdateTheoreticalMaxScore(1234567);
+    UpdateTheoreticalMaxScore(game_->GetMaxScore());
 }
 
 void GameScreen::Update(){

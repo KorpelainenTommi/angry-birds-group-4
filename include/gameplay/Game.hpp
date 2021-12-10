@@ -77,7 +77,8 @@ public:
     /// Create all objects from this level.
     void LoadLevel(Level level);
 
-
+    int GetMaxScore();
+    
     /* Note about object creation:
      *
      * A class can construct a GameObject themselves, and add the pointer
@@ -207,6 +208,8 @@ protected:
 
     /// Check the amount of teekkaris left, and end the level if 0
     bool CheckTeekkariCount();
+    
+    int levelMaxScore_;
 
 };
 
