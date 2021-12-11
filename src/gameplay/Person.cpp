@@ -5,10 +5,12 @@
 #include <box2d/b2_circle_shape.h>
 #include <box2d/b2_revolute_joint.h>
 #include <SFML/System/Vector2.hpp>
+#include <gameplay/ParticleEffect.hpp>
 #include <framework/RandomGen.hpp>
 #include <gameplay/Effect.hpp>
-#include <memory>
+#include <box2d/b2_api.h>
 #include <iostream>
+#include <memory>
 #include <cmath>
 
 
@@ -435,7 +437,26 @@ void Person::Update() {
     legLRot_ = ph::angToRot(legLBody_->GetAngle());
 
 
-        //Important! Immediately return after destroying the object. DestroyObject causes the destructor to be called (I think???) which is why
+    if(spawnHit_) {
+        spawnHit_ = false;
+        for(int i = 0; i < 3; i++) {
+            float a = 2.0F * ph::pi * rng::RandomF();
+            float u = rng::RandomF() + rng::RandomF();
+            float r = (u > 1) ? 2 - u : u;
+            float x = 0.5F * r * std::cosf(a);
+            float y = 0.5F * r * std::sinf(a);
+            int id = game_.AddObject(std::make_unique<PhysParticle>(game_, hitPoint_.x + x, hitPoint_.y + y, ph::angToRot(a)));
+            PhysParticle& p = (PhysParticle&)game_.GetObject(id);
+
+            p.SetSize(0.25F);
+            p.SetSprite(hitSp_);
+            p.Angular(rng::RandomInt(0, 1) ? rng::RandomF() * 0.4F : -rng::RandomF() * 0.4F);
+            p.Impulse({0, 10.0F});
+        }
+    }
+
+
+    //Important! Immediately return after destroying the object. DestroyObject causes the destructor to be called (I think???) which is why
     //any code that accesses member variables will crash if put after it
 
     //Destroy off screen objects
@@ -469,8 +490,24 @@ void Person::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Cont
         v2.Normalize();
         float dotV = std::abs(v.x * v2.x + v.y * v2.y);
         if(dotV > 0.5F) {
-            if(dotV * velocity.LengthSquared() < ph::damageTreshold * 2) game_.GetAudioSystem().PlaySound(sounds[rng::RandomInt(0, 2)], velocity.LengthSquared() / ph::damageTreshold);
-            else game_.GetAudioSystem().PlaySound(sounds2[rng::RandomInt(0, 2)], 1.0F);
+            SpriteID hitSp = SpriteID::hit_stars;
+
+            if(dotV * velocity.LengthSquared() < ph::damageTreshold * 2) {
+                game_.GetAudioSystem().PlaySound(sounds[rng::RandomInt(0, 2)], velocity.LengthSquared() / ph::damageTreshold);
+                hitSp = SpriteID::particles_dust;
+            }
+            else {
+                game_.GetAudioSystem().PlaySound(sounds2[rng::RandomInt(0, 2)], 1.0F);
+                hitSp = SpriteID::hit_stars;
+            }
+            
+            b2WorldManifold manifold;
+            contact.GetWorldManifold(&manifold);
+            auto point = manifold.points[0];
+            hitSp_ = hitSp;
+            hitPoint_ = point;
+            spawnHit_ = true;
+            
         }
     }
 

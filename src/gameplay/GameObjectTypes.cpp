@@ -6,6 +6,7 @@
 #include <gameplay/Teekkari.hpp>
 #include <gameplay/Pickup.hpp>
 #include <gameplay/Fuksi.hpp>
+#include <gameplay/Beer.hpp>
 #include <gameplay/Tnt.hpp>
 #include <iostream>
 #include <cmath>
@@ -185,7 +186,10 @@ const std::map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
     { gm::GameObjectType::pickup_tik, { "TIK Pickup", SpriteID::guild_tik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
     { gm::GameObjectType::pickup_inkubio, { "Inkubio Pickup", SpriteID::guild_inkubio, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
     { gm::GameObjectType::pickup_kik, { "KIK Pickup", SpriteID::guild_kik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
-    { gm::GameObjectType::pickup_professor, { "Professor Pickup", SpriteID::guild_professor, gm::BlockMaterial::glass, gm::BlockShape::block_ball }}
+    { gm::GameObjectType::pickup_professor, { "Professor Pickup", SpriteID::guild_professor, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+
+    { gm::GameObjectType::prop_beer, { "Beer bottle", SpriteID::beer, gm::BlockMaterial::glass, gm::BlockShape::block_bottle }},
+    { gm::GameObjectType::prop_beer_can, { "Beer bottle", SpriteID::beer_can, gm::BlockMaterial::metal, gm::BlockShape::block_can}}
 
 };
 
@@ -210,6 +214,8 @@ std::shared_ptr<b2Shape> gm::CreateShape2x2() { b2PolygonShape shape; shape.SetA
 std::shared_ptr<b2Shape> gm::CreateShapeBall() { b2CircleShape shape; shape.m_radius = 0.5F; return std::make_shared<b2CircleShape>(shape); }
 std::shared_ptr<b2Shape> gm::CreateShapePlank() { b2PolygonShape shape; shape.SetAsBox(1.5F, 0.09375F); return std::make_shared<b2PolygonShape>(shape); }
 std::shared_ptr<b2Shape> gm::CreateShapeThickPlank() { b2PolygonShape shape; shape.SetAsBox(3.0F, 0.1875F); return std::make_shared<b2PolygonShape>(shape); }
+std::shared_ptr<b2Shape> gm::CreateShapeBottle() { b2PolygonShape shape; shape.SetAsBox(0.15625F, 0.5F); return std::make_shared<b2PolygonShape>(shape); }
+std::shared_ptr<b2Shape> gm::CreateShapeCan() { b2PolygonShape shape; shape.SetAsBox(0.13671875F, 0.25F); return std::make_shared<b2PolygonShape>(shape); }
 
 /*std::shared_ptr<b2Shape> gm::CreateShapeTri() {
     b2PolygonShape shape;
@@ -224,7 +230,9 @@ const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties
     { gm::BlockShape::block_ball, { gm::BlockShape::block_ball, 3.1415926F, 1, gm::CreateShapeBall(), SpriteID::crack_ball, SpriteID::crack_ball_b}},
     /*{ gm::BlockShape::block_tri, { gm::BlockShape::block_tri, 0.435F, 0.87F, gm::CreateShapeTri()}},*/
     { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.5625F, 0.1875F, gm::CreateShapePlank(), SpriteID::crack_plank, SpriteID::crack_plank_b}},
-    { gm::BlockShape::block_thickplank, { gm::BlockShape::block_thickplank, 2.25F, 0.375F, gm::CreateShapeThickPlank(), SpriteID::crack_thickplank, SpriteID::crack_thickplank_b}}
+    { gm::BlockShape::block_thickplank, { gm::BlockShape::block_thickplank, 2.25F, 0.375F, gm::CreateShapeThickPlank(), SpriteID::crack_thickplank, SpriteID::crack_thickplank_b}},
+    { gm::BlockShape::block_bottle, { gm::BlockShape::block_bottle, 0.3125F, 1.0F, gm::CreateShapeBottle(), SpriteID::beer, SpriteID::beer}},
+    { gm::BlockShape::block_can, { gm::BlockShape::block_can, 0.13671875F, 0.5F, gm::CreateShapeCan(), SpriteID::beer_can, SpriteID::beer_can}}
 };
 
 
@@ -255,6 +263,7 @@ std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, 
 
         if(type == gm::GameObjectType::prop_tnt) return std::make_unique<Tnt>(game, x, y, rot);
         else if(type >= gm::GameObjectType::pickup_ik && type <= gm::GameObjectType::pickup_professor) return std::make_unique<Pickup>(game, type, x, y, rot);
+        else if(type == gm::GameObjectType::prop_beer || type == gm::GameObjectType::prop_beer_can) return std::make_unique<Beer>(game, type, x, y, rot);
         else return std::make_unique<Block>(game, type, x, y, rot);
     }
 

@@ -43,6 +43,8 @@ Block::Block(Game& game, gm::GameObjectType type, float x, float y, float rot) :
 
 void Block::Render(const RenderSystem& r) {
     r.RenderSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_, game_.GetCamera());
+    if(hp_ < 0.33F * mainBody_->GetMass() * materialData_.hpMassRatio) r.RenderSprite(shapeData_.lowHPSprite, x_, y_, shapeData_.height, rot_, game_.GetCamera());
+    else if(hp_ < 0.66F * mainBody_->GetMass() * materialData_.hpMassRatio) r.RenderSprite(shapeData_.halfHPSprite, x_, y_, shapeData_.height, rot_, game_.GetCamera());
 }
 
 void Block::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {

@@ -112,6 +112,21 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::rubber_thickplank, 0, {384, 288, 384, 24}},
     {SpriteID::concrete_thickplank, 0, {384, 312, 384, 24}},
 
+    {SpriteID::crack1x1, 0, {640, 384, 64, 64}},
+    {SpriteID::crack1x1_b, 0, {704, 384, 64, 64}},
+    {SpriteID::crack2x1, 0, {384, 384, 128, 64}},
+    {SpriteID::crack2x1_b, 0, {512, 384, 128, 64}},
+    {SpriteID::crack2x2, 0, {640, 448, 128, 128}},
+    {SpriteID::crack2x2_b, 0, {640, 576, 128, 128}},
+    {SpriteID::crack_ball, 0, {384, 448, 64, 64}},
+    {SpriteID::crack_ball_b, 0, {384, 512, 64, 64}},    
+    {SpriteID::crack_plank, 0, {448, 448, 192, 12}},
+    {SpriteID::crack_plank_b, 0, {448, 460, 192, 12}},
+    {SpriteID::crack_thickplank, 0, {384, 336, 384, 24}},
+    {SpriteID::crack_thickplank_b, 0, {384, 360, 384, 24}},
+
+
+
     {SpriteID::tnt, 0, {0, 356, 64, 64}},
     {SpriteID::sofa3x1, 0, {64, 356, 192, 64}},
 
@@ -122,6 +137,7 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::particles_plastic, 0, {128, 420, 32, 32}},
     {SpriteID::particles_rubber, 0, {160, 420, 32, 32}},
     {SpriteID::particles_concrete, 0, {192, 420, 32, 32}},
+    {SpriteID::hit_stars, 0, {0, 452, 32, 32}},
 
     //Teekkari bodies
     {SpriteID::torso_blue, 1, {0, 0, 130, 156}},
@@ -242,14 +258,13 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::ui_missing_star, 5, {257, 0, 256, 256}},
     
     {SpriteID::cannon_base, 0, {0, 654, 214, 114}},
-    {SpriteID::cannon_head, 0, {214, 501, 137, 267}},
+    {SpriteID::cannon_head, 0, {224, 501, 137, 267}},
 
     {SpriteID::background_field, 8, {0, 0, 1440, 957}},
 
 
     {SpriteID::beer, 0, {256, 356, 64, 64}},
     {SpriteID::beer_can, 0, {320, 356, 64, 64}},
-
 
     {SpriteID::cow, 3, {0, 0, 200, 150}},
     {SpriteID::wrench, 3, {200, 0, 100, 32}},

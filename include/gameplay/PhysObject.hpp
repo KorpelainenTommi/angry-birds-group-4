@@ -85,6 +85,11 @@ protected:
 
     /// This is called just before this object is destroyed from hp
     virtual void OnDeath() { }
+
+    SpriteID hitSp_ = SpriteID::hit_stars;
+    b2Vec2 hitPoint_ = {0, 0};
+    bool spawnHit_ = false;
+
 };
 
 

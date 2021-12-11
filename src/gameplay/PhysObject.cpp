@@ -1,6 +1,9 @@
 #include <gameplay/PhysObject.hpp>
 
+#include <framework/RandomGen.hpp>
+#include <gameplay/ParticleEffect.hpp>
 #include <iostream>
+#include <memory>
 #include <cmath>
 
 PhysObject::~PhysObject() { 
@@ -54,6 +57,22 @@ void PhysObject::Update() {
     y_ = pos.y;
     rot_ = ph::angToRot(mainBody_->GetAngle());
 
+    if(spawnHit_) {
+        spawnHit_ = false;
+        float a = 2.0F * ph::pi * rng::RandomF();
+        float u = rng::RandomF() + rng::RandomF();
+        float r = (u > 1) ? 2 - u : u;
+        float x = 0.5F * r * std::cosf(a);
+        float y = 0.5F * r * std::sinf(a);
+        int id = game_.AddObject(std::make_unique<PhysParticle>(game_, hitPoint_.x + x, hitPoint_.y + y, ph::angToRot(a)));
+        PhysParticle& p = (PhysParticle&)game_.GetObject(id);
+
+        p.SetSize(0.25F);
+        p.SetSprite(hitSp_);
+        p.Angular(rng::RandomInt(0, 1) ? rng::RandomF() * 0.4F : -rng::RandomF() * 0.4F);
+        p.Impulse({0, 10.0F});
+    }
+
     //Important! Immediately return after destroying the object. DestroyObject causes the destructor to be called (I think???) which is why
     //any code that accesses member variables will crash if put after it
 
@@ -102,7 +121,21 @@ void PhysObject::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2
     v.Normalize();
     v2.Normalize();
     float dotV = std::abs(v.x * v2.x + v.y * v2.y);
-    if(dotV > 0.5F && velocity.LengthSquared() > ph::damageTreshold) hp_ -= ph::damageScaling * velocity.Length() * 0.5F * (GetMass() + other.GetMass());
+    if(dotV > 0.5F && velocity.LengthSquared() > ph::damageTreshold) {
+        hp_ -= ph::damageScaling * velocity.Length() * 0.5F * (GetMass() + other.GetMass());
+        
+        SpriteID hitSp = SpriteID::hit_stars;
+
+        if(dotV * velocity.LengthSquared() < ph::damageTreshold * 2) hitSp = SpriteID::particles_dust;
+        else hitSp = SpriteID::hit_stars;
+            
+        b2WorldManifold manifold;
+        contact.GetWorldManifold(&manifold);
+        auto point = manifold.points[0];
+        hitSp_ = hitSp;
+        hitPoint_ = point;
+        spawnHit_ = true;
+    }
 
 }
 
