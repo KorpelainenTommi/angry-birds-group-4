@@ -306,7 +306,7 @@ enum AnimationID {
 
 
     //Teekkari abilities
-    gravity_flash,
+    gravity_spiral,
     matrix_bug,
     hand_whirl,
     thunder_sparks

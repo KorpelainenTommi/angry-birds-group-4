@@ -190,11 +190,15 @@ void Game::Update() {
                     else LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
                 }
                 else if(level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0) {
+                    points_ += teekkarisLeft_.size() * ph::teekkariScore;
                     float timeLeft = (float)(level_.timeLimit - GetTime()) / level_.timeLimit;
                     int p = (int)std::roundf(timeLeft * points_);
                     screen_.OnGameCompleted(p, level_.perfectScore);
                 }
-                else screen_.OnGameCompleted(points_, level_.perfectScore);
+                else {
+                    points_ += teekkarisLeft_.size() * ph::teekkariScore;
+                    screen_.OnGameCompleted(points_, level_.perfectScore);
+                }
             }
             else if(NoActivity() && NoTeekkaris()) {
                 screen_.OnGameLost("Level failed!");

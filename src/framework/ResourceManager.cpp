@@ -292,7 +292,8 @@ const ResourceManager::AnimationMapping ResourceManager::animationMaps_[] = {
     {AnimationID::cannon_explosion, 3, {156, 138}, {0, 492, 312, 276}},
     {AnimationID::particles_poof, 11, {128, 128}, {0, 0, 512, 512}},
     {AnimationID::matrix_bug, 3, {128, 128}, {384, 640, 384, 128}},
-    {AnimationID::hand_whirl, 3, {96, 96}, {384, 544, 384, 96}}
+    {AnimationID::hand_whirl, 3, {96, 96}, {384, 544, 384, 96}},
+    {AnimationID::gravity_spiral, 3, {96, 96}, {384, 448, 384, 96}}
 };
 
 ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(fileManager) {

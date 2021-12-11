@@ -14,13 +14,24 @@ void Editor::SetSelectedElement(gm::GameObjectType t){
 
 // add the projectile to starting projectile list and call GameScreen::UpdateProjectileList()
 void Editor::AddProjectile(gm::GameObjectType t){
+    if(!teekkarisLeft_.empty()) {
+        levelMaxScore_ += ph::teekkariScore;
+        screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
+    }
     teekkarisLeft_.push_back(gm::RandomTeekkari(t));
     UpdateProjectileList();
 }
 
 /// remove the element at the given idex in projectile list and call GameScreen::UpdateProjectileList()
 void Editor::RemoveProjectile(std::size_t index){
-    if(teekkarisLeft_.size() > index) teekkarisLeft_.erase(teekkarisLeft_.begin()+index);
+    if(teekkarisLeft_.size() > index) { 
+
+        if(teekkarisLeft_.size() > 1) {
+            levelMaxScore_ -= ph::teekkariScore;
+            screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
+        }
+        teekkarisLeft_.erase(teekkarisLeft_.begin()+index);
+    }
     UpdateProjectileList();
 }
 
@@ -61,6 +72,8 @@ bool Editor::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
     if(button == sf::Mouse::Button::Left && isPaused_) {
         if((dragObjectID_ = id) == -1) {
             dragObjectID_ = CreateObject(selectedElement_, xPos, yPos, 0);
+            levelMaxScore_ += gm::GetObjectScore(GetObject(dragObjectID_).GetObjectType());
+            screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
         }
 
     }
@@ -86,6 +99,8 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
         std::vector<b2Body*> bodies = GetObject(dragObjectID_).GetPhysBodies();
         for(auto& s : sprites) {
             if(r.CheckGround(s)) {
+                levelMaxScore_ -= gm::GetObjectScore(GetObject(dragObjectID_).GetObjectType());
+                screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
                 DestroyObject(dragObjectID_);
                 dragObjectID_ = -1;
                 return true;
@@ -95,6 +110,8 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
             if(dragObjectID_ != obj.first) {
                 for(auto b : bodies) {
                     if(obj.second->CheckIntersection(b)) {
+                        levelMaxScore_ -= gm::GetObjectScore(GetObject(dragObjectID_).GetObjectType());
+                        screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
                         DestroyObject(dragObjectID_);
                         dragObjectID_ = -1;
                         return true;
@@ -102,8 +119,6 @@ bool Editor::OnMouseUp(const sf::Mouse::Button& button, float xw, float yh) {
                 }
             }
         }
-        levelMaxScore_ += gm::GetObjectScore(GetObject(dragObjectID_).GetObjectType());
-        screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
         dragObjectID_ = -1;
         
     }

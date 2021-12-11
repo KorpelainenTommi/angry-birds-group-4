@@ -135,7 +135,10 @@ namespace ph {
     const float fuksiHP = 200;
 
     /// Score from a Fuksi
-    const int fuksiScore = 1000;
+    const int fuksiScore = 4000;
+
+    /// Score from not using a Teekkari
+    const int teekkariScore = 12000;
 
     /// Mathematical constant pi (with max precision that float allows)
     const float pi = 3.141592741F;

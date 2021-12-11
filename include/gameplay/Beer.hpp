@@ -25,7 +25,7 @@ protected:
     virtual void OnDeath() {
 
         game_.GetAudioSystem().PlaySound(materialData_.breakSound);
-        game_.AddPoints(objectType_ == gm::GameObjectType::prop_beer ? -2000 : -1000);
+        game_.AddPoints(objectType_ == gm::GameObjectType::prop_beer ? -4000 : -2000);
         
         //Spawn some particles
         
@@ -62,7 +62,7 @@ protected:
         TextParticle& textP = (TextParticle&)game_.GetObject(id);
         textP.SetSize(1.0F);
         textP.SetColor(sf::Color(0, 0, 0, 255));
-        textP.SetText(objectType_ == gm::GameObjectType::prop_beer ? "-2000" : "-1000");
+        textP.SetText(objectType_ == gm::GameObjectType::prop_beer ? "-4000" : "-2000");
 
 
     }

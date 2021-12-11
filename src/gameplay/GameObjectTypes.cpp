@@ -197,12 +197,12 @@ const std::map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
 // Materials
 
 const std::unordered_map<gm::BlockMaterial, gm::BlockMaterialData> gm::materialProperties = {
-    { gm::BlockMaterial::wood, { gm::BlockMaterial::wood, 200, 0.3F, 0, 2, 1, SoundID::wood_hit, SoundID::wood_crack, SpriteID::particles_wood }},
+    { gm::BlockMaterial::wood, { gm::BlockMaterial::wood, 200, 0.3F, 0, 2, 0.5F, SoundID::wood_hit, SoundID::wood_crack, SpriteID::particles_wood }},
     { gm::BlockMaterial::metal, { gm::BlockMaterial::metal, 900, 0.2F, 0, 5.0F, 0.1F, SoundID::metal_hit, SoundID::metal_crack, SpriteID::particles_metal }},
-    { gm::BlockMaterial::glass, { gm::BlockMaterial::glass, 400, 0.15F, 0.12F, 0.25F, 2.5F, SoundID::glass_hit, SoundID::glass_crack, SpriteID::particles_glass }},
-    { gm::BlockMaterial::plastic, { gm::BlockMaterial::plastic, 150, 0.23F, 0.18F, 1.7F, 2, SoundID::plastic_hit, SoundID::plastic_crack, SpriteID::particles_plastic }},
-    { gm::BlockMaterial::rubber, { gm::BlockMaterial::rubber, 180, 0.18F, 0.6F, 3, 4, SoundID::rubber_hit, SoundID::rubber_crack, SpriteID::particles_rubber }},
-    { gm::BlockMaterial::concrete, { gm::BlockMaterial::concrete, 1000, 0.88F, 0, 1, 0.4F, SoundID::concrete_hit, SoundID::concrete_crack, SpriteID::particles_concrete }}
+    { gm::BlockMaterial::glass, { gm::BlockMaterial::glass, 400, 0.15F, 0.12F, 0.25F, 0.375F, SoundID::glass_hit, SoundID::glass_crack, SpriteID::particles_glass }},
+    { gm::BlockMaterial::plastic, { gm::BlockMaterial::plastic, 150, 0.23F, 0.18F, 1.7F, 0.8F, SoundID::plastic_hit, SoundID::plastic_crack, SpriteID::particles_plastic }},
+    { gm::BlockMaterial::rubber, { gm::BlockMaterial::rubber, 180, 0.18F, 0.6F, 3, 0.5, SoundID::rubber_hit, SoundID::rubber_crack, SpriteID::particles_rubber }},
+    { gm::BlockMaterial::concrete, { gm::BlockMaterial::concrete, 1000, 0.88F, 0, 1, 0.1F, SoundID::concrete_hit, SoundID::concrete_crack, SpriteID::particles_concrete }}
 };
 
 
@@ -253,6 +253,7 @@ int gm::GetObjectScore(gm::GameObjectType type) {
         return (int)std::roundf(shapeData.volume * materialData.density * materialData.pointsPerMass);
     }
     else if(type == gm::GameObjectType::fuksi) return ph::fuksiScore;
+    else if(type >= gm::GameObjectType::teekkari_ik && type <= gm::GameObjectType::teekkari_professor) return ph::teekkariScore;
     else return 0;
 }
 
