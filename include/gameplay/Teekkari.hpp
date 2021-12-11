@@ -19,6 +19,7 @@
 #include <set>
 #include <limits>
 
+
 /// @brief Class for the projectiles of the game
 class Teekkari : public Person {
 public:
@@ -201,6 +202,10 @@ public:
         nVelocity *= 1/std::sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
         x_ += 3.0F*nVelocity.x;
         y_ += 3.0F*nVelocity.y;
+        
+        rot_ = std::atanf(nVelocity.x/nVelocity.y)*180/ph::pi;
+        if(nVelocity.y < 0) rot_ = 90 - rot_;
+
         creationTime_ = game.GetTime();
         //Create the main body
         b2BodyDef definition;
@@ -224,9 +229,6 @@ public:
         mainBody_->CreateFixture(&fixture);
         mainBody_->SetLinearVelocity(velocity);
         hp_ = ph::inf;
-        
-        
-
         Record();
 
     }
@@ -236,31 +238,27 @@ public:
     }
 
     virtual void Update() {
-        if(game_.GetTime() - creationTime_ > 5.0F) hp_ = 0;
+        if(game_.GetTime() - creationTime_ > ph::integralLength) hp_ = 0;
         PhysObject::Update();
+    }
+    virtual void OnCollision(const b2Vec2& relativeVelocity, PhysObject& other, const b2Contact& contact) {
+        other.DealDamage(other.GetHP());
+        SpriteID hitSp = SpriteID::hit_stars;
+        b2WorldManifold manifold;
+        contact.GetWorldManifold(&manifold);
+        auto point = manifold.points[0];
+        hitSp_ = hitSp;
+        hitPoint_ = point;
+        spawnHit_ = true;
+        
     }
 
 protected:
     float creationTime_;
     virtual void OnDeath() {
 
-        game_.GetAudioSystem().PlaySound(SoundID::metal_hit);
         game_.CheckLevelEnd();
 
-    }
-
-    virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
-
-        PhysObject::OnCollision(velocity, other, contact);
-
-        //Collision sound
-
-        //Deal extra damage to wood
-        if(gm::GetObjectGroup(other.GetObjectType()) == gm::GameObjectGroup::block) {
-            if(gm::blockTypes.at(other.GetObjectType()).material == gm::BlockMaterial::wood) {
-                other.DealDamage(1000);
-            }
-        }
     }
 
 };
@@ -310,7 +308,7 @@ protected:
             while(it != metalBlocks.end()) {
                 Block& nextBlock = static_cast<Block&>(game_.GetObject(*it));
                 if(currentBlock.ElectricityCheck(nextBlock) && remainingEnergy > 200) {
-                    float exponentialDecay = 2.0F;
+                    float exponentialDecay = 2.5F;
                     destroyRecursively(*it,remainingEnergy/exponentialDecay);
                     it = metalBlocks.begin();
                 }
@@ -564,12 +562,32 @@ class Professor : public Teekkari {
 public:
     Professor(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
     Professor(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
+    virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
+        if(other.GetObjectType() == gm::GameObjectType::ground_obj) {
+            hp_ = 0;
+        }
+        else {
+            PhysObject::OnCollision(velocity, other, contact);
+        }
+    }
+    virtual void Update() {
+        if(abilityUsed_ && game_.GetTime() - abilityCreationTime_ > ph::integralLength) {
+            mainBody_->SetType(b2BodyType::b2_dynamicBody);
+        }
+        Teekkari::Update();
+    }
 protected:
     virtual void Ability(float x, float y) {
         hp_ = ph::inf;
+        abilityCreationTime_ = game_.GetTime();
+        mainBody_->SetAngularVelocity(0.0F);
+        b2Vec2 v = mainBody_->GetLinearVelocity();
+        v *= 1.05F;
+        mainBody_->SetLinearVelocity(v);
         mainBody_->SetType(b2BodyType::b2_kinematicBody);
-        game_.AddObject(std::make_unique<AbilityIntegral>(game_, x_ , y_ , rot_, mainBody_->GetLinearVelocity()));
+        game_.AddObject(std::make_unique<AbilityIntegral>(game_, x_ , y_ , rot_, v));
     }
+    float abilityCreationTime_;
 };
 
 
