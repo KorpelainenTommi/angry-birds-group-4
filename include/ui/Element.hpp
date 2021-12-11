@@ -20,22 +20,6 @@ public:
 
     virtual void Render(const RenderSystem&) = 0;
 
-    void RenderTitle(const RenderSystem& r){
-        if(titleW_.f == 0)
-            titleW_ = r.MeasureText(' ' + title_ + ' ', titleFontSize_, ui::pfloat::vw, ui::defaultFont);
-        r.RenderRect(ui::backgroundColor, titleX_, titleY_, titleW_, titleFontSize_);
-        r.RenderText(
-            title_, 
-            titleX_, 
-            titleY_, 
-            titleW_, 
-            titleFontSize_, 
-            ui::textColor, 
-            ui::defaultFont, 
-            ui::TextAlign::center
-        );
-    }
-
     virtual void SetPosition(ui::pfloat x, ui::pfloat y) { x_ = x; y_ = y; }
 
     virtual void SetTop(ui::pfloat top){y_ = top;}
@@ -180,6 +164,8 @@ protected:
     bool renderTitle = false;
 
     bool isInsideCropArea(float xvw, float yvh) const;
+
+    void RenderTitle(const RenderSystem& r);
 };
 
 

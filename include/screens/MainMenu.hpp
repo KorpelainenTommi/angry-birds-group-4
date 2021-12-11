@@ -59,7 +59,6 @@ private:
     std::pair<Level, std::weak_ptr<Button>> selectedLevel_;
     bool hasSelectedLevel_ = false;
     int selectedLevelButtonListID_;
-    std::vector<std::shared_ptr<Element>> rightSideElements_;
     std::shared_ptr<MultilineText> scoreboard_;
     std::vector<std::shared_ptr<Button>> deactivatingButtons_;
     unsigned char nofButtons_ = 0;
@@ -67,8 +66,6 @@ private:
     void generateLevels();
 
     void addLevel(Level level);
-
-    void checkRightSideElementWidth();
 
     void addRightSideButton(
         unsigned char buttonNumber, 
