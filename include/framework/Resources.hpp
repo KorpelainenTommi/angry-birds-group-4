@@ -309,7 +309,8 @@ enum AnimationID {
     gravity_spiral,
     matrix_bug,
     hand_whirl,
-    thunder_sparks
+    thunder_sparks,
+    lightning
 
 
 };

@@ -246,8 +246,9 @@ protected:
             }
             currentBlock.DealDamage(remainingEnergy);
         };
-        if(nearestBlock != -1) {
+        if(nearestBlock != -1 && minDistance < 15.0F) {
             destroyRecursively(nearestBlock,ph::lightningEnergy);
+            game_.AddObject(std::make_unique<Effect>(game_, AnimationID::lightning, game_.GetObject(nearestBlock).GetX(), game_.GetObject(nearestBlock).GetY(), 0.0F, 4.0F, 32.0F, 0.125F));
         }
     }
 };
