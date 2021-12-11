@@ -16,7 +16,7 @@ public:
     /**
      * This should be used only by buttons created in Mainmenu::addLevel()
      */
-    void SelectLevel(const Level& level, std::weak_ptr<Button> button);
+    void SelectLevel(const Level& level, std::weak_ptr<Button> button, int id);
 
     Level GetSelectedLevel() const {return selectedLevel_.first;};
 
@@ -40,6 +40,8 @@ public:
 
     ui::pfloat calcScoreboardMultilineHeight() const;
 
+    void deleteSelectedLevel();
+
 private:
     const ui::pfloat padding_ = 2 VH;
     const ui::pfloat listPadding_ = 1 VH;
@@ -56,6 +58,7 @@ private:
     std::shared_ptr<ColoredElement> listBottom_;
     std::pair<Level, std::weak_ptr<Button>> selectedLevel_;
     bool hasSelectedLevel_ = false;
+    int selectedLevelButtonListID_;
     std::vector<std::shared_ptr<Element>> rightSideElements_;
     std::shared_ptr<MultilineText> scoreboard_;
     std::vector<std::shared_ptr<Button>> deactivatingButtons_;
