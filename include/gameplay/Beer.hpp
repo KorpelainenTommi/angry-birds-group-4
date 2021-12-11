@@ -35,8 +35,8 @@ protected:
                 float a = 2.0F * ph::pi * rng::RandomF();
                 float u = rng::RandomF() + rng::RandomF();
                 float r = (u > 1) ? 2 - u : u;
-                float x = shapeData_.height * r * std::cosf(a);
-                float y = shapeData_.height * r * std::sinf(a);
+                float x = shapeData_.height * r * cosf(a);
+                float y = shapeData_.height * r * sinf(a);
                 int id = game_.AddObject(std::make_unique<PhysParticle>(game_, x_ + x, y_ + y, ph::angToRot(a)));
                 PhysParticle& p = (PhysParticle&)game_.GetObject(id);
                 

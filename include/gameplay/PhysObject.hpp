@@ -62,7 +62,7 @@ public:
     virtual void Explosion(const b2Vec2& center, float magnitude);
     
     /// Deal explosive damage, that decays with distance
-    void PhysObject::ExplosionDamage(const b2Vec2& center, float damage);
+    void ExplosionDamage(const b2Vec2& center, float damage);
 
     /// Explicitly deal damage to this objects hp
     virtual void DealDamage(float damage);

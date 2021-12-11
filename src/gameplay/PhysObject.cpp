@@ -62,8 +62,8 @@ void PhysObject::Update() {
         float a = 2.0F * ph::pi * rng::RandomF();
         float u = rng::RandomF() + rng::RandomF();
         float r = (u > 1) ? 2 - u : u;
-        float x = 0.5F * r * std::cosf(a);
-        float y = 0.5F * r * std::sinf(a);
+        float x = 0.5F * r * cosf(a);
+        float y = 0.5F * r * sinf(a);
         int id = game_.AddObject(std::make_unique<PhysParticle>(game_, hitPoint_.x + x, hitPoint_.y + y, ph::angToRot(a)));
         PhysParticle& p = (PhysParticle&)game_.GetObject(id);
 
