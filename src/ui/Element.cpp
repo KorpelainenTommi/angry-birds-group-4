@@ -121,3 +121,19 @@ void Element::Hide(){
 void Element::Show(){
     visible_ = true;
 }
+
+void Element::RenderTitle(const RenderSystem& r){
+    if(titleW_.f == 0)
+        titleW_ = r.MeasureText(' ' + title_ + ' ', titleFontSize_, ui::pfloat::vw, ui::defaultFont);
+    r.RenderRect(ui::backgroundColor, titleX_, titleY_, titleW_, titleFontSize_);
+    r.RenderText(
+        title_, 
+        titleX_, 
+        titleY_, 
+        titleW_, 
+        titleFontSize_, 
+        ui::textColor, 
+        ui::defaultFont, 
+        ui::TextAlign::center
+    );
+}
