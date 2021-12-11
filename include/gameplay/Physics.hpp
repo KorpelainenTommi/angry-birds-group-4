@@ -66,7 +66,7 @@
 #include <cmath>
 #include <limits>
 
-
+/// @brief All gamerelated constants are stored here
 namespace ph {
 
 
@@ -158,8 +158,8 @@ namespace ph {
         return { x * cosf(rad) - y * sinf(rad), x * sinf(rad) + y * cosf(rad) };
     }
 
-
-    /* A tfloat is simply a float that keeps track of its last value
+    /// @brief A struct to help with interpolating
+    /** @details A tfloat is simply a float that keeps track of its last value
      * Treat these like any normal float. In fact, you can freely assign floats to tfloats,
      * and tfloats to floats
      * 

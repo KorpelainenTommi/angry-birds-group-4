@@ -19,6 +19,7 @@
 #include <set>
 #include <limits>
 
+/// @brief Class for the projectiles of the game
 class Teekkari : public Person {
 public:
     Teekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, data.objType, x, y, rot)
@@ -54,7 +55,7 @@ protected:
 
 //Abilities
 
-
+/// @brief Class for cow ability of an inkubioteekkari. Spawns a cow.
 class AbilityCow : public PhysObject {
 public:
     AbilityCow(Game& game, float x, float y, float rot) : PhysObject(game, gm::GameObjectType::ability_cow, x, y, rot) {
@@ -116,7 +117,7 @@ protected:
     }
 };
 
-
+/// @brief Class for wrench ability of an inkubioteekkari. Spawns wrenches
 class AbilityWrench : public PhysObject {
 public:
     AbilityWrench(Game& game, float x, float y, float rot) : PhysObject(game, gm::GameObjectType::ability_wrench, x, y, rot) {
@@ -194,7 +195,7 @@ protected:
 
 
 //Teekkaris
-
+/// @brief  Class for IKteekkari
 class IKTeekkari : public Teekkari {
 public:
     IKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -204,7 +205,7 @@ protected:
 
     }
 };
-
+/// @brief Class for SIKteekkari
 class SIKTeekkari : public Teekkari {
 public:
     SIKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -250,7 +251,7 @@ protected:
         }
     }
 };
-
+/// @brief Class for TEFYTeekkari
 class TEFYTeekkari : public Teekkari {
 public:
     TEFYTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -361,7 +362,7 @@ protected:
     int gCounter = 0;
     float abilityStartTime_ = 0;
 };
-
+/// @brief Class for TUTAteekkari
 class TUTATeekkari : public Teekkari {
 public:
     TUTATeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -421,7 +422,7 @@ protected:
     int whooshCounter = 0;
     float abilityStartTime_ = 0;
 };
-
+/// @brief Class for TIKteekkari
 class TIKTeekkari : public Teekkari {
 public:
     TIKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -439,7 +440,7 @@ protected:
 
     }
 };
-
+/// @brief Class for INKUBIOteekkari
 class INKUBIOTeekkari : public Teekkari {
 public:
     INKUBIOTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -450,7 +451,7 @@ protected:
         game_.AddObject(std::move(cow));
     }
 };
-
+/// @brief Class for KIKteekkari
 class KIKTeekkari : public Teekkari {
 public:
     KIKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -483,7 +484,7 @@ private:
     int wrenchesShot_ = 0;
     b2Vec2 targetDir = {0, -1};
 };
-
+/// @brief Class for the professor
 class Professor : public Teekkari {
 public:
     Professor(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}

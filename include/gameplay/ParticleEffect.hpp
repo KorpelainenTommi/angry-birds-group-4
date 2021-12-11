@@ -10,8 +10,10 @@
 #include <string>
 #include <cmath>
 
+/// @brief Particle class with physics
 class PhysParticle : public PhysObject {
 public:
+    /// @brief Constructor
     PhysParticle(Game& game, float x, float y, float rot) : PhysObject(game, gm::GameObjectType::phys_particle, x, y, rot) {
         hp_ = std::numeric_limits<float>::infinity();
         creationTime_ = game.GetTime();
@@ -38,7 +40,7 @@ public:
 
         Record();
     }
-
+    /// @brief Renders the particle
     virtual void Render(const RenderSystem& r) {
         float opacity = 1.0F;
         float t = creationTime_ + lifeTime_ - game_.GetTime();
@@ -48,16 +50,21 @@ public:
         }
         r.RenderSprite(sprite_, x_, y_, size_, rot_, game_.GetCamera(), sf::Color(255, 255, 255, (int)std::roundf(opacity * 255)));
     }
-
+    /// @brief Updates particle: location and lifetime
     virtual void Update() {
         if(game_.GetTime() - creationTime_ > lifeTime_) hp_ = 0;
         PhysObject::Update();
     }
-
+    /// @brief Sets size of the particle
     void SetSize(float sz) { size_ = sz; }
+    /// @brief Sets lifetime of the particle
     void SetLifeTime(float l) { lifeTime_ = l; }
+    /// @brief Sets sprite of the particle
     void SetSprite(SpriteID sp) { sprite_ = sp; }
+    /// @brief Implements parentclass method and return empty vector.
     virtual std::vector<b2Body*> GetPhysBodies() { return std::vector<b2Body*>(); }
+    
+    /// @brief Get mainbody
     b2Body* GetBody() { return mainBody_; }
 
 protected:

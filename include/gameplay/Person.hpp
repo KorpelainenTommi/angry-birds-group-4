@@ -6,31 +6,44 @@
 #include <gameplay/Physics.hpp>
 #include <box2d/b2_body.h>
 
-/// Constructs a physics ragdoll that can be used for people
+/// @brief Constructs a physics ragdoll that can be used for people
 class Person : public PhysObject {
 public:
 
-    //The person will point right. If mirrored = true, it will point to the left
+    /// @brief Constructor. The person will point right. If mirrored = true, it will point to the left
     Person(Game& game, gm::GameObjectType type, float x, float y, float rot, bool mirrored = false, int collisionGroup = -5);
+    
+    /// @brief Destructor for person
     virtual ~Person();
 
+    /// @brief Renders the person
     virtual void Render(const RenderSystem& r);
+    
+    /// @brief Returns mass of the person
     virtual float GetMass() const;
+    /// @brief Records all tfloats
     virtual void Record();
+    
+    /// @brief Updates rigidbody
     virtual void Update();
     
+    /// @brief Set x coordinate
     virtual void SetX(float x);
-
+    
+    /// @brief Set y coordinate
     virtual void SetY(float y);
 
+    /// @brief Set rotation
     virtual void SetRotation(float rot);
 
     
     //SetPosition is same as GameObject::SetPosition
 
-
+    /// @brief Handles the collision between itself and another physobject
     virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact);
+    /// @brief Creates an impulse
     virtual void Impulse(const b2Vec2& f);
+
     virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r);
     virtual std::vector<sf::Sprite> GetSprites(const RenderSystem& r);
     virtual bool CheckIntersection(sf::Sprite s, const RenderSystem& r);

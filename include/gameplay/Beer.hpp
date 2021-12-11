@@ -21,7 +21,7 @@ public:
     Beer(Game& game, gm::GameObjectType type, float x, float y, float rot) : Block(game, type, x, y, rot) {}
 
 protected:
-    /// @brief Method to be called on death. Destroys itself and couses minus points.
+    /// @brief Method to be called on death. Destroys itself and causes minus points.
     virtual void OnDeath() {
 
         game_.GetAudioSystem().PlaySound(materialData_.breakSound);
