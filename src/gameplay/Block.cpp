@@ -127,3 +127,11 @@ std::vector<b2Body*> Block::GetPhysBodies() {
 bool Block::CheckIntersection(b2Body* other) {
     return b2TestOverlap(mainBody_->GetFixtureList()[0].GetShape(), 0, other->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), other->GetTransform());
 }
+
+const gm::BlockMaterial Block::GetBlockMaterial() const {
+    return blockData_.material;
+}
+
+bool Block::ElectricityCheck(Block& block) {
+    return true;
+}

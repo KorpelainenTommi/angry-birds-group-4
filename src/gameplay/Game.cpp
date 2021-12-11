@@ -381,3 +381,6 @@ int Game::GetMaxScore() {
 }
 
 
+std::map<int,std::unique_ptr<GameObject>>& Game::GetObjects() {
+    return objects_;
+}

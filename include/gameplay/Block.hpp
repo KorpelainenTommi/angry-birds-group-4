@@ -27,7 +27,10 @@ public:
 
     virtual std::vector<b2Body*> GetPhysBodies();
     virtual bool CheckIntersection(b2Body* other);
-
+    
+    const gm::BlockMaterial GetBlockMaterial() const;
+    bool ElectricityCheck(Block& block);
+    
 protected:
     gm::BlockData blockData_;
     gm::BlockShapeData shapeData_;

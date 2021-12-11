@@ -11,7 +11,10 @@
 #include <gameplay/Person.hpp>
 #include <box2d/b2_body.h>
 #include <memory>
-
+#include <gameplay/Block.hpp>
+#include <cmath>
+#include <set>
+#include <iostream>
 class Teekkari : public Person {
 public:
     Teekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, data.objType, x, y, rot)
@@ -205,6 +208,42 @@ public:
 protected:
     virtual void Ability(float x, float y) {
 
+        std::set<int> metalBlocks;
+        int nearestBlock = -1;
+        for(auto& o : game_.GetObjects()) {
+            float minDistance = ph::inf;
+            if(o.first >= gm::objectGroupSize && o.first < 2*gm::objectGroupSize) {
+                Block& block = static_cast<Block&>(*o.second);
+                if(block.GetBlockMaterial() == gm::BlockMaterial::metal) {
+                    std::cout << block.GetHP() << std::endl;
+                    metalBlocks.insert(o.first);
+                    float distance = std::sqrt((x-block.GetX())*(x-block.GetX())+(y-block.GetY())*(y-block.GetY()));
+                    if(distance < minDistance) {
+                        minDistance = distance;
+                        nearestBlock = o.first;
+                    }
+                }
+            }
+        }
+        std::function<void(int,float)> destroyRecursively = [&](int startBlock, float remainingEnergy) {
+            Block& currentBlock = static_cast<Block&>(game_.GetObject(startBlock));
+            metalBlocks.erase(startBlock);
+            std::set<int>::iterator it = metalBlocks.begin();
+            while(it != metalBlocks.end()) {
+                Block& nextBlock = static_cast<Block&>(game_.GetObject(*it));
+                if(currentBlock.ElectricityCheck(nextBlock) && remainingEnergy > 200) {
+                    destroyRecursively(*it,remainingEnergy/1.5F);
+                    it = metalBlocks.begin();
+                }
+                else {
+                    ++it;
+                }
+            }
+            currentBlock.DealDamage(remainingEnergy);
+        };
+        if(nearestBlock != -1) {
+            destroyRecursively(nearestBlock,ph::lightningEnergy);
+        }
     }
 };
 

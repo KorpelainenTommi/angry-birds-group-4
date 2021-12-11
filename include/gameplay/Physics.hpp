@@ -64,7 +64,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <cmath>
-
+#include <limits>
 
 
 namespace ph {
@@ -73,6 +73,7 @@ namespace ph {
     /// Width of the area seen by a camera at zoom = 1.0F
     const float fullscreenPlayArea = 50.0F;
 
+    const float lightningEnergy = 30000.0F;
 
     /// Thickness of the ground. More ground than this will not be visible at the lowest camera position
     const float groundThickness = 20.0F;
@@ -139,6 +140,8 @@ namespace ph {
 
     /// Mathematical constant pi (with max precision that float allows)
     const float pi = 3.141592741F;
+
+    const float inf = std::numeric_limits<float>::infinity();
 
     /// Convert from Box2D angle (radians) to SFML rotation (degrees)
     inline float angToRot(float ang) { return -180 * ang / pi; }

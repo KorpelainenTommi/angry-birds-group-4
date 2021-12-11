@@ -179,6 +179,8 @@ public:
     /// Checks if there are active teekkaris, or active abilities in the level
     bool NoActivity();
     
+    std::map<int,std::unique_ptr<GameObject>>& GetObjects();
+    
 protected:
     GameScreen& screen_;
     
