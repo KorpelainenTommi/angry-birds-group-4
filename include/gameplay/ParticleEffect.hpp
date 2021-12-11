@@ -6,13 +6,14 @@
 #include <box2d/b2_circle_shape.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_body.h>
+#include <limits>
 #include <string>
 #include <cmath>
 
 class PhysParticle : public PhysObject {
 public:
     PhysParticle(Game& game, float x, float y, float rot) : PhysObject(game, gm::GameObjectType::phys_particle, x, y, rot) {
-        hp_ = 100;
+        hp_ = std::numeric_limits<float>::infinity();
         creationTime_ = game.GetTime();
 
         //Create the main body
@@ -56,6 +57,7 @@ public:
     void SetSize(float sz) { size_ = sz; }
     void SetLifeTime(float l) { lifeTime_ = l; }
     void SetSprite(SpriteID sp) { sprite_ = sp; }
+    virtual std::vector<b2Body*> GetPhysBodies() { return std::vector<b2Body*>(); }
     b2Body* GetBody() { return mainBody_; }
 
 protected:
@@ -71,7 +73,7 @@ protected:
 class TextParticle : public PhysObject {
 public:
     TextParticle(Game& game, float x, float y, float rot) : PhysObject(game, gm::GameObjectType::phys_particle, x, y, rot) {
-        hp_ = 100;
+        hp_ = std::numeric_limits<float>::infinity();
         creationTime_ = game.GetTime();
 
         //Create the main body
@@ -117,6 +119,7 @@ public:
     void SetLifeTime(float l) { lifeTime_ = l; }
     void SetText(std::string text) { text_ = text; }
     void SetColor(sf::Color color) { color_ = color; }
+    virtual std::vector<b2Body*> GetPhysBodies() { return std::vector<b2Body*>(); }
 
 protected:
     float creationTime_;
