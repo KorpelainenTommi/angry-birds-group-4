@@ -9,8 +9,10 @@
 #include <box2d/b2_fixture.h>
 #include <limits>
 
+/// @brief Ground class
 class Ground : public PhysObject {
 public:
+    /// @brief Constructs the ground according to the dimensions in physics-hpp
     Ground(Game& game) : PhysObject(game, gm::GameObjectType::ground_obj, 0, -0.5F * ph::groundThickness, 0) {
         b2BodyDef groundDef;
         b2PolygonShape groundShape;
@@ -32,15 +34,14 @@ public:
         mainBody_->CreateFixture(&fixture);
         hp_ = std::numeric_limits<float>::infinity();
     }
-
+    /// @brief Get the mass of the ground
     virtual float GetMass() const { return ph::groundMass;}
-
+   /// @brief Renders the ground
     virtual void Render(const RenderSystem& r) {
         r.RenderRect(ph::groundColor, 0, -0.5F * ph::groundThickness, ph::fullscreenPlayArea, ph::groundThickness, 0, game_.GetCamera());
     }
-
+    /// @brief Update ground. Empty implementation overrides default behaviour for PhysObjects and therefore ground is not updated.
     virtual void Update() {
-        //Empty implementation overrides default behaviour for PhysObjects
     }
 
     

@@ -22,7 +22,7 @@ namespace gm {
 //List of all game object types
 //Defined in the cpp file
 
-
+/// @brief Groups for gameobjects
 enum GameObjectGroup {
     background,
     block,
@@ -31,7 +31,7 @@ enum GameObjectGroup {
     ground
 };
 
-/// A unique identifier defining the type of GameObject. All GameObjects should be spawnable without extra info
+/// @brief A unique identifier defining the type of GameObject. All GameObjects should be spawnable without extra info
 enum GameObjectType {
 
 
@@ -153,7 +153,7 @@ enum GameObjectType {
 
 };
 
-/// Used to save objects to file
+/// @brief Struct to save objects to file
 struct GameObjectData {
     
     float x;
@@ -165,19 +165,19 @@ struct GameObjectData {
 
 const int objectGroupSize = 100000000;
 
-/// Get the desired object group based on a GameObjectType
+/// @brief Get the desired object group based on a GameObjectType
 int GetObjectGroup(GameObjectType);
 
-/// Get the object score if broken, or 0 if not applicable
+/// @brief Get the object score if broken, or 0 if not applicable
 int GetObjectScore(GameObjectType type);
 
-/// Construct a child class based on GameObjectType
+/// @brief Construct a child class based on GameObjectType
 std::unique_ptr<GameObject> IDToObject(Game& game, GameObjectType type, float x, float y, float rot);
 
 
 
 
-//Face and sound of a Teekkari or Fuksi
+/// @brief Struct for face and sound of a Teekkari or Fuksi
 struct PersonFace {
     SpriteID face = SpriteID::teekkari_head1;
     SoundID grunt = SoundID::grunt1;
@@ -187,7 +187,7 @@ struct PersonFace {
     //just looks wrong if the face doesn't match the hands
 };
 
-//Body of a person
+/// @brief Struct for body of a person
 struct PersonBody {
     SpriteID torso = SpriteID::torso_blue;
     SpriteID arm = SpriteID::arm_blue;
@@ -195,9 +195,10 @@ struct PersonBody {
     SpriteID armb = SpriteID::armb_blue;
     std::string guildName = "Teemu Teekkari";
 };
-
-// All properties needed to spawn a unique Teekkari or Fuksi.
-// A Teekkari can be spawned with GameObjectType as well, it will have a randomly generated PersonData
+/// @brief Struct for all data needed for a person
+/** @details All properties needed to spawn a unique Teekkari or Fuksi.
+*  A Teekkari can be spawned with GameObjectType as well, it will have a randomly generated PersonData
+*/
 struct PersonData {
     PersonFace face;
     PersonBody body;
@@ -205,37 +206,38 @@ struct PersonData {
 };
 
 
-/// List of teekkari heads to choose from
+/// @brief List of teekkari heads to choose from
 extern const std::vector<PersonFace> teekkariHeads;
 
-/// List of teekkari heads with a different cap, because... well this is a really dumb way to accomplish this
+/// @brief List of teekkari heads with a different cap, because... well this is a really dumb way to accomplish this
 extern const std::vector<PersonFace> teekkariHeads_s;
 
-/// List of fuksi heads to choose from
+/// @brief List of fuksi heads to choose from
 extern const std::vector<PersonFace> fuksiHeads;
 
-/// Lookup for teekkari bodies
+/// @brief Lookup for teekkari bodies
 extern const std::unordered_map<GameObjectType, PersonBody> teekkariBodies;
 
-/// List of fuksi bodies
+/// @brief List of fuksi bodies
 extern const std::vector<gm::PersonBody> fuksiBodies;
 
-/// List of all teekkaris
+/// @brief List of all teekkaris
 extern const std::vector<gm::GameObjectType> teekkaris;
 
-/// Lookup from pickups to teekkaris
+/// @brief Lookup from pickups to teekkaris
 extern const std::unordered_map<gm::GameObjectType, gm::GameObjectType> pickupLookup;
 
-/// Return a random teekkari from a guild based on GameObjectType
+/// @brief Return a random teekkari from a guild based on GameObjectType
 PersonData RandomTeekkari(GameObjectType type);
 
-/// Return a random fuksi
+/// @brief Return a random fuksi
 PersonData RandomFuksi();
 
 
-// Block properties
 
+/// @brief Block material properties
 enum BlockMaterial { wood, metal, glass, plastic, rubber, concrete };
+/// @brief Block shape properties
 enum BlockShape { block_1x1, block_2x1, block_2x2, block_ball, /*block_tri,*/ block_plank, block_thickplank, block_bottle, block_can };
 
 
@@ -251,7 +253,7 @@ std::shared_ptr<b2Shape> CreateShapeThickPlank();
 std::shared_ptr<b2Shape> CreateShapeBottle();
 std::shared_ptr<b2Shape> CreateShapeCan();
 
-
+/// @brief Struct for Block material data
 struct BlockMaterialData {
     BlockMaterial material;
     float density;
@@ -264,6 +266,7 @@ struct BlockMaterialData {
     SpriteID particle;
 };
 
+/// @brief Struct for block shape data
 struct BlockShapeData {
     BlockShape shape;
     float volume;
@@ -273,6 +276,7 @@ struct BlockShapeData {
     SpriteID lowHPSprite;
 };
 
+/// @brief Struct for block's data
 struct BlockData {
     std::string blockName;
     SpriteID sprite;
@@ -280,13 +284,13 @@ struct BlockData {
     BlockShape shape;
 };
 
-/// Ordered lookup for all types of blocks
+/// @brief Ordered lookup for all types of blocks
 extern const std::map<GameObjectType, BlockData> blockTypes;
 
-/// Lookup for all block materials
+/// @brief Lookup for all block materials
 extern const std::unordered_map<BlockMaterial, BlockMaterialData> materialProperties;
 
-/// Lookup for all block shapes
+/// @brief Lookup for all block shapes
 extern const std::unordered_map<BlockShape, BlockShapeData> shapeProperties;
 
 
