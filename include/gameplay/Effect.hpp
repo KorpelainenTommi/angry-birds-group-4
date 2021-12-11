@@ -6,24 +6,27 @@
 #include <gameplay/Physics.hpp>
 #include <iostream>
 
+/// @brief Effects are visible objects that don't have physical effects.
 class Effect : public GameObject {
 public:
+    /// @brief Constructor
     Effect(Game& game, AnimationID anim, float x, float y, float rot, float size = 1.0F, float fps = 24.0F, float duration = 1.0F, bool loop = false) :
     GameObject(game, gm::GameObjectType::anim_effect, x, y, rot), fps_(fps), size_(size), duration_(duration), loop_(loop), animationID_(anim)
     {starting_time = game_.GetTime();}
 
+    /// @brief Get frame
     int GetFrame(){
         float time = game_.GetTime() - starting_time;
         return (int)(time * fps_);
     }
-
+    /// @brief Check if effect has ended
     bool CheckDuration(){  ///For checking if effect has ended
         if(game_.GetTime() - starting_time > duration_){
             return true;
         }
         return false;
     }
-
+    /// @brief Renders the effect
     virtual void Render(const RenderSystem& r) {
 
         int frame = CheckDuration() ? (int)(duration_ * fps_) : GetFrame();
@@ -31,7 +34,7 @@ public:
         r.RenderAnimation(animationID_, frame, x_, y_, size_, rot_, game_.GetCamera());
 
     }
-
+    /// @brief Updates effect
     virtual void Update() {
         if(CheckDuration()) game_.DestroyObject(gameID_);
     }

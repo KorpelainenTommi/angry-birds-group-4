@@ -14,14 +14,14 @@
 #include <box2d/b2_api.h>
 #include <unordered_map>
 
-// A block that gives a teekkari to the player when broken
+///@brief A block that gives a teekkari to the player when broken
 class Beer : public Block {
 public:
-
+/// @brief Constructor
     Beer(Game& game, gm::GameObjectType type, float x, float y, float rot) : Block(game, type, x, y, rot) {}
 
 protected:
-
+    /// @brief Method to be called on death. Destroys itself and couses minus points.
     virtual void OnDeath() {
 
         game_.GetAudioSystem().PlaySound(materialData_.breakSound);

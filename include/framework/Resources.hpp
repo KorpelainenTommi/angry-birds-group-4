@@ -1,7 +1,7 @@
 #ifndef RESOURCES_HPP
 #define RESOURCES_HPP
 
-/// All sprites usable with RenderSystem
+/// @brief All sprites usable with RenderSystem
 enum SpriteID { 
 
     nice_face,
@@ -294,7 +294,7 @@ enum SpriteID {
 
 };
 
-/// All animations usable with RenderSystem
+/// @brief All animations usable with RenderSystem
 enum AnimationID { 
 
     //Explosions
@@ -314,7 +314,7 @@ enum AnimationID {
 
 };
 
-/// All sounds usable with AudioSystem
+/// @brief All sounds usable with AudioSystem
 enum SoundID { 
     
 
@@ -405,7 +405,7 @@ enum SoundID {
 
 };
 
-/// All fonts usable with RenderSystem
+/// @brief All fonts usable with RenderSystem
 enum FontID { source_serif, consolas, magneto };
 
 #endif

@@ -9,23 +9,23 @@
 #include <framework/FileManager.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 
-/// Framework class for managing and indexing all resources
+/// @brief Framework class for managing and indexing all resources
 class ResourceManager {
 public:
 
-    /// Construct a ResourceManager, that loads resources with this FileManager
+    /// @brief Construct a ResourceManager, that loads resources with this FileManager
     ResourceManager(const FileManager&);
     
-    /// Reference to the Font specified by this FontID
+    /// @brief Get reference to the Font specified by this FontID
     const sf::Font& GetFont(FontID);
     
-    /// Reference to the Sprite specified by this SpriteID    
+    /// @brief Get reference to the Sprite specified by this SpriteID
     const sf::Sprite& GetSprite(SpriteID id);
     
-    /// Reference to the Sound specified by this SoundID
+    /// @brief Get reference to the Sound specified by this SoundID
     const sf::SoundBuffer& GetSound(SoundID id);
 
-    /// Reference to the sprite specified by this AnimationID and frame
+    /// @brief Get reference to the sprite specified by this AnimationID and frame
     const sf::Sprite& GetAnimation(AnimationID id, int frame);
 
 private:

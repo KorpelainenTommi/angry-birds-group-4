@@ -11,30 +11,30 @@
 
 
 
-/// Framework class for loading and saving data
+/// @brief Framework class for loading and saving data
 class FileManager {
 public:
 
-    /// Load a texture from this path, true if successful, false if not
+    /// @brief Load a texture from this path, true if successful, false if not
     bool LoadTexture(sf::Texture& texture, const std::string& path) const;
 
-    /// Load an audio clip from this path, true if successful, false if not    
+    /// @brief Load an audio clip from this path, true if successful, false if not
     bool LoadAudio(sf::SoundBuffer& soundBuffer, const std::string& path) const;
 
-    /// Load a font from this path, true if successful, false if not    
+    /// @brief Load a font from this path, true if successful, false if not
     bool LoadFont(sf::Font& font, const std::string& path) const;
 
 
-    /// Return a list of all playable levels
+    /// @brief Return a list of all playable levels
     std::vector<Level> ListLevels() const;
 
-    /// Return a list of levels that can extend an endless game
+    /// @brief Return a list of levels that can extend an endless game
     std::vector<Level> ListEndless() const;
 
-    /// Save a level. If the level already existed, this will overwrite it
+    /// @brief Save a level. If the level already existed, this will overwrite it
     bool SaveLevel(Level& level) const;
 
-    /// Delete a level
+    /// @brief Delete a level
     void DeleteLevel(const Level& level) const;
 
 private:

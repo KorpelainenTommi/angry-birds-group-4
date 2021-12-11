@@ -10,24 +10,29 @@
 #include <SFML/System/Vector2.hpp>
 
 
-/// A Cannon always aims at the mouse cursor. The launch force is based on cursor distance to the cannon
+/// @brief A Cannon always aims at the mouse cursor. The launch force is based on cursor distance to the cannon
 class Cannon : public GameObject {
 public:
 
-    /// Construct a catapult at this position facing right
+    /// @brief Construct a catapult at this position facing right
     Cannon(Game& game, gm::GameObjectType type, float x, float y, float rot);
 
-    /// Destroy underlying rigidbodies with b2dWorld.DestroyBody()
+    ///@brief  Destroy underlying rigidbodies with b2dWorld.DestroyBody()
     virtual ~Cannon();
 
-    /// Update this GameObjects position to reflect the state in the box2d world
+    /// @brief Update this GameObjects position to reflect the state in the box2d world
     virtual void Update();
 
-    
+    /// @brief Render the cannon
     virtual void Render(const RenderSystem& r);
     
+    /// @brief Receive mouse events from the user
     virtual bool OnMouseMove(float xw, float yh);
+    
+    /// @brief Receive mouse events from the user
     virtual bool OnMouseDown(const sf::Mouse::Button& e, float x, float y);
+    
+    /// @brief Receive mouse events from the user
     virtual bool OnMouseUp(const sf::Mouse::Button& e, float x, float y);
     
     
