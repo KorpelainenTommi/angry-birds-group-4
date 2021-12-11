@@ -5,9 +5,8 @@
 #include <memory>
 #include <limits.h>
 
-/**
- * No support for cropping.
- */
+/// @brief a list of elements that can be scrolled
+/// @details takes care of the positioning of the child elements
 class ListElement: public ColoredElement{
 public:
     ListElement(
@@ -21,24 +20,17 @@ public:
 
     virtual bool OnMouseScroll(float delta, float xw, float yh);
 
-    /**
-     * Inserts the element into the list and returns an id that can be used to access or remove the element. 
-     */
+    /// @brief insert a new element to the list
+    /// @returns an integer id that can be used later on to access or remove the element
     int InsertElement(std::shared_ptr<Element> element);
 
-    /**
-     * Remove the element with the id returned by InsertElement.
-     */
+    /// @brief removes the element associated with the id returned by InsertElement
     void RemoveElement(int id);
 
-    /**
-     * Returns the element with the id returned by InsertElement.
-     */
+    /// @brief returns the element associated with the id returned by InsertElement
     std::shared_ptr<Element> GetElement(int id);
 
-    /**
-     * Set the amount of space between elements.
-     */
+    /// @brief set the amount of space shown between elements
     void SetSpacing(const ui::pfloat&);
 
     /**
@@ -46,9 +38,7 @@ public:
      */
     const std::map<int, std::shared_ptr<Element>>& GetElements() const;
 
-    /**
-     * Removes all elements from the element list.
-     */
+    /// @brief removes all elements from the list
     void ClearElements();
 
     virtual void SetPosition(ui::pfloat x, ui::pfloat y);

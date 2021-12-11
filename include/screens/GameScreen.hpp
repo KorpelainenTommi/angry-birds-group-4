@@ -37,36 +37,35 @@ public:
     
     virtual ~GameScreen() = default;
 
+    /// @brief exit to main menu
     void Exit();
 
+    /// @brief send a restart signal for Game
     void Restart();
 
-    /**
-     * requiredMaxScore is not the absolute max score but the one that is required for max points.
-     */
+    /// @brief show the victory message box
     void OnGameCompleted(int score, int requiredMaxScore);
 
+    /// @brief show the game loss message box
     void OnGameLost(const std::string& reason = "Level failed!");
 
+    /// @brief update the score shown in the UI
     void OnScoreChange(int score);
 
-    /**
-     * Game should call this whenever the list of projectiles should be updated.
-     */
+    /// @brief update the projectiles in the left hand side panel
     void UpdateProjectileList(std::vector<std::pair<SpriteID, std::string>>);
 
-    /**
-     * Editor should call this whenever the theoretical max score of the level changes.
-     * (e.g. when new blocks are added or removed AND when the editor is created)
-     */
+    /// @brief update the theoretical max score shown in the editor UI
     void UpdateTheoreticalMaxScore(int maxScore);
 
     Game& GetGame();
 
+    /// @brief return a reference to the editor when the UI is in editor mode
     Editor& GetEditor();
 
     bool IsInEditorMode() const {return editorMode_;}
 
+    /// @brief save the level that is being edited in the editor
     bool SaveEditor();
 
     /**
@@ -95,6 +94,7 @@ public:
 
     ui::pfloat calcVictoryMessageInputTop() const;
 
+    /// @brief save the player's score to the level file
     void saveScore(const std::string& name, int score);
 
     ui::pfloat calcProjectileBarWidth() const;
@@ -143,6 +143,7 @@ public:
 
     void hideTimeTrialOptions();
 
+    /// @brief sets the selected game mode in editor
     void setSelectedGameMode(LevelMode m);
 
     void hideEditorPanel();

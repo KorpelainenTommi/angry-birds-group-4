@@ -24,10 +24,12 @@ public:
 
     virtual void SetTop(ui::pfloat top){y_ = top;}
 
+    /// @brief returns the raw y coordinate of the element without considering the offset
     ui::pfloat GetTopY() const {return y_;}
 
     virtual void SetLeft(ui::pfloat left){x_ = left;}
 
+    /// @brief returns the raw x coordinate of the element without considering the offset
     ui::pfloat GetLeftX() const {return x_;}
 
     virtual void SetSize(ui::pfloat w, ui::pfloat h) { w_ = w; h_ = h; }
@@ -40,23 +42,19 @@ public:
 
     ui::pfloat GetWidth() const {return w_;}
 
+    /// @brief checks if the given coordinates are inside the elements and its crop area and the element is visible
     virtual bool isInside(float xw, float yh) const;
 
-    /**
-     * Should only check if the element captures the event and execute no other code.
-     * Ideally this should be a pure function.
-     */
+    /// @brief return true if the element captures the event, but doesn't execute any event handlers yet
+    /// @details ideally this should be a pure function
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
 
-    /**
-     * This will be called if OnMouseDown returned true.
-     * Screen uses this to check if it should play click sound.
-     */
+    /// @brief return true if screen should play click sound after this element is clicked
+    /// @details this method is called only if OnMouseDown returned true
     bool ClickSoundShouldBePlayed() const;
 
-    /**
-     * This will be called if OnMouseDown returned true.
-     */
+    /// @brief execute event handlers and do all other things that must be done on the event occurs
+    /// @details this method is called only if OnMouseDown returned true
     virtual void ExecuteOnMouseDown();
 
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
@@ -71,6 +69,7 @@ public:
 
     virtual bool OnTextEntered(const sf::Event::TextEvent&){return false;}
 
+    /// @brief this method is called whenever the window is resized
     virtual void OnWindowResize();
 
     void SetMouseDownHandler(const std::function<void()> f){mouseDownHandler_ = f;}
@@ -97,8 +96,10 @@ public:
     void SetWindowResizeHandler(const std::function<void()> f){windowResizeHandler_ = f;}
     void SetWindowResizeHandler(){windowResizeHandler_ = NULL;}
 
+    /// @brief remove frocus from the element
     virtual void Blur();
 
+    /// @brief give focus for the element
     virtual void Focus();
 
     virtual void SetOffsetX(const ui::pfloat& ox){offsetX_ = ox;}
@@ -107,6 +108,7 @@ public:
     virtual void SetOffsetY(const ui::pfloat& oy){offsetY_ = oy;}
     virtual void SetOffsetY(){offsetY_ = 0 VH;}
 
+    /// @brief set the area in which the element must be rendered
     virtual void SetCropArea(const ui::CropArea& a){
         cropArea_ = a;
         cropped_ = true;
@@ -117,14 +119,21 @@ public:
 
     ui::CropArea GetCropArea() const {return cropArea_;}
 
+    /// @brief convert any pfloat into a pfloat that is relative to window height
     ui::pfloat toVH(const ui::pfloat&) const;
+    /// @brief convert any pfloat into a pfloat that is relative to window width
     ui::pfloat toVW(const ui::pfloat&) const;
 
+    /// @brief get the y coordinate in which the offset has been taken into account
     ui::pfloat GetTop() const;
+    /// @brief get the x coordinate in which the offset has been taken into account
     ui::pfloat GetLeft() const;
 
+    /// @brief tell the element to either capture or pass events that can give it a focus
     void SetFocusCapture(bool b){captureFocus_ = b;}
 
+    /// @brief set a HTML-like title for the elemnt
+    /// @brief currently RoundIcon is the only element that implements this functionality
     void SetTitle(const std::string& s);
 
     bool IsVisible() const;

@@ -3,6 +3,7 @@
 
 #include <ui/Element.hpp>
 
+/// @brief a simple element with a background color
 class ColoredElement: public Element{
 public:
     ColoredElement(

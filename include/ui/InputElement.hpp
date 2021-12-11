@@ -3,6 +3,7 @@
 
 #include <ui/ColoredElement.hpp>
 
+/// @brief an element that allows user to give input as a single line text
 class InputElement: public ColoredElement{
 public:
     InputElement(
@@ -19,8 +20,10 @@ public:
 
     virtual void Render(const RenderSystem&);
 
+    /// @brief set the text value of the input
     void SetText(const std::string&);
 
+    /// @brief get the text value of the input
     std::string GetText() const;
 
     virtual bool OnKeyDown(const sf::Event::KeyEvent&);

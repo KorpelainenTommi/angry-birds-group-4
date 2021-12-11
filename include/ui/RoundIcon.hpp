@@ -3,6 +3,7 @@
 
 #include <ui/RoundElement.hpp>
 
+/// @brief an element for showing icons with a round hit box
 class RoundIcon: public RoundElement{
 public:
     RoundIcon(
@@ -18,10 +19,13 @@ public:
 
     SpriteID GetIcon(){return icon_;}
 
+    /// @brief modify the apperance of the element to indicate that it is selected
     void Select();
 
+    /// @brief undo Select()
     void Unselect();
 
+    /// @brief set the thickness of the highlight border that is shown when the element is selected
     void SetBorderThickness(const ui::pfloat&);
 
 private:

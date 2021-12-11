@@ -3,6 +3,7 @@
 
 #include <ui/ColoredElement.hpp>
 
+/// @brief a simple base element for a message box
 class MessageBox: public ColoredElement{
 public:
     MessageBox(const ui::pfloat& height, const ui::pfloat& width): ColoredElement(

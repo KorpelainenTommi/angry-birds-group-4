@@ -12,7 +12,7 @@
 
 namespace ui {
 
-
+    /// @brief a struct for handling UI measurements in units that are relative to window height or width
     struct pfloat {
     public:
         enum P { vh, vw };
@@ -90,6 +90,7 @@ namespace ui {
  * 
  */ 
 
+    /// @brief a sturc for determining the area in which a shape or an elemen consisting of shapes should be rendered
     struct CropArea {
         CropArea() {}
         CropArea(const pfloat& t, const pfloat& l, const pfloat& h, const pfloat& w) : 
@@ -148,9 +149,12 @@ namespace ui {
     extern float aspectRatio;
 
 
+    /// @brief convert a pfloat into a raw floating point value that is relative to window height
     float toVHFloat(const pfloat& p);
+    /// @brief convert a pfloat into a raw floating point value that is relative to window width
     float toVWFloat(const pfloat& p);
 
+    /// @brief combine two crop areas that fits inside both of the original crop areas
     CropArea combineCropAreas(const CropArea& a, const CropArea& b);
 
 }

@@ -16,10 +16,13 @@ public:
 
     virtual void Render(const RenderSystem& r);
 
+    /// @brief set the amount of space shown between the lines in relative units
     void SetRelativeLineSpacing(const ui::pfloat& s);
 
+    /// @brief set the amount of space shown between the lines in absolute units
     void SetAbsoluteLineSpacing(float s);
 
+    /// @brief get the amount of space shown between the lines in units relative to the current window size
     ui::pfloat GetLineSpacing();
 
 private:

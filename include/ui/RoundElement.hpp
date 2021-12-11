@@ -3,6 +3,7 @@
 
 #include <ui/Element.hpp>
 
+/// @brief a base calss for elements with a round hit box
 class RoundElement: public Element{
 public:
     RoundElement(

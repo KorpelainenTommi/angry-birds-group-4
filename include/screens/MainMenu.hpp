@@ -13,11 +13,10 @@ public:
 
     virtual void Render(const RenderSystem&);
 
-    /**
-     * This should be used only by buttons created in Mainmenu::addLevel()
-     */
+    /// @brief this is ment to be used only by UI call backs
     void SelectLevel(const Level& level, std::weak_ptr<Button> button, int id);
 
+    /// @brief this is ment to be used only by UI call backs
     Level GetSelectedLevel() const {return selectedLevel_.first;};
 
     ui::pfloat calcListWidth() const;

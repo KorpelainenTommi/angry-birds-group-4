@@ -27,8 +27,10 @@ public:
         mouseDownHandler_ = mouseDownHandler;
     };
 
+    /// @brief deactivate the button so it can't be pressed
     void Deactivate(){active_ = false;};
 
+    /// @brief activate the button so it can be pressed again
     void Activate(){active_ = true;};
 
     void SetDeactivatedBackgroundColor(const sf::Color& c){deactivatedBackgroundColor_ = c;}
@@ -36,6 +38,8 @@ public:
 
     virtual void Render(const RenderSystem&);
 
+    /// @brief execute mouse down handler and do other things that should be done when mouse down occurs
+    /// @details screen calls this after setting focus for the element if OnMouseDown returned true
     virtual void ExecuteOnMouseDown();
 
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);

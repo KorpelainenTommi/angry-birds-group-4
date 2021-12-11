@@ -4,6 +4,8 @@
 #include <ui/ColoredElement.hpp>
 #include <limits.h>
 
+/// @brief a element for managing a large number of elements
+/// @details makes the positions of child elements relative to its own position
 class DivElement: public ColoredElement{
 public:
     DivElement(
@@ -13,14 +15,19 @@ public:
         const ui::pfloat& width
     ): ColoredElement(top, left, height, width){};
 
+    /// @brief insert a new element to the div
+    /// @returns an integer id that can be used later on to access or remove the element
     int InsertElement(std::shared_ptr<Element> element);
 
+    /// @brief removes the element associated with the id returned by InsertElement
     void RemoveElement(int id);
 
+    /// @brief returns the element associated with the id returned by InsertElement
     std::shared_ptr<Element> GetElement(int id);
 
     const std::map<int, std::shared_ptr<Element>>& GetElements() const;
 
+    /// @brief removes all elements from the div
     void ClearElements();
 
     virtual void SetPosition(ui::pfloat x, ui::pfloat y);
@@ -46,7 +53,9 @@ public:
     virtual void SetCropArea(const ui::CropArea& a);
     virtual void SetCropArea();
 
+    /// @brief hide the element and all its child elements
     virtual void Hide();
+    /// @brief show the element and all its child elements
     virtual void Show();
 
 private:

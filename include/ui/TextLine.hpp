@@ -2,7 +2,7 @@
 #define UI_TEXTLINE_HPP
 
 #include <ui/TextElement.hpp>
-
+ /// @brief an element for a single text line
 class TextLine: public TextElement{
 public:
     TextLine(

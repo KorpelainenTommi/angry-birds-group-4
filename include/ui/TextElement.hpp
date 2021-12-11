@@ -3,6 +3,7 @@
 
 #include <ui/ColoredElement.hpp>
 
+/// @brief a base class for elements containing text
 class TextElement: public ColoredElement{
 public:
     TextElement(

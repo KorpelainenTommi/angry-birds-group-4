@@ -47,13 +47,17 @@ public:
 
     virtual bool OnKeyUp(const sf::Event::KeyEvent&);
 
+    /// @brief add a confirmation message box to screen's message queue
     void Confirm(std::string text, const std::function<void(bool)> callBack);
 
+    /// @brief add an alert message box to screen's message queue
     void Alert(std::string text, const std::function<void()> callBack);
     void Alert(std::string text);
 
+    /// @brief use audio system to play the UI click sound
     void PlayClickSound() const;
 
+    /// @brief remove the oldest message from screen's message queue
     void DequeueMessage();
 
     ui::pfloat calcMessageBoxButtonTop(const ui::pfloat& messageHeight) const;
