@@ -204,7 +204,7 @@ public:
         y_ += 3.0F*nVelocity.y;
         
         rot_ = std::atanf(nVelocity.x/nVelocity.y)*180/ph::pi;
-        if(nVelocity.y < 0) rot_ = 90 - rot_;
+        if(nVelocity.y < 0) rot_ = rot_ + 180;
 
         creationTime_ = game.GetTime();
         //Create the main body
@@ -218,7 +218,7 @@ public:
 
 
         b2PolygonShape shape;
-        shape.SetAsBox(1.333333F, 1.0F);
+        shape.SetAsBox(3.0F, 1.0F);
         b2FixtureDef fixture;
         b2FixtureUserData userData;
         userData.data = this;
