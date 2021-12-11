@@ -130,6 +130,21 @@ const gm::BlockMaterial Block::GetBlockMaterial() const {
 }
 
 bool Block::ElectricityCheck(Block& block) {
-    return true;
+    bool check = false;
+    b2Body* other = block.mainBody_;
+    b2Shape * shape = mainBody_->GetFixtureList()[0].GetShape();
+    if(shape->GetType() == b2Shape::Type::e_polygon) {
+        b2PolygonShape newShape;
+        b2PolygonShape *pshape = static_cast<b2PolygonShape*>(shape);
+        newShape.SetAsBox(pshape->m_vertices[2].x + 0.1F, pshape->m_vertices[2].y + 0.1F);
+        check = b2TestOverlap(&newShape, 0, other->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), other->GetTransform());
+    }
+    else if(shape->GetType() == b2Shape::Type::e_circle) {
+        b2CircleShape newShape;
+        b2CircleShape *cshape = static_cast<b2CircleShape*>(shape);
+        newShape.m_radius = cshape->m_radius + 0.1F;
+        check = b2TestOverlap(&newShape, 0, other->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), other->GetTransform());
+    }
+    return check;
 }
 
