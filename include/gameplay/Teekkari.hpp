@@ -1,6 +1,7 @@
 #ifndef TEEKKARI_HPP
 #define TEEKKARI_HPP
 
+#include <framework/RenderSystem.hpp>
 #include <screens/GameScreen.hpp>
 #include <ui/UIConstants.hpp>
 #include <gameplay/GameObjectTypes.hpp>
@@ -51,7 +52,7 @@ protected:
 class AbilityCow : public PhysObject {
 public:
     AbilityCow(Game& game, float x, float y, float rot) : PhysObject(game, gm::GameObjectType::ability_cow, x, y, rot) {
-        hp_ = 100000;
+        hp_ = 300000;
         creationTime_ = game.GetTime();
 
         //Create the main body
@@ -224,8 +225,60 @@ public:
     TUTATeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
 protected:
     virtual void Ability(float x, float y) {
-
+        abilityStartTime_ = game_.GetTime();
     }
+
+    virtual void Update() {
+        if(abilityUsed_ && game_.GetTime() < abilityStartTime_ + 2.0F) {
+            Force({0, 2000.0F});
+            if(whooshCounter == 0) {
+                game_.GetAudioSystem().PlaySound(SoundID::hand_whoosh);
+                
+                auto objs = game_.GetObjects();
+                
+                b2CircleShape circle;
+                circle.m_radius = 4.0F;
+                
+                for(auto o : objs) {
+                    if(o->GetGameID() != gameID_) {
+                        auto physBodies = o->GetPhysBodies();
+                        bool hit = false;
+                        for(auto p : physBodies) {
+                            if(b2TestOverlap(&circle, 0, p->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), p->GetTransform())) {
+                                hit = true;
+                                break;
+                            }
+                        }
+                if(hit) {
+                    PhysObject* phys = (PhysObject*)o;
+                    phys->ExplosionDamage({x_, y_}, 3000);
+                    phys->Explosion({x_, y_}, phys->GetMass() * 15.0F);
+                }
+            }
+        }
+
+
+            }
+            whooshCounter++;
+            whooshCounter %= 5;
+
+            armRBody_->SetAngularVelocity(100);
+            armLBody_->SetAngularVelocity(100);
+        }
+        Teekkari::Update();
+    }
+
+    virtual void Render(const RenderSystem& r) {
+        Teekkari::Render(r);
+        if(abilityUsed_ && game_.GetTime() < abilityStartTime_ + 2.0F) {
+            float t = game_.GetTime() - abilityStartTime_;
+            int frame = (int)(t * 60.0F);
+            r.RenderAnimation(AnimationID::hand_whirl, frame, x_, y_, 3.0F, rot_, game_.GetCamera());
+        }
+    }
+
+    int whooshCounter = 0;
+    float abilityStartTime_ = 0;
 };
 
 class TIKTeekkari : public Teekkari {
