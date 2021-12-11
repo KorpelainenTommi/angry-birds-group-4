@@ -161,6 +161,9 @@ public:
     /// Increment current points
     void AddPoints(int p);
 
+    /// Add a teekkari
+    void AddTeekkari(gm::GameObjectType teekkari);
+
     /// UI calls this to report Game that the user has selected a projectile.
     void SelectProjectile(int index);
 
@@ -181,6 +184,8 @@ public:
 
     /// Checks if there are active teekkaris, or active abilities in the level
     bool NoActivity();
+
+    virtual bool IsEditor() const { return false; }
     
 protected:
     GameScreen& screen_;

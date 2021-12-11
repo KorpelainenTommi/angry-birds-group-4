@@ -4,6 +4,7 @@
 #include <gameplay/Cannon.hpp>
 #include <gameplay/Ground.hpp>
 #include <gameplay/Teekkari.hpp>
+#include <gameplay/Pickup.hpp>
 #include <gameplay/Fuksi.hpp>
 #include <gameplay/Tnt.hpp>
 #include <iostream>
@@ -78,6 +79,18 @@ const std::vector<gm::GameObjectType> gm::teekkaris = {
     gm::GameObjectType::teekkari_kik,
     gm::GameObjectType::teekkari_professor
 };
+
+const std::unordered_map<gm::GameObjectType, gm::GameObjectType> gm::pickupLookup = {
+    { gm::GameObjectType::pickup_ik, gm::GameObjectType::teekkari_ik},
+    { gm::GameObjectType::pickup_sik, gm::GameObjectType::teekkari_sik},
+    { gm::GameObjectType::pickup_tefy, gm::GameObjectType::teekkari_tefy},
+    { gm::GameObjectType::pickup_tuta, gm::GameObjectType::teekkari_tuta},
+    { gm::GameObjectType::pickup_tik, gm::GameObjectType::teekkari_tik},
+    { gm::GameObjectType::pickup_inkubio, gm::GameObjectType::teekkari_inkubio},
+    { gm::GameObjectType::pickup_kik, gm::GameObjectType::teekkari_kik},
+    { gm::GameObjectType::pickup_professor, gm::GameObjectType::teekkari_professor}
+};
+
 
 gm::PersonData gm::RandomTeekkari(gm::GameObjectType type) {
 
@@ -162,7 +175,17 @@ const std::map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
     { gm::GameObjectType::thickplank_concrete, { "large concrete plank", SpriteID::concrete_thickplank, gm::BlockMaterial::concrete, gm::BlockShape::block_thickplank } },
 
     //Props
-    { gm::GameObjectType::prop_tnt, { "tnt", SpriteID::tnt, gm::BlockMaterial::wood, gm::BlockShape::block_1x1 } }
+    { gm::GameObjectType::prop_tnt, { "tnt", SpriteID::tnt, gm::BlockMaterial::wood, gm::BlockShape::block_1x1 } },
+
+    //Pickups
+    { gm::GameObjectType::pickup_ik, { "IK Pickup", SpriteID::guild_ik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_sik, { "SIK Pickup", SpriteID::guild_sik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_tefy, { "TEFY Pickup", SpriteID::guild_tefy, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_tuta, { "Prodeko Pickup", SpriteID::guild_tuta, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_tik, { "TIK Pickup", SpriteID::guild_tik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_inkubio, { "Inkubio Pickup", SpriteID::guild_inkubio, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_kik, { "KIK Pickup", SpriteID::guild_kik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_professor, { "Professor Pickup", SpriteID::guild_professor, gm::BlockMaterial::glass, gm::BlockShape::block_ball }}
 
 };
 
@@ -231,6 +254,7 @@ std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, 
     if(type >= gm::GameObjectType::block_wood1x1 && type < gm::GameObjectType::cannon) {
 
         if(type == gm::GameObjectType::prop_tnt) return std::make_unique<Tnt>(game, x, y, rot);
+        else if(type >= gm::GameObjectType::pickup_ik && type <= gm::GameObjectType::pickup_professor) return std::make_unique<Pickup>(game, type, x, y, rot);
         else return std::make_unique<Block>(game, type, x, y, rot);
     }
 

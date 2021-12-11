@@ -47,6 +47,7 @@ const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
     {SoundID::gravity_shiftdown, "data/audio/gravity_shiftdown.wav"},
 
     {SoundID::poof, "data/audio/poof.wav"},
+    {SoundID::teekkari_recruit, "data/audio/teekkari_recruit.wav"},
     {SoundID::nice, "data/audio/nice.wav"}
 
 };
@@ -61,6 +62,7 @@ const std::pair<int, std::string> ResourceManager::texturePaths_[] = {
     {6, "data/textures/fuksi_bodies.png"},
     {7, "data/textures/fuksi_heads.png"},
     {8, "data/textures/background.jpg"},
+    {9, "data/textures/guilds.png"},
     {10, "data/textures/explosion.png"},
     {11, "data/textures/poof.png"}
 };
@@ -245,8 +247,25 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::background_field, 8, {0, 0, 1440, 957}},
 
 
+    {SpriteID::beer, 0, {256, 356, 64, 64}},
+    {SpriteID::beer_can, 0, {320, 356, 64, 64}},
+
+
     {SpriteID::cow, 3, {0, 0, 200, 150}},
-    {SpriteID::wrench, 3, {200, 0, 100, 32}}
+    {SpriteID::wrench, 3, {200, 0, 100, 32}},
+
+    {SpriteID::gravity_symbols, 3, {300, 0, 138, 64}},
+    {SpriteID::math_cloud, 3, {300, 64, 138, 64}},
+    {SpriteID::integral_sign, 3, {438, 0, 330, 128}},
+    
+    {SpriteID::guild_ik, 9, {0, 0, 130, 130}},
+    {SpriteID::guild_tefy, 9, {0, 130, 130, 130}},
+    {SpriteID::guild_sik, 9, {130, 0, 130, 130}},
+    {SpriteID::guild_tuta, 9, {130, 130, 130, 130}},
+    {SpriteID::guild_tik, 9, {260, 0, 130, 130}},
+    {SpriteID::guild_inkubio, 9, {260, 130, 130, 130}},
+    {SpriteID::guild_kik, 9, {390, 0, 130, 130}},
+    {SpriteID::guild_professor, 9, {390, 130, 130, 130}}
 
 
 };

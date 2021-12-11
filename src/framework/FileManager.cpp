@@ -24,6 +24,7 @@ bool FileManager::LoadFont(sf::Font& font, const std::string& path) const {
 
 std::vector<std::string> FileManager::ListLevelPaths(std::string folder) const {
     std::vector<std::string> paths;
+    if(!std::filesystem::exists(folder)) std::filesystem::create_directory(folder);
     for(const auto& entry : std::filesystem::directory_iterator(folder)) {
         if(entry.is_regular_file() && entry.path().extension() == ".lvl") paths.push_back(entry.path().string());
     }

@@ -1,5 +1,5 @@
-#ifndef FUKSI_HPP
-#define FUKSI_HPP
+#ifndef PARTICLE_EFFECT_HPP
+#define PARTICLE_EFFECT_HPP
 
 #include <gameplay/GameObjectTypes.hpp>
 #include <gameplay/PhysObject.hpp>
@@ -56,6 +56,7 @@ public:
     void SetSize(float sz) { size_ = sz; }
     void SetLifeTime(float l) { lifeTime_ = l; }
     void SetSprite(SpriteID sp) { sprite_ = sp; }
+    b2Body* GetBody() { return mainBody_; }
 
 protected:
     float creationTime_;

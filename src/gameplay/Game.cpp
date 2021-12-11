@@ -175,7 +175,7 @@ void Game::Update() {
         if(timeLimitReached) screen_.OnGameLost("Out of time!");
         else {
             if(NoFuksis()) {
-                if(level_.levelMode == LevelMode::endless) {
+                if(level_.levelMode == LevelMode::endless && !IsEditor()) {
                     auto levels = screen_.GetApplication().GetFileManager().ListEndless();
                     if(levels.empty()) screen_.OnGameCompleted(points_, level_.perfectScore);
                     else LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
@@ -357,6 +357,10 @@ void Game::SetCameraPos(float x, float y) { camera_.x = x; camera_.y = y; }
 void Game::SetCameraZoom(float zoom) { camera_.zoom = zoom; }
 void Game::SetCameraRot(float rot) { camera_.rot = rot; }
 void Game::AddPoints(int p) { points_ += p; screen_.OnScoreChange(points_); }
+void Game::AddTeekkari(gm::GameObjectType teekkari) { 
+    teekkarisLeft_.push_back(gm::RandomTeekkari(teekkari));
+    UpdateProjectileList();
+}
 
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }

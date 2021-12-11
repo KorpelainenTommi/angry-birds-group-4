@@ -12,11 +12,10 @@
 #include <box2d/b2_body.h>
 #include <box2d/b2_api.h>
 
-/// A Block is a single body physics object with a shape and a material, that can give points when broken
+/// A block that explodes
 class Tnt : public Block {
 public:
 
-    /// Construct a Block identified by this GameObjectType. It is assumed the type is a valid block
     Tnt(Game& game, float x, float y, float rot) : Block(game, gm::GameObjectType::prop_tnt, x, y, rot) {}
 
 protected:

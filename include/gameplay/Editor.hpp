@@ -31,6 +31,8 @@ public:
     Level& GetLevel();
     
     void SaveLevel();
+
+    virtual bool IsEditor() const { return true; }    
     
 private:
     gm::GameObjectType selectedElement_;

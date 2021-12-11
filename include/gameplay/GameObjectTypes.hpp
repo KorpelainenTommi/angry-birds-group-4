@@ -222,6 +222,9 @@ extern const std::vector<gm::PersonBody> fuksiBodies;
 /// List of all teekkaris
 extern const std::vector<gm::GameObjectType> teekkaris;
 
+/// Lookup from pickups to teekkaris
+extern const std::unordered_map<gm::GameObjectType, gm::GameObjectType> pickupLookup;
+
 /// Return a random teekkari from a guild based on GameObjectType
 PersonData RandomTeekkari(GameObjectType type);
 

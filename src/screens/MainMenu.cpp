@@ -54,6 +54,9 @@ ui::pfloat MainMenu::calcListElementWidth() const {
 void MainMenu::generateLevels(){
     auto list = app_.GetFileManager().ListLevels();
     for(auto e: list) addLevel(e);
+
+    auto listE = app_.GetFileManager().ListEndless();
+    for(auto e: listE) addLevel(e);
 }
 
 void MainMenu::addLevel(Level level){
@@ -62,7 +65,7 @@ void MainMenu::addLevel(Level level){
     e->SetMouseDownHandler([level, w, this](){
         this->SelectLevel(level, w);
     });
-    e->SetText(level.levelName);
+    e->SetText(level.levelName + " (" + levelModeNames[level.levelMode]+ ")");
     e->SetRelativeFontSize(ui::defaultFontSize * 2.5);
     list_->InsertElement(e);
     menu_.push_back(e);
