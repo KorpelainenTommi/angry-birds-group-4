@@ -9,13 +9,16 @@
 #include <box2d/b2_body.h>
 #include <memory>
 
+/// @brief Enemyclass
 class Fuksi : public Person {
 public:
+    /// @brief Constructor
     Fuksi(Game& game, float x, float y, float rot, gm::PersonData data) : Fuksi(game, x, y, rot) { data_ = data; }
     Fuksi(Game& game, float x, float y, float rot) : Person(game, gm::GameObjectType::fuksi, x, y, rot, true, -6)
     { data_ = gm::RandomFuksi(); hp_ = ph::fuksiHP; }
 
 protected:
+    /// @brief Increments points and other things  on death. 
     virtual void OnDeath() {
         //Spawn points effect
         int points = gm::GetObjectScore(objectType_);

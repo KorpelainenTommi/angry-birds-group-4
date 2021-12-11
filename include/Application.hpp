@@ -9,40 +9,57 @@
 #include <framework/RenderSystem.hpp>
 #include <framework/AudioSystem.hpp>
 
+
 class Screen;
+
+/// @brief The top level object of an instance
 
 class Application {
 public:
 
-    /// Construct a fullscreen application and activate the first screen
+    /// @brief Construct a fullscreen application and activate the first screen
     Application();
 
-    /// Game, event and renderloop
+    /// @brief Game, event and renderloop
     bool Loop();
 
-    /// Transition to screen, and make it active. The old screen is destroyed.
+    /// @brief Transition to screen, and make it active. The old screen is destroyed.
     void TransitionTo(std::unique_ptr<Screen>);
 
-    /// Resize the window
+    /// @brief Resize the window
     void Resize(unsigned int width, unsigned int height);
 
-    /// Go fullscreen
+    /// @brief Go fullscreen
     void Fullscreen();
 
-    /// Close the application
+    /// @brief Close the application
     void Exit();
 
 
-    /// These are here in case someone absolutely needs them
+    // These are here in case someone absolutely needs them
+    
+    /// @brief Get aspectratio
     float GetAspectRatio() const;
+    
+    /// @brief Get window width
     float GetWindowWidth() const;
+    
+    /// @brief Get window height
     float GetWindowHeight() const;
+    
+    /// @brief  Get if it is Fullscreen
     bool IsFullScreen() const;
 
-    /// Get explicit access to systems
+    /// @brief Get explicit access to Audiosystem
     AudioSystem& GetAudioSystem();
+    
+    /// @brief Get explicit access to Filemanager
     const FileManager& GetFileManager() const;
+    
+    /// @brief Get explicit access to RenderSystem
     const RenderSystem& GetRenderSystem() const;
+    
+    /// @brief Get explicit access to RescourceManager
     const ResourceManager& GetResourceManager() const;
 
 
