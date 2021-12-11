@@ -24,15 +24,14 @@ public:
     virtual std::vector<sf::Sprite> GetSprites(const RenderSystem& r);
     virtual bool CheckIntersection(sf::Sprite s, const RenderSystem& r);
 
-<<<<<<< HEAD
+
     virtual std::vector<b2Body*> GetPhysBodies();
     virtual bool CheckIntersection(b2Body* other);
     
     const gm::BlockMaterial GetBlockMaterial() const;
     bool ElectricityCheck(Block& block);
     
-=======
->>>>>>> ab11eff73e52a3788174c19f1a682679e51f2ed2
+
 protected:
     gm::BlockData blockData_;
     gm::BlockShapeData shapeData_;

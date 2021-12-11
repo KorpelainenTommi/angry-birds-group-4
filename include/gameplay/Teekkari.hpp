@@ -215,16 +215,16 @@ protected:
 
         std::set<int> metalBlocks;
         int nearestBlock = -1;
-        for(auto& o : game_.GetObjects()) {
+        for(auto o : game_.GetObjects()) {
             float minDistance = ph::inf;
-            if(o.first >= gm::objectGroupSize && o.first < 2*gm::objectGroupSize) {
-                Block& block = static_cast<Block&>(*o.second);
+            if(o->GetGameID() >= gm::objectGroupSize && o->GetGameID() < 2*gm::objectGroupSize) {
+                Block& block = static_cast<Block&>(*o);
                 if(block.GetBlockMaterial() == gm::BlockMaterial::metal) {
-                    metalBlocks.insert(o.first);
+                    metalBlocks.insert(o->GetGameID());
                     float distance = std::sqrt((x-block.GetX())*(x-block.GetX())+(y-block.GetY())*(y-block.GetY()));
                     if(distance < minDistance) {
                         minDistance = distance;
-                        nearestBlock = o.first;
+                        nearestBlock = o->GetGameID();
                     }
                 }
             }

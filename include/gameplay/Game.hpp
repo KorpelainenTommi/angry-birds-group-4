@@ -193,7 +193,7 @@ public:
 
     virtual bool IsEditor() const { return false; }
     
-    std::map<int,std::unique_ptr<GameObject>>& GetObjects();
+    //std::map<int,std::unique_ptr<GameObject>>& GetObjects();
     
 protected:
     GameScreen& screen_;

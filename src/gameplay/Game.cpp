@@ -419,7 +419,7 @@ int Game::GetMaxScore() {
     return levelMaxScore_;
 }
 
-
+/*
 std::map<int,std::unique_ptr<GameObject>>& Game::GetObjects() {
     return objects_;
-}
+}*/
