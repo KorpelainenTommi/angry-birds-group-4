@@ -21,6 +21,8 @@ public:
     virtual void Resume();
     virtual void Restart();
     
+    bool InPlayMode() const;
+
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);

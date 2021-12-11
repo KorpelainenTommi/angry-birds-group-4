@@ -145,7 +145,9 @@ bool Editor::OnKeyDown(const sf::Event::KeyEvent& key){
     return true;
 }
 
-
+bool Editor::InPlayMode() const {
+    return playMode_;
+}
 
 void Editor::Restart() {
     playMode_ = false;

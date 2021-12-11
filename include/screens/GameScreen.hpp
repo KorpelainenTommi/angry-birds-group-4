@@ -109,6 +109,10 @@ public:
 
     void selectProjectileIcon(std::shared_ptr<RoundIcon> i);
 
+    void autoSelectProjectileIcon();
+
+    void unselectProjectileIcon();
+
     ui::pfloat calcEditorPanelLeft() const;
 
     ui::pfloat calcEditorContentWidth() const;
@@ -167,6 +171,7 @@ private:
     const ui::pfloat editorElementListSpacing_ = 0.2 VH;
 
     std::unique_ptr<Game> game_;
+    bool gameInitialized_ = false;
     Level level_;
     std::shared_ptr<TextLine> scoreLabel_;
     std::shared_ptr<TextLine> timeLabel_;
