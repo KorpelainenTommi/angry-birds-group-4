@@ -17,13 +17,7 @@ public:
         const ui::pfloat& width
     ): ColoredElement(top, left, height, width){}
 
-    //virtual void Render(const RenderSystem&);
-
-    /*virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
-
-    virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
-
-    virtual bool OnMouseMove(float xw, float yh);*/
+    virtual bool OnMouseMove(float xw, float yh);
 
     virtual bool OnMouseScroll(float delta, float xw, float yh);
 
@@ -89,10 +83,14 @@ private:
     ui::pfloat scrollOffset_;
     ui::pfloat spacing_ = 1 VH;
     float scrollMultiplier_ = 5000.0;
+    float lastMouseX_ = 0;
+    float lastMouseY_ = 0;
 
     void updateValues();
 
     ui::CropArea calcCropArea() const;
+
+    void updateScrollOffset(float delta, float xw, float yh);
 };
 
 #endif
