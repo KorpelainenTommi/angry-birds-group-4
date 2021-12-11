@@ -106,13 +106,22 @@ enum SpriteID {
     crack_thickplank_b,
 
     //Props
-    beer1,
-    beer2,
-    beer_can1,
-    beer_can2,
+    beer,
+    beer_can,
 
     sofa3x1,
     tnt,
+
+    //Guilds
+
+    guild_ik,
+    guild_sik,
+    guild_tefy,
+    guild_tuta,
+    guild_tik,
+    guild_inkubio,
+    guild_kik,
+    guild_professor,
 
 
     //Cannon
@@ -258,7 +267,6 @@ enum SpriteID {
     math_cloud,
     integral_sign,
     
-    
     //Block break particles
     particles_dust, //Generic ground hit
     particles_wood,
@@ -298,7 +306,7 @@ enum AnimationID {
 
 
     //Teekkari abilities
-    gravity_flash,
+    gravity_spiral,
     matrix_bug,
     hand_whirl,
     thunder_sparks
@@ -338,7 +346,8 @@ enum SoundID {
     can_break,
 
     sofa_spring,
-    tnt_explode,
+    tnt_explode1,
+    tnt_explode2,
 
 
     //Cannon sounds
@@ -393,8 +402,6 @@ enum SoundID {
     thunder_strike,
     professor_oneliner,
     integral_destruction
-
-
 
 };
 

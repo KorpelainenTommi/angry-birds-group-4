@@ -34,6 +34,9 @@ const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
     {SoundID::cannon_load, "data/audio/cannon_load.wav"},
     {SoundID::cannon_shot, "data/audio/cannon_shot.wav"},
 
+    {SoundID::tnt_explode1, "data/audio/tnt_explode1.wav"},
+    {SoundID::tnt_explode2, "data/audio/tnt_explode2.wav"},    
+
     {SoundID::cow_moo, "data/audio/cow_moo.wav"},
     {SoundID::cow_death, "data/audio/cow_death.wav"},
 
@@ -43,7 +46,10 @@ const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
     {SoundID::gravity_shiftup, "data/audio/gravity_shiftup.wav"},
     {SoundID::gravity_shiftdown, "data/audio/gravity_shiftdown.wav"},
 
+    {SoundID::hand_whoosh, "data/audio/hand_whoosh.wav"},
+
     {SoundID::poof, "data/audio/poof.wav"},
+    {SoundID::teekkari_recruit, "data/audio/teekkari_recruit.wav"},
     {SoundID::nice, "data/audio/nice.wav"}
 
 };
@@ -57,9 +63,9 @@ const std::pair<int, std::string> ResourceManager::texturePaths_[] = {
     {5, "data/textures/stars.png"},
     {6, "data/textures/fuksi_bodies.png"},
     {7, "data/textures/fuksi_heads.png"},
-    {8, "data/textures/background0.jpg"},
-    {9, "data/textures/ground0.jpg"},
-    {10, "data/textures/explosion0.png"},
+    {8, "data/textures/background.jpg"},
+    {9, "data/textures/guilds.png"},
+    {10, "data/textures/explosion.png"},
     {11, "data/textures/poof.png"}
 };
 
@@ -108,6 +114,21 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::rubber_thickplank, 0, {384, 288, 384, 24}},
     {SpriteID::concrete_thickplank, 0, {384, 312, 384, 24}},
 
+    {SpriteID::crack1x1, 0, {640, 384, 64, 64}},
+    {SpriteID::crack1x1_b, 0, {704, 384, 64, 64}},
+    {SpriteID::crack2x1, 0, {384, 384, 128, 64}},
+    {SpriteID::crack2x1_b, 0, {512, 384, 128, 64}},
+    {SpriteID::crack2x2, 0, {640, 448, 128, 128}},
+    {SpriteID::crack2x2_b, 0, {640, 576, 128, 128}},
+    {SpriteID::crack_ball, 0, {384, 448, 64, 64}},
+    {SpriteID::crack_ball_b, 0, {384, 512, 64, 64}},    
+    {SpriteID::crack_plank, 0, {448, 448, 192, 12}},
+    {SpriteID::crack_plank_b, 0, {448, 460, 192, 12}},
+    {SpriteID::crack_thickplank, 0, {384, 336, 384, 24}},
+    {SpriteID::crack_thickplank_b, 0, {384, 360, 384, 24}},
+
+
+
     {SpriteID::tnt, 0, {0, 356, 64, 64}},
     {SpriteID::sofa3x1, 0, {64, 356, 192, 64}},
 
@@ -118,6 +139,7 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::particles_plastic, 0, {128, 420, 32, 32}},
     {SpriteID::particles_rubber, 0, {160, 420, 32, 32}},
     {SpriteID::particles_concrete, 0, {192, 420, 32, 32}},
+    {SpriteID::hit_stars, 0, {0, 452, 32, 32}},
 
     //Teekkari bodies
     {SpriteID::torso_blue, 1, {0, 0, 130, 156}},
@@ -238,22 +260,40 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::ui_missing_star, 5, {257, 0, 256, 256}},
     
     {SpriteID::cannon_base, 0, {0, 654, 214, 114}},
-    {SpriteID::cannon_head, 0, {214, 501, 137, 267}},
+    {SpriteID::cannon_head, 0, {224, 501, 137, 267}},
 
     {SpriteID::background_field, 8, {0, 0, 1440, 957}},
 
 
+    {SpriteID::beer, 0, {256, 356, 64, 64}},
+    {SpriteID::beer_can, 0, {320, 356, 64, 64}},
+
     {SpriteID::cow, 3, {0, 0, 200, 150}},
-    {SpriteID::wrench, 3, {200, 0, 100, 32}}
+    {SpriteID::wrench, 3, {200, 0, 100, 32}},
+
+    {SpriteID::gravity_symbols, 3, {300, 0, 138, 64}},
+    {SpriteID::math_cloud, 3, {300, 64, 138, 64}},
+    {SpriteID::integral_sign, 3, {438, 0, 330, 128}},
+    
+    {SpriteID::guild_ik, 9, {0, 0, 130, 130}},
+    {SpriteID::guild_tefy, 9, {0, 130, 130, 130}},
+    {SpriteID::guild_sik, 9, {130, 0, 130, 130}},
+    {SpriteID::guild_tuta, 9, {130, 130, 130, 130}},
+    {SpriteID::guild_tik, 9, {260, 0, 130, 130}},
+    {SpriteID::guild_inkubio, 9, {260, 130, 130, 130}},
+    {SpriteID::guild_kik, 9, {390, 0, 130, 130}},
+    {SpriteID::guild_professor, 9, {390, 130, 130, 130}}
 
 
 };
 
 const ResourceManager::AnimationMapping ResourceManager::animationMaps_[] = {
-    {AnimationID::explosion, 10, {88, 88}, {0, 0, 616, 352}},
+    {AnimationID::explosion, 10, {88, 88}, {0, 0, 616, 264}},
     {AnimationID::cannon_explosion, 3, {156, 138}, {0, 492, 312, 276}},
     {AnimationID::particles_poof, 11, {128, 128}, {0, 0, 512, 512}},
-    {AnimationID::matrix_bug, 3, {128, 128}, {384, 640, 384, 128}}
+    {AnimationID::matrix_bug, 3, {128, 128}, {384, 640, 384, 128}},
+    {AnimationID::hand_whirl, 3, {96, 96}, {384, 544, 384, 96}},
+    {AnimationID::gravity_spiral, 3, {96, 96}, {384, 448, 384, 96}}
 };
 
 ResourceManager::ResourceManager(const FileManager& fileManager) : fileManager_(fileManager) {

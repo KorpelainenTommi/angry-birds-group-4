@@ -2,6 +2,7 @@
 #include <gameplay/Block.hpp>
 #include <gameplay/Teekkari.hpp>
 #include <gameplay/Effect.hpp>
+#include <cmath>
 #include <iostream>
 
 Cannon::Cannon(Game& game, gm::GameObjectType type, float x, float y, float rot) :
@@ -27,17 +28,29 @@ Cannon::Cannon(Game& game, gm::GameObjectType type, float x, float y, float rot)
 
 Cannon::~Cannon() {
 }
-bool Cannon::OnMouseMove(float xw, float yh) {
-    if(!isActive_ || relativeCoords_.x >= xw || game_.CannonDisabled()) return false;
-    float angle = std::atan((xw-relativeCoords_.x)/(-yh+relativeCoords_.y))*180/ph::pi;
-    if(relativeCoords_.y < yh) angle += 180;
-    if(angle > 15 && angle < 110) rot_pipe_ = angle;
-    relativeDistance_ = std::sqrt((xw-relativeCoords_.x)*(xw-relativeCoords_.x) + (yh-relativeCoords_.y)*(yh-relativeCoords_.y));
+bool Cannon::OnMouseMove(float xW, float yH) {
+    if(!isActive_ || game_.CannonDisabled()) return false;
+
+    float rx = relativeCoords_.x;
+    float ry = relativeCoords_.y;
+    float xw = xW;
+    float yh = yH;
+    if(rx >= xw) xw = rx;
+    
+    relativeDistance_ = sqrtf((xw-rx)*(xw-rx) + (yh-ry)*(yh-ry));
     if(relativeDistance_ > 0.5F) relativeDistance_ = 0.5F;
     w_loadBar_ = h_pipe_*relativeDistance_;
+    
+    float angle = atanf((xw-rx)/(-yh+ry))*180/ph::pi;
+    if(ry < yh) angle += 180;
+    if(angle > 0 && angle < 110) rot_pipe_ = angle;
+    else {
+        if(ry < yh) rot_pipe_ = 110;
+        else rot_pipe_ = atanf(0.01F/(-yh+ry))*180/ph::pi;
+    }
     float angleRad = rot_pipe_*ph::pi/180;
-    x_loadBar_ = x_pipe_ - std::cos(angleRad)*sizeh_*0.6F - std::sin(angleRad)*(0.1F-relativeDistance_*0.5F)*h_pipe_;
-    y_loadBar_ = y_pipe_ + std::sin(angleRad)*sizeh_*0.6F - std::cos(angleRad)*(0.1F-relativeDistance_*0.5F)*h_pipe_;
+    x_loadBar_ = x_pipe_ - cosf(angleRad)*sizeh_*0.6F - std::sin(angleRad)*(0.1F-relativeDistance_*0.5F)*h_pipe_;
+    y_loadBar_ = y_pipe_ + sinf(angleRad)*sizeh_*0.6F - std::cos(angleRad)*(0.1F-relativeDistance_*0.5F)*h_pipe_;
     return true;
 }
 
@@ -58,7 +71,7 @@ bool Cannon::OnMouseUp(const sf::Mouse::Button& e, float x, float y) {
 
 
     float angleRad = ph::rotToAng(rot_pipe_);
-    b2Vec2 dir = { -std::sin(angleRad), std::cos(angleRad) };
+    b2Vec2 dir = { -sinf(angleRad), cosf(angleRad) };
 
     gm::PersonData teekkari;
     if(game_.TakeProjectile(teekkari)) {

@@ -4,7 +4,10 @@
 #include <gameplay/Cannon.hpp>
 #include <gameplay/Ground.hpp>
 #include <gameplay/Teekkari.hpp>
+#include <gameplay/Pickup.hpp>
 #include <gameplay/Fuksi.hpp>
+#include <gameplay/Beer.hpp>
+#include <gameplay/Tnt.hpp>
 #include <iostream>
 #include <cmath>
 
@@ -77,6 +80,18 @@ const std::vector<gm::GameObjectType> gm::teekkaris = {
     gm::GameObjectType::teekkari_kik,
     gm::GameObjectType::teekkari_professor
 };
+
+const std::unordered_map<gm::GameObjectType, gm::GameObjectType> gm::pickupLookup = {
+    { gm::GameObjectType::pickup_ik, gm::GameObjectType::teekkari_ik},
+    { gm::GameObjectType::pickup_sik, gm::GameObjectType::teekkari_sik},
+    { gm::GameObjectType::pickup_tefy, gm::GameObjectType::teekkari_tefy},
+    { gm::GameObjectType::pickup_tuta, gm::GameObjectType::teekkari_tuta},
+    { gm::GameObjectType::pickup_tik, gm::GameObjectType::teekkari_tik},
+    { gm::GameObjectType::pickup_inkubio, gm::GameObjectType::teekkari_inkubio},
+    { gm::GameObjectType::pickup_kik, gm::GameObjectType::teekkari_kik},
+    { gm::GameObjectType::pickup_professor, gm::GameObjectType::teekkari_professor}
+};
+
 
 gm::PersonData gm::RandomTeekkari(gm::GameObjectType type) {
 
@@ -158,7 +173,23 @@ const std::map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
     { gm::GameObjectType::thickplank_glass, { "large glass plank", SpriteID::glass_thickplank, gm::BlockMaterial::glass, gm::BlockShape::block_thickplank } },
     { gm::GameObjectType::thickplank_plastic, { "large plastic plank", SpriteID::plastic_thickplank, gm::BlockMaterial::plastic, gm::BlockShape::block_thickplank } },
     { gm::GameObjectType::thickplank_rubber, { "large rubber plank", SpriteID::rubber_thickplank, gm::BlockMaterial::rubber, gm::BlockShape::block_thickplank } },
-    { gm::GameObjectType::thickplank_concrete, { "large concrete plank", SpriteID::concrete_thickplank, gm::BlockMaterial::concrete, gm::BlockShape::block_thickplank } }
+    { gm::GameObjectType::thickplank_concrete, { "large concrete plank", SpriteID::concrete_thickplank, gm::BlockMaterial::concrete, gm::BlockShape::block_thickplank } },
+
+    //Props
+    { gm::GameObjectType::prop_tnt, { "tnt", SpriteID::tnt, gm::BlockMaterial::wood, gm::BlockShape::block_1x1 } },
+
+    //Pickups
+    { gm::GameObjectType::pickup_ik, { "IK Pickup", SpriteID::guild_ik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_sik, { "SIK Pickup", SpriteID::guild_sik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_tefy, { "TEFY Pickup", SpriteID::guild_tefy, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_tuta, { "Prodeko Pickup", SpriteID::guild_tuta, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_tik, { "TIK Pickup", SpriteID::guild_tik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_inkubio, { "Inkubio Pickup", SpriteID::guild_inkubio, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_kik, { "KIK Pickup", SpriteID::guild_kik, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+    { gm::GameObjectType::pickup_professor, { "Professor Pickup", SpriteID::guild_professor, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
+
+    { gm::GameObjectType::prop_beer, { "Beer bottle", SpriteID::beer, gm::BlockMaterial::glass, gm::BlockShape::block_bottle }},
+    { gm::GameObjectType::prop_beer_can, { "Beer bottle", SpriteID::beer_can, gm::BlockMaterial::metal, gm::BlockShape::block_can}}
 
 };
 
@@ -166,12 +197,12 @@ const std::map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
 // Materials
 
 const std::unordered_map<gm::BlockMaterial, gm::BlockMaterialData> gm::materialProperties = {
-    { gm::BlockMaterial::wood, { gm::BlockMaterial::wood, 200, 0.3F, 0, 2, 1, SoundID::wood_hit, SoundID::wood_crack, SpriteID::particles_wood }},
+    { gm::BlockMaterial::wood, { gm::BlockMaterial::wood, 200, 0.3F, 0, 2, 0.5F, SoundID::wood_hit, SoundID::wood_crack, SpriteID::particles_wood }},
     { gm::BlockMaterial::metal, { gm::BlockMaterial::metal, 900, 0.2F, 0, 5.0F, 0.1F, SoundID::metal_hit, SoundID::metal_crack, SpriteID::particles_metal }},
-    { gm::BlockMaterial::glass, { gm::BlockMaterial::glass, 400, 0.15F, 0.12F, 0.25F, 2.5F, SoundID::glass_hit, SoundID::glass_crack, SpriteID::particles_glass }},
-    { gm::BlockMaterial::plastic, { gm::BlockMaterial::plastic, 150, 0.23F, 0.18F, 1.7F, 2, SoundID::plastic_hit, SoundID::plastic_crack, SpriteID::particles_plastic }},
-    { gm::BlockMaterial::rubber, { gm::BlockMaterial::rubber, 180, 0.18F, 0.6F, 3, 4, SoundID::rubber_hit, SoundID::rubber_crack, SpriteID::particles_rubber }},
-    { gm::BlockMaterial::concrete, { gm::BlockMaterial::concrete, 1000, 0.88F, 0, 1, 0.4F, SoundID::concrete_hit, SoundID::concrete_crack, SpriteID::particles_concrete }}
+    { gm::BlockMaterial::glass, { gm::BlockMaterial::glass, 400, 0.15F, 0.12F, 0.25F, 0.375F, SoundID::glass_hit, SoundID::glass_crack, SpriteID::particles_glass }},
+    { gm::BlockMaterial::plastic, { gm::BlockMaterial::plastic, 150, 0.23F, 0.18F, 1.7F, 0.8F, SoundID::plastic_hit, SoundID::plastic_crack, SpriteID::particles_plastic }},
+    { gm::BlockMaterial::rubber, { gm::BlockMaterial::rubber, 180, 0.18F, 0.6F, 3, 0.5, SoundID::rubber_hit, SoundID::rubber_crack, SpriteID::particles_rubber }},
+    { gm::BlockMaterial::concrete, { gm::BlockMaterial::concrete, 1000, 0.88F, 0, 1, 0.1F, SoundID::concrete_hit, SoundID::concrete_crack, SpriteID::particles_concrete }}
 };
 
 
@@ -183,6 +214,8 @@ std::shared_ptr<b2Shape> gm::CreateShape2x2() { b2PolygonShape shape; shape.SetA
 std::shared_ptr<b2Shape> gm::CreateShapeBall() { b2CircleShape shape; shape.m_radius = 0.5F; return std::make_shared<b2CircleShape>(shape); }
 std::shared_ptr<b2Shape> gm::CreateShapePlank() { b2PolygonShape shape; shape.SetAsBox(1.5F, 0.09375F); return std::make_shared<b2PolygonShape>(shape); }
 std::shared_ptr<b2Shape> gm::CreateShapeThickPlank() { b2PolygonShape shape; shape.SetAsBox(3.0F, 0.1875F); return std::make_shared<b2PolygonShape>(shape); }
+std::shared_ptr<b2Shape> gm::CreateShapeBottle() { b2PolygonShape shape; shape.SetAsBox(0.15625F, 0.5F); return std::make_shared<b2PolygonShape>(shape); }
+std::shared_ptr<b2Shape> gm::CreateShapeCan() { b2PolygonShape shape; shape.SetAsBox(0.13671875F, 0.25F); return std::make_shared<b2PolygonShape>(shape); }
 
 /*std::shared_ptr<b2Shape> gm::CreateShapeTri() {
     b2PolygonShape shape;
@@ -197,7 +230,9 @@ const std::unordered_map<gm::BlockShape, gm::BlockShapeData> gm::shapeProperties
     { gm::BlockShape::block_ball, { gm::BlockShape::block_ball, 3.1415926F, 1, gm::CreateShapeBall(), SpriteID::crack_ball, SpriteID::crack_ball_b}},
     /*{ gm::BlockShape::block_tri, { gm::BlockShape::block_tri, 0.435F, 0.87F, gm::CreateShapeTri()}},*/
     { gm::BlockShape::block_plank, { gm::BlockShape::block_plank, 0.5625F, 0.1875F, gm::CreateShapePlank(), SpriteID::crack_plank, SpriteID::crack_plank_b}},
-    { gm::BlockShape::block_thickplank, { gm::BlockShape::block_thickplank, 2.25F, 0.375F, gm::CreateShapeThickPlank(), SpriteID::crack_thickplank, SpriteID::crack_thickplank_b}}
+    { gm::BlockShape::block_thickplank, { gm::BlockShape::block_thickplank, 2.25F, 0.375F, gm::CreateShapeThickPlank(), SpriteID::crack_thickplank, SpriteID::crack_thickplank_b}},
+    { gm::BlockShape::block_bottle, { gm::BlockShape::block_bottle, 0.3125F, 1.0F, gm::CreateShapeBottle(), SpriteID::beer, SpriteID::beer}},
+    { gm::BlockShape::block_can, { gm::BlockShape::block_can, 0.13671875F, 0.5F, gm::CreateShapeCan(), SpriteID::beer_can, SpriteID::beer_can}}
 };
 
 
@@ -218,13 +253,20 @@ int gm::GetObjectScore(gm::GameObjectType type) {
         return (int)std::roundf(shapeData.volume * materialData.density * materialData.pointsPerMass);
     }
     else if(type == gm::GameObjectType::fuksi) return ph::fuksiScore;
+    else if(type >= gm::GameObjectType::teekkari_ik && type <= gm::GameObjectType::teekkari_professor) return ph::teekkariScore;
     else return 0;
 }
 
 std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, float x, float y, float rot) {
 
     // Block
-    if(type >= gm::GameObjectType::block_wood1x1 && type <= gm::GameObjectType::thickplank_concrete) return std::make_unique<Block>(game, type, x, y, rot);
+    if(type >= gm::GameObjectType::block_wood1x1 && type < gm::GameObjectType::cannon) {
+
+        if(type == gm::GameObjectType::prop_tnt) return std::make_unique<Tnt>(game, x, y, rot);
+        else if(type >= gm::GameObjectType::pickup_ik && type <= gm::GameObjectType::pickup_professor) return std::make_unique<Pickup>(game, type, x, y, rot);
+        else if(type == gm::GameObjectType::prop_beer || type == gm::GameObjectType::prop_beer_can) return std::make_unique<Beer>(game, type, x, y, rot);
+        else return std::make_unique<Block>(game, type, x, y, rot);
+    }
 
     //Teekkaris
     if(type >= gm::GameObjectType::teekkari_ik && type <= gm::GameObjectType::teekkari_professor) {

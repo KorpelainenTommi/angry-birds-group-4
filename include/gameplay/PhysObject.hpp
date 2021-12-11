@@ -60,12 +60,19 @@ public:
 
     /// Add explosive force away from center
     virtual void Explosion(const b2Vec2& center, float magnitude);
+    
+    /// Deal explosive damage, that decays with distance
+    void ExplosionDamage(const b2Vec2& center, float damage);
 
     /// Explicitly deal damage to this objects hp
     virtual void DealDamage(float damage);
 
     virtual float GetHP() const;
     virtual float GetMass() const;
+
+    virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r);
+    virtual std::vector<b2Body*> GetPhysBodies();
+    virtual bool CheckIntersection(b2Body* other);
 
 
 
@@ -78,6 +85,11 @@ protected:
 
     /// This is called just before this object is destroyed from hp
     virtual void OnDeath() { }
+
+    SpriteID hitSp_ = SpriteID::hit_stars;
+    b2Vec2 hitPoint_ = {0, 0};
+    bool spawnHit_ = false;
+
 };
 
 

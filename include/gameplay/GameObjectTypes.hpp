@@ -99,10 +99,10 @@ enum GameObjectType {
 
 
     //Props
-    prop_beer1,
-    prop_beer2,
-    prop_beer_can1,
-    prop_beer_can2,
+    prop_beer,
+    prop_beer_can,
+    prop_chair,
+    prop_table,
 
     prop_sofa2x1,
     prop_tnt,
@@ -137,6 +137,7 @@ enum GameObjectType {
     
     //Physics particle
     phys_particle,
+    professor_particle,
 
     //Animation
     anim_effect,
@@ -222,6 +223,9 @@ extern const std::vector<gm::PersonBody> fuksiBodies;
 /// List of all teekkaris
 extern const std::vector<gm::GameObjectType> teekkaris;
 
+/// Lookup from pickups to teekkaris
+extern const std::unordered_map<gm::GameObjectType, gm::GameObjectType> pickupLookup;
+
 /// Return a random teekkari from a guild based on GameObjectType
 PersonData RandomTeekkari(GameObjectType type);
 
@@ -232,7 +236,7 @@ PersonData RandomFuksi();
 // Block properties
 
 enum BlockMaterial { wood, metal, glass, plastic, rubber, concrete };
-enum BlockShape { block_1x1, block_2x1, block_2x2, block_ball, /*block_tri,*/ block_plank, block_thickplank };
+enum BlockShape { block_1x1, block_2x1, block_2x2, block_ball, /*block_tri,*/ block_plank, block_thickplank, block_bottle, block_can };
 
 
 // Allocate and create shared base shapes for BlockShapeData to use
@@ -244,6 +248,8 @@ std::shared_ptr<b2Shape> CreateShapeBall();
 //std::shared_ptr<b2Shape> CreateShapeTri();
 std::shared_ptr<b2Shape> CreateShapePlank();
 std::shared_ptr<b2Shape> CreateShapeThickPlank();
+std::shared_ptr<b2Shape> CreateShapeBottle();
+std::shared_ptr<b2Shape> CreateShapeCan();
 
 
 struct BlockMaterialData {

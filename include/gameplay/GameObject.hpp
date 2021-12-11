@@ -47,14 +47,14 @@ public:
     virtual ph::tfloat GetY() const { return y_; }
     virtual ph::tfloat GetRot() const { return rot_; }
     gm::GameObjectType GetObjectType() const { return objectType_; }
-
+    int GetGameID() const { return gameID_; }
 
     virtual void Render(const RenderSystem&) = 0;
     
-    virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) { return false; }
     virtual std::vector<sf::Sprite> GetSprites(const RenderSystem& r) { return std::vector<sf::Sprite>(); }
     virtual bool CheckIntersection(sf::Sprite s, const RenderSystem& r) { return false; }
 
+    virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) { return false; }
     virtual std::vector<b2Body*> GetPhysBodies() { return std::vector<b2Body*>(); }
     virtual bool CheckIntersection(b2Body* other) { return false; }
 

@@ -31,7 +31,8 @@ struct Level {
         int sum = 0;
         for(const auto& obj : objectData)
             sum += gm::GetObjectScore(obj.type);
-        return sum;
+        if(startingTeekkaris.empty()) return sum;
+        else return sum + (startingTeekkaris.size()-1) * gm::GetObjectScore(gm::GameObjectType::teekkari_ik);
 
     }
 

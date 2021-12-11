@@ -43,6 +43,8 @@ Block::Block(Game& game, gm::GameObjectType type, float x, float y, float rot) :
 
 void Block::Render(const RenderSystem& r) {
     r.RenderSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_, game_.GetCamera());
+    if(hp_ < 0.33F * mainBody_->GetMass() * materialData_.hpMassRatio) r.RenderSprite(shapeData_.lowHPSprite, x_, y_, shapeData_.height, rot_, game_.GetCamera());
+    else if(hp_ < 0.66F * mainBody_->GetMass() * materialData_.hpMassRatio) r.RenderSprite(shapeData_.halfHPSprite, x_, y_, shapeData_.height, rot_, game_.GetCamera());
 }
 
 void Block::OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
@@ -68,8 +70,8 @@ void Block::OnDeath() {
         float a = 2.0F * ph::pi * rng::RandomF();
         float u = rng::RandomF() + rng::RandomF();
         float r = (u > 1) ? 2 - u : u;
-        float x = shapeData_.height * r * std::cosf(a);
-        float y = shapeData_.height * r * std::sinf(a);
+        float x = shapeData_.height * r * cosf(a);
+        float y = shapeData_.height * r * sinf(a);
         int id = game_.AddObject(std::make_unique<PhysParticle>(game_, x_ + x, y_ + y, ph::angToRot(a)));
         PhysParticle& p = (PhysParticle&)game_.GetObject(id);
 
@@ -98,12 +100,6 @@ void Block::OnDeath() {
 
 }
 
-bool Block::ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) {
-
-    auto absCoords = mouseCoords;
-    return mainBody_->GetFixtureList()[0].TestPoint({absCoords.x, absCoords.y});
-
-}
 
 std::vector<sf::Sprite> Block::GetSprites(const RenderSystem& r) {
     std::vector<sf::Sprite> s;
@@ -116,6 +112,7 @@ bool Block::CheckIntersection(sf::Sprite s, const RenderSystem& r) {
     return r.IntersectWithSprite(blockData_.sprite, x_, y_, shapeData_.height, rot_, s);
     
 }
+
 
 
 std::vector<b2Body*> Block::GetPhysBodies() {
@@ -135,3 +132,4 @@ const gm::BlockMaterial Block::GetBlockMaterial() const {
 bool Block::ElectricityCheck(Block& block) {
     return true;
 }
+

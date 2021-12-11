@@ -110,6 +110,9 @@ public:
     /// Get a reference to the GameObject with this id
     GameObject& GetObject(int id);
 
+    /// Get a list of all objects
+    std::vector<GameObject*> GetObjects();
+
 
     /// Get the time in ticks
     unsigned int GetTicks() const;
@@ -158,6 +161,15 @@ public:
     /// Increment current points
     void AddPoints(int p);
 
+    /// Add a teekkari
+    void AddTeekkari(gm::GameObjectType teekkari);
+
+    /// Pause time for everyone, except the professor !
+    void ProfessorPause();
+
+    /// Time moves again
+    void ProfessorResume();
+
     /// UI calls this to report Game that the user has selected a projectile.
     void SelectProjectile(int index);
 
@@ -178,6 +190,8 @@ public:
 
     /// Checks if there are active teekkaris, or active abilities in the level
     bool NoActivity();
+
+    virtual bool IsEditor() const { return false; }
     
     std::map<int,std::unique_ptr<GameObject>>& GetObjects();
     
@@ -196,6 +210,9 @@ protected:
     //Mark this level for ending check. It is important that the level isn't ended in the middle of an Update, since
     //that could cause us to reference destructed objects
     bool checkForFinish_ = false;
+
+    /// The professors ability can stop all other objects except himself
+    bool professorPause_ = false;
 
     bool isPaused_ = false;
     int points_;

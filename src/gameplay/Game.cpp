@@ -59,6 +59,16 @@ GameObject& Game::GetObject(int id) {
     return *objects_[id];
 }
 
+std::vector<GameObject*> Game::GetObjects() {
+
+    std::vector<GameObject*> vec;
+    for(const auto& p : objects_) {
+        vec.push_back(p.second.get());
+    }
+    return vec;
+
+}
+
 int Game::AddObject(std::unique_ptr<GameObject> obj) {
     int id;
     switch (gm::GetObjectGroup(obj->objectType_)) {
@@ -147,14 +157,23 @@ void Game::Update() {
     //Increment tick count
     time_++;
 
-    world_.Step(ph::timestep, ph::velocityIters, ph::positionIters);
+    if(!professorPause_) world_.Step(ph::timestep, ph::velocityIters, ph::positionIters);
 
     //Call update on objects. They will handle their own business
     
     auto it = objects_.begin();
     int i = 0;
     while(it != objects_.end()) {
-        (it++)->second->Update();
+        auto iter =  (it++);
+        if(professorPause_) {
+            gm::GameObjectType type = iter->second->GetObjectType();
+            if(type == gm::GameObjectType::ability_integral
+            || type == gm::GameObjectType::teekkari_professor
+            || type == gm::GameObjectType::professor_particle) {
+                
+            }
+        }
+        else iter->second->Update();
     }
 
     bool timeLimitReached = (level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0 && GetTime() > level_.timeLimit);
@@ -165,16 +184,21 @@ void Game::Update() {
         if(timeLimitReached) screen_.OnGameLost("Out of time!");
         else {
             if(NoFuksis()) {
-                if(level_.levelMode == LevelMode::endless) {
+                if(level_.levelMode == LevelMode::endless && !IsEditor()) {
                     auto levels = screen_.GetApplication().GetFileManager().ListEndless();
-                    LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
+                    if(levels.empty()) screen_.OnGameCompleted(points_, level_.perfectScore);
+                    else LoadLevel(levels[rng::RandomInt(0, levels.size()-1)]);
                 }
                 else if(level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0) {
+                    points_ += teekkarisLeft_.size() * ph::teekkariScore;
                     float timeLeft = (float)(level_.timeLimit - GetTime()) / level_.timeLimit;
                     int p = (int)std::roundf(timeLeft * points_);
                     screen_.OnGameCompleted(p, level_.perfectScore);
                 }
-                else screen_.OnGameCompleted(points_, level_.perfectScore);
+                else {
+                    points_ += teekkarisLeft_.size() * ph::teekkariScore;
+                    screen_.OnGameCompleted(points_, level_.perfectScore);
+                }
             }
             else if(NoActivity() && NoTeekkaris()) {
                 screen_.OnGameLost("Level failed!");
@@ -346,12 +370,26 @@ void Game::SetCameraPos(float x, float y) { camera_.x = x; camera_.y = y; }
 void Game::SetCameraZoom(float zoom) { camera_.zoom = zoom; }
 void Game::SetCameraRot(float rot) { camera_.rot = rot; }
 void Game::AddPoints(int p) { points_ += p; screen_.OnScoreChange(points_); }
+void Game::AddTeekkari(gm::GameObjectType teekkari) { 
+    teekkarisLeft_.push_back(gm::RandomTeekkari(teekkari));
+    UpdateProjectileList();
+}
+
+
+void Game::ProfessorPause() {
+    professorPause_ = true;
+}
+
+void Game::ProfessorResume() {
+    professorPause_ = false;
+}
+
 
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
 GameScreen& Game::GetScreen() { return screen_; }
 
-bool Game::CannonDisabled() const { return isPaused_ || teekkarisLeft_.empty(); }
+bool Game::CannonDisabled() const { return isPaused_ || teekkarisLeft_.empty() || professorPause_; }
 bool Game::IsPaused() const { return isPaused_; }
 
 void Game::Pause() {
@@ -368,6 +406,7 @@ void Game::Restart() {
     ResetCamera();
     teekkarisLeft_.clear();
     isPaused_ = false;
+    professorPause_ = false;
     time_ = 0;
     points_ = 0;
     levelMaxScore_ = level_.CalculateMaxScore();

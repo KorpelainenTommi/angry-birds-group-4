@@ -1,8 +1,7 @@
 #include <screens/MainMenu.hpp>
 #include <Application.hpp>
 #include <screens/GameScreen.hpp>
-
-
+#include <algorithm>
 
 MainMenu::MainMenu(Application& app): Screen(app){
     addList();
@@ -15,10 +14,7 @@ MainMenu::MainMenu(Application& app): Screen(app){
     });
     addRightSideButton(3, "Delete", [&app, this](){
         this->Confirm("Delete " + this->GetSelectedLevel().levelName, [this](bool b){
-            if(b){
-                this->GetApplication().GetFileManager().DeleteLevel(this->GetSelectedLevel());
-                app_.TransitionTo(std::make_unique<MainMenu>(this->GetApplication()));
-            }
+            if(b) this->deleteSelectedLevel();
         });
     }, true);
     addRightSideButton(4, "Create from", [&app, this](){
@@ -34,6 +30,20 @@ MainMenu::MainMenu(Application& app): Screen(app){
     }, true);
 
     addScoreboard();
+}
+
+void MainMenu::deleteSelectedLevel(){
+    if(!hasSelectedLevel_) return;
+    hasSelectedLevel_ = false;
+    auto end = menu_.end();
+    for(auto it = menu_.begin(); it != end; it++){
+        if(it->get() == selectedLevel_.second.lock().get()){
+            menu_.erase(it);
+            break;
+        }
+    }
+    list_->RemoveElement(selectedLevelButtonListID_);
+    app_.GetFileManager().DeleteLevel(GetSelectedLevel());
 }
 
 void MainMenu::Render(const RenderSystem& r){
@@ -52,28 +62,38 @@ ui::pfloat MainMenu::calcListElementWidth() const {
 }
 
 void MainMenu::generateLevels(){
+    std::function<bool(Level, Level)> foo = [](Level a, Level b){
+        return a.levelName < b.levelName;
+    };
+
     auto list = app_.GetFileManager().ListLevels();
+    std::sort(list.begin(), list.end(), foo);
     for(auto e: list) addLevel(e);
+
+    auto listE = app_.GetFileManager().ListEndless();
+    std::sort(listE.begin(), listE.end(), foo);
+    for(auto e: listE) addLevel(e);
 }
 
 void MainMenu::addLevel(Level level){
-    auto e = std::make_shared<Button>(0 VH, listPadding_, 20 VH, calcListElementWidth());
-    auto w = std::weak_ptr<Button>(e);
-    e->SetMouseDownHandler([level, w, this](){
-        this->SelectLevel(level, w);
-    });
-    e->SetText(level.levelName);
-    e->SetRelativeFontSize(ui::defaultFontSize * 2.5);
-    list_->InsertElement(e);
+    auto e = std::make_shared<Button>(0 VH, listPadding_, 20 VW, calcListElementWidth());
+    int id = list_->InsertElement(e);
     menu_.push_back(e);
+    auto w = std::weak_ptr<Button>(e);
+    e->SetMouseDownHandler([level, w, this, id](){
+        this->SelectLevel(level, w, id);
+    });
+    e->SetText(level.levelName + " (" + levelModeNames[level.levelMode]+ ")");
+    e->SetRelativeFontSize(ui::defaultFontSize * 2.5);
 }
 
-void MainMenu::SelectLevel(const Level& level, std::weak_ptr<Button> button){
+void MainMenu::SelectLevel(const Level& level, std::weak_ptr<Button> button, int id){
     if(hasSelectedLevel_) selectedLevel_.second.lock()->SetBackgroundColor();
     else{
         hasSelectedLevel_ = true;
         for(auto e: deactivatingButtons_) e->Activate();
     }
+    selectedLevelButtonListID_ = id;
     selectedLevel_ = {level, button};
     button.lock()->SetBackgroundColor(selectedLevelBackground_);
     scoreboard_->SetText(generateScoreboardText(level));

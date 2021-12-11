@@ -10,36 +10,47 @@ int ListElement::InsertElement(std::shared_ptr<Element> element){
 
 void ListElement::RemoveElement(int id){
     elements_.erase(id);
+    OnWindowResize();
 }
 
 std::shared_ptr<Element> ListElement::GetElement(int id){
     return elements_[id];
 }
 
+bool ListElement::OnMouseMove(float xw, float yh){
+    bool b = Element::OnMouseMove(xw, yh);
+    lastMouseX_ = xw;
+    lastMouseY_ = yh;
+    return b;
+}
+
 bool ListElement::OnMouseScroll(float delta, float xw, float yh){
     if(isInside(xw, yh)){
-        float h = toVHFloat(h_);
-        float s = toVHFloat(spacing_);
-        for(auto t: elements_){
-            //if(t.second->OnMouseScroll(delta, xw, yh)) return true;
-            h -= toVHFloat(t.second->GetHeight()) + s;
-        }
-        h += s;
-        if(scrollOffset_.f >= 0 && delta * scrollMultiplier_ >= 0) return true;
-        scrollOffset_ += (delta * scrollMultiplier_ / ui::windowHeight) VH;
-
-        //set scroll limits
-        if(scrollOffset_.f > 0) scrollOffset_ = 0 VH;
-        else if(scrollOffset_.f < h && h < 0) scrollOffset_ = h VH;
-        else if(scrollOffset_.f < h) scrollOffset_ = 0 VH;
-
-        for(auto t: elements_){
-            t.second->SetOffsetY(scrollOffset_);
-            t.second->OnMouseMove(xw, yh);
-        }
+        updateScrollOffset(delta, xw, yh);
         return true;
     }
     return false;
+}
+
+void ListElement::updateScrollOffset(float delta, float xw, float yh){
+    float h = toVHFloat(h_);
+    float s = toVHFloat(spacing_);
+    for(auto t: elements_) h -= toVHFloat(t.second->GetHeight()) + s;
+    h += s;
+    float dtsm = delta * scrollMultiplier_;
+    if(scrollOffset_.f == 0 && dtsm >= 0) return;
+    else if(scrollOffset_.f == h && h < 0 && dtsm < 0) return;
+    scrollOffset_ = (scrollOffset_.f + dtsm / ui::windowHeight) VH;
+
+    //set scroll limits
+    if(scrollOffset_.f > 0) scrollOffset_ = 0 VH;
+    else if(scrollOffset_.f < h && h < 0) scrollOffset_ = h VH;
+    else if(scrollOffset_.f < h) scrollOffset_ = 0 VH;
+
+    for(auto t: elements_){
+        t.second->SetOffsetY(scrollOffset_);
+        t.second->OnMouseMove(xw, yh);
+    }
 }
 
 void ListElement::SetSpacing(const ui::pfloat& s){
@@ -66,6 +77,7 @@ void ListElement::updateValues(){
         e->SetCropArea(ca);
         h += toVHFloat(e->GetHeight()) + s;
     }
+    updateScrollOffset(0, lastMouseX_, lastMouseY_);
 }
 
 ui::CropArea ListElement::calcCropArea() const {

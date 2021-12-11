@@ -20,7 +20,8 @@ GameScreen::GameScreen(
     game_ = editorMode ? 
         std::make_unique<Editor>(*this, initialLevel) : 
         std::make_unique<Game>(*this, initialLevel);
-    UpdateTheoreticalMaxScore(game_->GetMaxScore());
+    gameInitialized_ = true;
+    if(editorMode_) UpdateTheoreticalMaxScore(game_->GetMaxScore());
 }
 
 void GameScreen::Update(){
@@ -120,9 +121,11 @@ void GameScreen::addEditorTopLeftButtons(){
         auto sb = startButton.lock();
         if(sb->GetIcon() == SpriteID::ui_button_resume){
             sb->SetIcon(SpriteID::ui_button_restart);
-            this->GetEditor().Resume();
+            autoSelectProjectileIcon();
+            this->GetEditor().Play();
         }else{
             sb->SetIcon(SpriteID::ui_button_resume);
+            unselectProjectileIcon();
             this->GetEditor().Restart();
             this->GetEditor().Pause();
         }
@@ -163,8 +166,19 @@ bool GameScreen::SaveEditor(){
             return false;
         }
     }
+
+    if(GetEditor().NoFuksis()) {
+        Alert("Level must contain at least 1 Fuksi");
+        return false;
+    }
+
+    if(selectedGameMode_ != LevelMode::endless && GetEditor().NoTeekkaris()) {
+        Alert("Level must contain at least one starting Teekkari");
+        return false;
+    }
+
     GetEditor().SaveLevel();
-    Level lev = GetEditor().GetLevel();
+    Level& lev = GetEditor().GetLevel();
     lev.levelName = name;
     lev.levelMode = selectedGameMode_;
     lev.perfectScore = score;
@@ -471,10 +485,19 @@ ui::pfloat GameScreen::calcProjectileBarBodyHeight() const {
 void GameScreen::UpdateProjectileList(std::vector<std::pair<SpriteID, std::string>> projectiles){
     clearIcons();
     for(auto e: projectiles) addProjectileIcon(e.first, e.second);
-    if(!editorMode_ && projectiles.size() > 0) {
-        auto last = std::static_pointer_cast<RoundIcon>(projectileList_->GetElements().cbegin()->second);
-        selectProjectileIcon(last);
-    }
+    if(!editorMode_) autoSelectProjectileIcon();
+    else if(gameInitialized_ && GetEditor().InPlayMode()) autoSelectProjectileIcon();
+}
+
+void GameScreen::autoSelectProjectileIcon(){
+    if(!iconIndexes_.size()) return;
+    selectProjectileIcon(std::static_pointer_cast<RoundIcon>(menu_[iconIndexes_[0]]));
+}
+
+void GameScreen::unselectProjectileIcon(){
+    if(!hasSelectedIcon_) return;
+    hasSelectedIcon_ = false;
+    selectedIcon_->Unselect();
 }
 
 void GameScreen::clearIcons(){
@@ -483,6 +506,7 @@ void GameScreen::clearIcons(){
         menu_.erase(menu_.begin() + iconIndexes_[--i]);
     }
     iconIndexes_.clear();
+    hasSelectedIcon_ = false;
 }
 
 void GameScreen::addProjectileIcon(SpriteID icon, const std::string& name){
@@ -496,7 +520,7 @@ void GameScreen::addProjectileIcon(SpriteID icon, const std::string& name){
     auto wi = std::weak_ptr<RoundIcon>(i);
     auto index = projectileList_->GetElements().size();
     i->SetMouseDownHandler([this, index, wi](){
-        if(this->IsInEditorMode()){
+        if(this->IsInEditorMode() && this->GetEditor().IsPaused()){
             this->GetEditor().RemoveProjectile(index);
         }else{
             this->GetGame().SelectProjectile(index);

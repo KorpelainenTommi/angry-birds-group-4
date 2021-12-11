@@ -19,21 +19,30 @@ public:
     void RemoveProjectile(std::size_t index);
     
     virtual void Resume();
+    virtual void Restart();
     
+    bool InPlayMode() const;
+
     virtual bool OnMouseMove(float xw, float yh);
     virtual bool OnMouseDown(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnMouseUp(const sf::Mouse::Button& button, float xw, float yh);
     virtual bool OnKeyDown(const sf::Event::KeyEvent&);
+
+    void Play();
     
-    Level GetLevel() const;
+    Level& GetLevel();
     
     void SaveLevel();
+
+    virtual bool IsEditor() const { return true; }    
     
 private:
     gm::GameObjectType selectedElement_;
     int dragObjectID_ = -1;
     ph::tfloat dragX_;
     ph::tfloat dragY_;
+
+    bool playMode_ = false;
 
 };
 

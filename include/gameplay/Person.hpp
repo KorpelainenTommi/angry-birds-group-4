@@ -91,6 +91,7 @@ protected:
     ph::tfloat legLY_;
     ph::tfloat legLRot_;
 
+
 };
 
 #endif

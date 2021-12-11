@@ -1,9 +1,11 @@
 #ifndef TEEKKARI_HPP
 #define TEEKKARI_HPP
 
+#include <framework/RenderSystem.hpp>
 #include <screens/GameScreen.hpp>
 #include <ui/UIConstants.hpp>
 #include <gameplay/GameObjectTypes.hpp>
+#include <gameplay/ParticleEffect.hpp>
 #include <gameplay/PhysObject.hpp>
 #include <framework/RandomGen.hpp>
 #include <gameplay/Effect.hpp>
@@ -11,10 +13,13 @@
 #include <gameplay/Person.hpp>
 #include <box2d/b2_body.h>
 #include <memory>
+
 #include <gameplay/Block.hpp>
 #include <cmath>
 #include <set>
-#include <iostream>
+
+#include <limits>
+
 class Teekkari : public Person {
 public:
     Teekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, data.objType, x, y, rot)
@@ -54,7 +59,7 @@ protected:
 class AbilityCow : public PhysObject {
 public:
     AbilityCow(Game& game, float x, float y, float rot) : PhysObject(game, gm::GameObjectType::ability_cow, x, y, rot) {
-        hp_ = 100000;
+        hp_ = 300000;
         creationTime_ = game.GetTime();
 
         //Create the main body
@@ -215,7 +220,6 @@ protected:
             if(o.first >= gm::objectGroupSize && o.first < 2*gm::objectGroupSize) {
                 Block& block = static_cast<Block&>(*o.second);
                 if(block.GetBlockMaterial() == gm::BlockMaterial::metal) {
-                    std::cout << block.GetHP() << std::endl;
                     metalBlocks.insert(o.first);
                     float distance = std::sqrt((x-block.GetX())*(x-block.GetX())+(y-block.GetY())*(y-block.GetY()));
                     if(distance < minDistance) {
@@ -253,8 +257,109 @@ public:
     TEFYTeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
 protected:
     virtual void Ability(float x, float y) {
+        game_.GetAudioSystem().PlaySound(SoundID::gravity_shiftup);
 
+        int id = game_.AddObject(std::make_unique<PhysParticle>(game_, x_, y_, 0.0F));
+        PhysParticle& p = (PhysParticle&)game_.GetObject(id);
+
+        p.SetSprite(SpriteID::gravity_symbols);
+        p.SetSize(1.5F);
+        p.GetBody()->SetGravityScale(0);
+        p.GetBody()->ApplyLinearImpulseToCenter({0, 10.0F}, true);
+
+        abilityStartTime_ = game_.GetTime();
+
+        mainBody_->SetGravityScale(0);
+        headBody_->SetGravityScale(0);
+        armRBody_->SetGravityScale(0);
+        armLBody_->SetGravityScale(0);
+        legRBody_->SetGravityScale(0);
+        legLBody_->SetGravityScale(0);
+
+        mainBody_->SetLinearDamping(3);
+        headBody_->SetLinearDamping(3);
+        armRBody_->SetLinearDamping(3);
+        armLBody_->SetLinearDamping(3);
+        legRBody_->SetLinearDamping(3);
+        legLBody_->SetLinearDamping(3);
+
+        mainBody_->GetFixtureList()[0].SetSensor(true);
+        headBody_->GetFixtureList()[0].SetSensor(true);
+        armRBody_->GetFixtureList()[0].SetSensor(true);
+        armLBody_->GetFixtureList()[0].SetSensor(true);
+        legRBody_->GetFixtureList()[0].SetSensor(true);
+        legLBody_->GetFixtureList()[0].SetSensor(true);
+
+
+
+        hp_ = std::numeric_limits<float>::infinity();
     }
+
+    virtual void Update() {
+        float t = 3.0F + abilityStartTime_ - game_.GetTime();
+        if(abilityUsed_ && t > 0) {
+            Torque(-8000.0F / (t*t));
+            if(gCounter == 0) {
+                auto objs = game_.GetObjects();
+                
+                b2CircleShape circle;
+                circle.m_radius = 15.0F;
+                
+                for(auto o : objs) {
+                    if(o->GetGameID() != gameID_) {
+                        auto physBodies = o->GetPhysBodies();
+                        bool hit = false;
+                        for(auto p : physBodies) {
+                            if(b2TestOverlap(&circle, 0, p->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), p->GetTransform())) {
+                                hit = true;
+                                break;
+                            }
+                        }
+                        if(hit) {
+                            PhysObject* phys = (PhysObject*)o;
+                            phys->Explosion({x_, y_}, phys->GetMass() * -15.0F);
+                        }
+                    }
+                }
+            }
+            gCounter++;
+            gCounter %= 5;
+        }
+        
+        else if(abilityUsed_) {
+            game_.GetAudioSystem().PlaySound(SoundID::gravity_shiftdown);
+            hp_ = 0;
+        }
+        Teekkari::Update();
+    }
+
+    virtual void Render(const RenderSystem& r) {
+
+        float t = 3.0F + abilityStartTime_ - game_.GetTime();
+        if(abilityUsed_ && t > 0) {
+
+        float timeLeft = game_.GetTime() - abilityStartTime_;
+        int frame = (int)(timeLeft * 30.0F);
+
+
+        float fade = 200 * (t / 2.5F);
+        if(fade < 0) fade = 0;
+        sf::Color c = sf::Color(255, 255, 255, (int)roundf(fade));
+        r.RenderAnimation(AnimationID::gravity_spiral, frame, x_, y_, 2.5F, 0, game_.GetCamera(), c);
+        SpriteID arm = data_.face.bType ? data_.body.armb : data_.body.arm;
+        r.RenderSprite(arm, armLX_, armLY_, armHeight, armLRot_, game_.GetCamera(), c);
+        r.RenderSprite(data_.body.leg, legLX_, legLY_, legHeight, legLRot_, game_.GetCamera(), c);
+        r.RenderSprite(data_.body.torso, x_, y_, torsoHeight, rot_, game_.GetCamera(), c);
+        r.RenderSprite(data_.body.leg, legRX_, legRY_, legHeight, legRRot_, game_.GetCamera(), c);
+        r.RenderSprite(arm, armRX_, armRY_, armHeight, armRRot_, game_.GetCamera(), c);
+        r.RenderSprite(data_.face.face, headX_, headY_, headHeight, headRot_, game_.GetCamera(), c);
+        }
+        else Teekkari::Render(r);
+    }
+
+
+    int gCounter = 0;
+    float abilityStartTime_ = 0;
 };
 
 class TUTATeekkari : public Teekkari {
@@ -263,8 +368,58 @@ public:
     TUTATeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
 protected:
     virtual void Ability(float x, float y) {
-
+        abilityStartTime_ = game_.GetTime();
     }
+
+    virtual void Update() {
+        if(abilityUsed_ && game_.GetTime() < abilityStartTime_ + 2.0F) {
+            Force({0, 2000.0F});
+            if(whooshCounter == 0) {
+                game_.GetAudioSystem().PlaySound(SoundID::hand_whoosh);
+                
+                auto objs = game_.GetObjects();
+                
+                b2CircleShape circle;
+                circle.m_radius = 4.0F;
+                
+                for(auto o : objs) {
+                    if(o->GetGameID() != gameID_) {
+                        auto physBodies = o->GetPhysBodies();
+                        bool hit = false;
+                        for(auto p : physBodies) {
+                            if(b2TestOverlap(&circle, 0, p->GetFixtureList()[0].GetShape(), 0, mainBody_->GetTransform(), p->GetTransform())) {
+                                hit = true;
+                                break;
+                            }
+                        }
+                        if(hit) {
+                            PhysObject* phys = (PhysObject*)o;
+                            phys->ExplosionDamage({x_, y_}, 3000);
+                            phys->Explosion({x_, y_}, phys->GetMass() * 15.0F);
+                        }
+                    }
+                }
+            }
+            whooshCounter++;
+            whooshCounter %= 5;
+
+            armRBody_->SetAngularVelocity(100);
+            armLBody_->SetAngularVelocity(100);
+        }
+        Teekkari::Update();
+    }
+
+    virtual void Render(const RenderSystem& r) {
+        Teekkari::Render(r);
+        if(abilityUsed_ && game_.GetTime() < abilityStartTime_ + 2.0F) {
+            float t = game_.GetTime() - abilityStartTime_;
+            int frame = (int)(t * 60.0F);
+            r.RenderAnimation(AnimationID::hand_whirl, frame, x_, y_, 3.0F, rot_, game_.GetCamera());
+        }
+    }
+
+    int whooshCounter = 0;
+    float abilityStartTime_ = 0;
 };
 
 class TIKTeekkari : public Teekkari {
