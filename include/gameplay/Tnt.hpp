@@ -12,7 +12,7 @@
 #include <box2d/b2_body.h>
 #include <box2d/b2_api.h>
 
-/// A block that explodes
+/// @brief A TNT block that explodes
 class Tnt : public Block {
 public:
 

@@ -12,62 +12,64 @@
 #include <box2d/b2_shape.h>
 #include <box2d/b2_contact.h>
 
-/// An object that has one or more rigidbodies. Can be affected with forces and other PhysObjects
+/// @brief Class for objects that have one or more rigidbodies. Can be affected with forces and other PhysObjects
 class PhysObject : public GameObject {
 public:
-
+    /// @brief Constructor
     PhysObject(Game& game, gm::GameObjectType objectID, float x, float y, float rot) : 
     GameObject(game, objectID, x, y, rot) { }
 
-    /// Destroy underlying rigidbodies with b2dWorld.DestroyBody()
+    /// @brief Destroy underlying rigidbodies with b2dWorld.DestroyBody()
     virtual ~PhysObject();
 
-    /// Update this GameObjects position to reflect the state in the box2d world
+    /// @brief Update this GameObjects position to reflect the state in the box2d world
     virtual void Update();
 
-    /// OnCollision is called when this PhysObject collides with another PhysObject
+    /// @brief OnCollision is called when this PhysObject collides with another PhysObject
     virtual void OnCollision(const b2Vec2& relativeVelocity, PhysObject& other, const b2Contact& contact);
 
-    /// Set this rigidbody's x
+    /// @brief Set this rigidbody's x
     virtual void SetX(float x);
 
-    /// Set this rigidbody's y
+    /// @brief Set this rigidbody's y
     virtual void SetY(float y);
 
-    /// Set this rigidbody's rotation
+    /// @brief Set this rigidbody's rotation
     virtual void SetRotation(float rot);
 
-    /// Set this rigidbody's position
+    /// @brief Set this rigidbody's position
     virtual void SetPosition(float x, float y);
 
-    /// Instant change in velocity
+    /// @brief Instant change in velocity
     virtual void Impulse(const b2Vec2& f);
 
-    /// Instant change in velocity at point p
+    /// @brief Instant change in velocity at point p
     virtual void Impulse(const b2Vec2& f, const b2Vec2& p);
 
-    /// Force over time
+    /// @brief Force over time
     virtual void Force(const b2Vec2& f);
 
-    /// Force over time at point p
+    /// @brief Force over time at point p
     virtual void Force(const b2Vec2& f, const b2Vec2& p);
 
-    /// Torque over time
+    /// @brief Torque over time
     virtual void Torque(float t);
 
-    /// Instant change in angular velocity
+    /// @brief Instant change in angular velocity
     virtual void Angular(float a);
 
-    /// Add explosive force away from center
+    /// @brief Add explosive force away from center
     virtual void Explosion(const b2Vec2& center, float magnitude);
     
-    /// Deal explosive damage, that decays with distance
+    /// @brief Deal explosive damage, that decays with distance
     void ExplosionDamage(const b2Vec2& center, float damage);
 
-    /// Explicitly deal damage to this objects hp
+    /// @brief Explicitly deal damage to this objects hp
     virtual void DealDamage(float damage);
 
+    /// @brief Get HP
     virtual float GetHP() const;
+    /// @brief Get mass
     virtual float GetMass() const;
 
     virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r);

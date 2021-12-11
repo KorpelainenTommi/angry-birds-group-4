@@ -14,7 +14,7 @@
 #include <box2d/b2_api.h>
 #include <unordered_map>
 
-// A block that gives a teekkari to the player when broken
+/// @brief A block that gives a teekkari to the player when broken
 class Pickup : public Block {
 public:
 
