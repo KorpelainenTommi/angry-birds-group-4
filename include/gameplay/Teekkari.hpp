@@ -192,6 +192,80 @@ protected:
 
 };
 
+/// @brief Class for integral ability of a professor
+class AbilityIntegral : public PhysObject {
+public:
+    AbilityIntegral(Game& game, float x, float y, float rot, const b2Vec2 velocity) : PhysObject(game, gm::GameObjectType::ability_integral, x, y, rot) {
+        // Normalized velocity
+        b2Vec2 nVelocity = velocity;
+        nVelocity *= 1/std::sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
+        x_ += 3.0F*nVelocity.x;
+        y_ += 3.0F*nVelocity.y;
+        creationTime_ = game.GetTime();
+        //Create the main body
+        b2BodyDef definition;
+        definition.type = b2BodyType::b2_kinematicBody;
+        definition.fixedRotation = false;
+        definition.position = {x_, y_};
+        definition.angle = ph::rotToAng(rot_);
+        
+        mainBody_ = game.GetB2World().CreateBody(&definition);
+
+
+        b2PolygonShape shape;
+        shape.SetAsBox(1.333333F, 1.0F);
+        b2FixtureDef fixture;
+        b2FixtureUserData userData;
+        userData.data = this;
+
+        fixture.filter.groupIndex = -5;
+        fixture.shape = &shape;
+        fixture.userData = userData;
+        mainBody_->CreateFixture(&fixture);
+        mainBody_->SetLinearVelocity(velocity);
+        hp_ = ph::inf;
+        
+        
+
+        Record();
+
+    }
+
+    virtual void Render(const RenderSystem& r) {
+        r.RenderSprite(SpriteID::integral_sign, x_, y_, 2.0F, rot_, game_.GetCamera());
+    }
+
+    virtual void Update() {
+        if(game_.GetTime() - creationTime_ > 5.0F) hp_ = 0;
+        PhysObject::Update();
+    }
+
+protected:
+    float creationTime_;
+    virtual void OnDeath() {
+
+        game_.GetAudioSystem().PlaySound(SoundID::metal_hit);
+        game_.CheckLevelEnd();
+
+    }
+
+    virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
+
+        PhysObject::OnCollision(velocity, other, contact);
+
+        //Collision sound
+
+        //Deal extra damage to wood
+        if(gm::GetObjectGroup(other.GetObjectType()) == gm::GameObjectGroup::block) {
+            if(gm::blockTypes.at(other.GetObjectType()).material == gm::BlockMaterial::wood) {
+                other.DealDamage(1000);
+            }
+        }
+    }
+
+};
+
+
 
 
 //Teekkaris
@@ -492,7 +566,9 @@ public:
     Professor(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
 protected:
     virtual void Ability(float x, float y) {
-
+        hp_ = ph::inf;
+        mainBody_->SetType(b2BodyType::b2_kinematicBody);
+        game_.AddObject(std::make_unique<AbilityIntegral>(game_, x_ , y_ , rot_, mainBody_->GetLinearVelocity()));
     }
 };
 
