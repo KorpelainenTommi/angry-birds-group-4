@@ -157,14 +157,23 @@ void Game::Update() {
     //Increment tick count
     time_++;
 
-    world_.Step(ph::timestep, ph::velocityIters, ph::positionIters);
+    if(!professorPause_) world_.Step(ph::timestep, ph::velocityIters, ph::positionIters);
 
     //Call update on objects. They will handle their own business
     
     auto it = objects_.begin();
     int i = 0;
     while(it != objects_.end()) {
-        (it++)->second->Update();
+        auto iter =  (it++);
+        if(professorPause_) {
+            gm::GameObjectType type = iter->second->GetObjectType();
+            if(type == gm::GameObjectType::ability_integral
+            || type == gm::GameObjectType::teekkari_professor
+            || type == gm::GameObjectType::professor_particle) {
+                
+            }
+        }
+        else iter->second->Update();
     }
 
     bool timeLimitReached = (level_.levelMode == LevelMode::time_trial && level_.timeLimit > 0 && GetTime() > level_.timeLimit);
@@ -362,11 +371,21 @@ void Game::AddTeekkari(gm::GameObjectType teekkari) {
     UpdateProjectileList();
 }
 
+
+void Game::ProfessorPause() {
+    professorPause_ = true;
+}
+
+void Game::ProfessorResume() {
+    professorPause_ = false;
+}
+
+
 AudioSystem& Game::GetAudioSystem() const { return screen_.GetApplication().GetAudioSystem(); }
 b2World& Game::GetB2World() { return world_; }
 GameScreen& Game::GetScreen() { return screen_; }
 
-bool Game::CannonDisabled() const { return isPaused_ || teekkarisLeft_.empty(); }
+bool Game::CannonDisabled() const { return isPaused_ || teekkarisLeft_.empty() || professorPause_; }
 bool Game::IsPaused() const { return isPaused_; }
 
 void Game::Pause() {
@@ -383,6 +402,7 @@ void Game::Restart() {
     ResetCamera();
     teekkarisLeft_.clear();
     isPaused_ = false;
+    professorPause_ = false;
     time_ = 0;
     points_ = 0;
     levelMaxScore_ = level_.CalculateMaxScore();

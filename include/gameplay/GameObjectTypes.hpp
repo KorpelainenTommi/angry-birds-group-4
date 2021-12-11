@@ -137,6 +137,7 @@ enum GameObjectType {
     
     //Physics particle
     phys_particle,
+    professor_particle,
 
     //Animation
     anim_effect,
