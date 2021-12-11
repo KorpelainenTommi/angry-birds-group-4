@@ -76,7 +76,7 @@ void MainMenu::generateLevels(){
 }
 
 void MainMenu::addLevel(Level level){
-    auto e = std::make_shared<Button>(0 VH, listPadding_, 20 VW, calcListElementWidth());
+    auto e = std::make_shared<Button>(0 VH, listPadding_, 20 VH, calcListElementWidth());
     int id = list_->InsertElement(e);
     menu_.push_back(e);
     auto w = std::weak_ptr<Button>(e);
