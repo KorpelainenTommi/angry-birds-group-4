@@ -59,6 +59,9 @@ public:
     b2Body* GetBody() { return mainBody_; }
 
 protected:
+
+    // Allows professor to create special particles that move in stopped time
+    friend class Professor;
     float creationTime_;
     float size_ = 0.1F;
     float lifeTime_ = 1.0F;
