@@ -78,7 +78,7 @@ public:
         b2FixtureDef fixture;
         b2FixtureUserData userData;
         userData.data = this;
-        fixture.density = 1000.0F;
+        fixture.density = 1500.0F;
         fixture.friction = 0.0F;
         fixture.restitution = 0.4F;
         fixture.filter.groupIndex = -5;
