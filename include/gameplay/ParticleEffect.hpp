@@ -70,7 +70,6 @@ public:
 protected:
 
     // Allows professor to create special particles that move in stopped time
-    friend class Professor;
     float creationTime_;
     float size_ = 0.1F;
     float lifeTime_ = 1.0F;
@@ -135,5 +134,62 @@ protected:
     std::string text_ = "";
     sf::Color color_ = {255, 106, 0, 255};
 };
+
+
+/// @brief Special particle that moves in stopped time
+class ProfessorParticle : public GameObject {
+public:
+    /// @brief Constructor
+    ProfessorParticle(Game& game, float x, float y, float rot) : GameObject(game, gm::GameObjectType::professor_particle, x, y, rot) {
+        creationTime_ = game.GetTime();
+        Record();
+    }
+    /// @brief Renders the particle
+    virtual void Render(const RenderSystem& r) {
+        float opacity = 1.0F;
+        float t = creationTime_ + lifeTime_ - GetRealTime();
+        if(t < ph::particleFadeTime) {
+            opacity = t / ph::particleFadeTime;
+            opacity *= opacity;
+        }
+        r.RenderSprite(sprite_, x_, y_, size_, rot_, game_.GetCamera(), sf::Color(255, 255, 255, (int)std::roundf(opacity * 255)));
+    }
+    /// @brief Updates particle: location and lifetime
+    virtual void Update() {
+        upd_++;
+        if(GetRealTime() - creationTime_ > lifeTime_) game_.DestroyObject(gameID_);
+        else {
+            Record();
+            x_ = x_ + ph::timestep * vx;
+            y_ = y_ + ph::timestep * vy;
+        }
+    }
+    /// @brief Sets size of the particle
+    void SetSize(float sz) { size_ = sz; }
+    /// @brief Sets lifetime of the particle
+    void SetLifeTime(float l) { lifeTime_ = l; }
+    /// @brief Sets sprite of the particle
+    void SetSprite(SpriteID sp) { sprite_ = sp; }
+    /// @brief Implements parentclass method and return empty vector.
+    virtual std::vector<b2Body*> GetPhysBodies() { return std::vector<b2Body*>(); }
+    /// @brief Set velocity of the particle
+    void SetVelocity(float x, float y) { vx = x; vy = y; }
+
+
+protected:
+
+    float GetRealTime() {
+        return creationTime_ + upd_ * ph::timestep;
+    }
+
+    int upd_ = 0;
+    float creationTime_;
+    float size_ = 0.1F;
+    float lifeTime_ = 1.0F;
+    SpriteID sprite_ = SpriteID::particles_dust;
+    float vx = 0;
+    float vy = 0;
+};
+
 
 #endif

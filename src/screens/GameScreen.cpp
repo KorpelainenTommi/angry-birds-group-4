@@ -140,6 +140,7 @@ void GameScreen::addEditorTopLeftButtons(){
 }
 
 bool GameScreen::SaveEditor(){
+    if(GetEditor().InPlayMode()) return false;
     std::string name = editorNameInput_->GetText();
     if(isEmpty(name)){
         Alert("Level name can't be empty.");

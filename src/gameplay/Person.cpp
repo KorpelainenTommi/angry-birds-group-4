@@ -348,24 +348,30 @@ void Person::SetY(float y) {
     legLY_ = legLY_ + ofs;
 }
 
+void Person::SetPosition(float x, float y) {
+    SetX(x);
+    SetY(y);
+}
+
 void Person::SetRotation(float rot) {
 
-    float r = rot - ph::angToRot(mainBody_->GetAngle());
+    float r = rot - rot_;
     GameObject::SetRotation(rot);
-
-    b2Vec2 headOfs = headBody_->GetPosition() - mainBody_->GetPosition();
-    b2Vec2 armROfs = armRBody_->GetPosition() - mainBody_->GetPosition();
-    b2Vec2 armLOfs = armLBody_->GetPosition() - mainBody_->GetPosition();
-    b2Vec2 legROfs = legRBody_->GetPosition() - mainBody_->GetPosition();
-    b2Vec2 legLOfs = legLBody_->GetPosition() - mainBody_->GetPosition();
-
+    b2Vec2 mp = {x_, y_};
     float a = ph::rotToAng(r);
 
-    float headA = headBody_->GetAngle() + a;
-    float armRA = armRBody_->GetAngle() + a;
-    float armLA = armLBody_->GetAngle() + a;
-    float legRA = legRBody_->GetAngle() + a;
-    float legLA = legLBody_->GetAngle() + a;
+
+    b2Vec2 headOfs = b2Vec2(headX_, headY_) - mp;
+    b2Vec2 armROfs = b2Vec2(armRX_, armRY_) - mp;
+    b2Vec2 armLOfs = b2Vec2(armLX_, armLY_) - mp;
+    b2Vec2 legROfs = b2Vec2(legRX_, legRY_) - mp;
+    b2Vec2 legLOfs = b2Vec2(legLX_, legLY_) - mp;
+
+    float headA = ph::rotToAng(headRot_) + a;
+    float armRA = ph::rotToAng(armRRot_) + a;
+    float armLA = ph::rotToAng(armLRot_) + a;
+    float legRA = ph::rotToAng(legRRot_) + a;
+    float legLA = ph::rotToAng(legLRot_) + a;
 
     sf::Vector2f headP = ph::rotateVector(headOfs.x, headOfs.y, r) + sf::Vector2f(x_, y_);
     sf::Vector2f armRP = ph::rotateVector(armROfs.x, armROfs.y, r) + sf::Vector2f(x_, y_);
@@ -373,13 +379,12 @@ void Person::SetRotation(float rot) {
     sf::Vector2f legRP = ph::rotateVector(legROfs.x, legROfs.y, r) + sf::Vector2f(x_, y_);
     sf::Vector2f legLP = ph::rotateVector(legLOfs.x, legLOfs.y, r) + sf::Vector2f(x_, y_);
 
-    b2Vec2 p = mainBody_->GetPosition();
-    mainBody_->SetTransform(p, ph::rotToAng(rot));
+    mainBody_->SetTransform(mp, ph::rotToAng(rot));
     headBody_->SetTransform({headP.x, headP.y}, headA);
-    armRBody_->SetTransform({armRP.x, armRP.y}, headA);
-    armLBody_->SetTransform({armLP.x, armLP.y}, headA);
-    legRBody_->SetTransform({legRP.x, legRP.y}, headA);
-    legLBody_->SetTransform({legLP.x, legLP.y}, headA);
+    armRBody_->SetTransform({armRP.x, armRP.y}, armRA);
+    armLBody_->SetTransform({armLP.x, armLP.y}, armLA);
+    legRBody_->SetTransform({legRP.x, legRP.y}, legRA);
+    legLBody_->SetTransform({legLP.x, legLP.y}, legLA);
 
     headX_ = headP.x;
     armRX_ = armRP.x;

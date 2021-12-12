@@ -8,6 +8,7 @@
 #include <gameplay/ParticleEffect.hpp>
 #include <gameplay/PhysObject.hpp>
 #include <framework/RandomGen.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <gameplay/Effect.hpp>
 #include <gameplay/Physics.hpp>
 #include <gameplay/Person.hpp>
@@ -117,7 +118,7 @@ protected:
     }
 };
 
-/// @brief Class for wrench ability of an inkubioteekkari. Spawns wrenches
+/// @brief Class for wrench ability of an ikteekkari. Spawns wrenches
 class AbilityWrench : public PhysObject {
 public:
     AbilityWrench(Game& game, float x, float y, float rot) : PhysObject(game, gm::GameObjectType::ability_wrench, x, y, rot) {
@@ -193,6 +194,74 @@ protected:
 };
 
 
+/// @brief Class for the integral ability of a professor
+class AbilityIntegral : public GameObject {
+public:
+    AbilityIntegral(Game& game, float x, float y, float rot) : GameObject(game, gm::GameObjectType::ability_integral, x, y, rot) {
+        creationTime_ = game.GetTime();
+        hitShape_.SetAsBox(width_ / 2, height_ / 2);
+        Record();
+    }
+
+    virtual void Render(const RenderSystem& r) {
+        r.RenderSprite(SpriteID::integral_sign, x_, y_, height_, rot_, game_.GetCamera());
+    }
+
+    virtual void Update() {
+
+        updCount_++;
+
+        if(GetRealTime() - creationTime_ > 3.2F) {
+            game_.DestroyObject(gameID_);
+        }
+        else {
+
+            b2Transform hitTransform;
+            hitTransform.Set({x_, y_}, 0);
+
+            auto objs = game_.GetObjects();
+            for(auto o : game_.GetObjects()) {
+                if(o->GetObjectType() != gm::GameObjectType::ability_integral 
+                && o->GetObjectType() != gm::GameObjectType::teekkari_professor
+                && o->GetObjectType() != gm::GameObjectType::professor_particle) {
+                    if(gm::GetObjectGroup(o->GetObjectType()) == gm::GameObjectGroup::block 
+                    || gm::GetObjectGroup(o->GetObjectType()) == gm::GameObjectGroup::teekkari) {
+                        auto physBodies = o->GetPhysBodies();
+                        bool hit = false;
+                        for(auto p : physBodies) {
+                            if(b2TestOverlap(&hitShape_, 0, p->GetFixtureList()[0].GetShape(), 0, hitTransform, p->GetTransform())) {
+                                hit = true;
+                                break;
+                            }
+                        }
+                        if(hit) {
+                            PhysObject* phys = (PhysObject*)o;
+                            phys->DealDamage(std::numeric_limits<float>::infinity());
+                        }
+                    }
+                }
+            }
+
+            x_.Record();
+            x_ += ph::timestep * ph::fullscreenPlayArea / 3.2F;
+        }
+    }
+
+protected:
+
+    float GetRealTime() {
+        return creationTime_ + updCount_ * ph::timestep;
+    }
+
+    int updCount_ = 0;
+    float creationTime_;
+    b2PolygonShape hitShape_;
+    float height_ = 2.0F;
+    float width_ = 5.15625F;
+
+};
+
+
 
 //Teekkaris
 /// @brief  Class for IKteekkari
@@ -210,9 +279,54 @@ class SIKTeekkari : public Teekkari {
 public:
     SIKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
     SIKTeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
+    
+    virtual void Render(const RenderSystem& r) {
+        Teekkari::Render(r);
+
+        if(abilityUsed_ && !used_) {
+            float t = game_.GetTime() - abilityStartTime_;
+            int frame = (int)(t * 20.0F);
+            r.RenderAnimation(AnimationID::thunder_sparks, frame, x_, y_, 2.0F, 0.0F, game_.GetCamera());
+        }
+
+        if(lightning_) {
+            r.RenderSprite(SpriteID::lightning_strike, lightningPos_.x, lightningPos_.y, lightningH_, lightningRot_, game_.GetCamera());
+            if(game_.GetTime() > lightningStart_ + 0.05F) lightning_ = false;
+        }
+    }
+
+    virtual void Update() {
+
+        if(abilityUsed_ && !used_ && game_.GetTime() > abilityStartTime_ + 1.0F) {
+            ActiveAbility();
+            used_ = true;
+        }
+
+        int c = sleepCounter_;
+        Teekkari::Update();
+
+        //Prevent the Teekkari from despawning when he is charging his ability
+        if(abilityUsed_ && !used_) sleepCounter_ = c;
+    }
+
 protected:
     virtual void Ability(float x, float y) {
+        abilityStartTime_ = game_.GetTime();
+        game_.GetAudioSystem().PlaySound(SoundID::thunder_static);
+    }
 
+
+
+    float abilityStartTime_ = 0;
+    bool used_ = false;
+
+    b2Vec2 lightningPos_ = {0, 0};
+    float lightningH_ = 0;
+    float lightningRot_ = 0;
+    bool lightning_ = false;
+    float lightningStart_ = 0;
+
+    void ActiveAbility() {
         std::set<int> metalBlocks;
         int nearestBlock = -1;
         float minDistance = ph::inf;
@@ -245,58 +359,33 @@ protected:
                 }
             }
             currentBlock.DealDamage(remainingEnergy);
+            game_.AddObject(std::make_unique<Effect>(game_, AnimationID::lightning, currentBlock.GetX(), currentBlock.GetY(), 0.0F, 4.0F, 40.0F, 0.1F));
         };
         if(nearestBlock != -1 && minDistance < 15.0F) {
+            auto& block = game_.GetObject(nearestBlock);
+            b2Vec2 v = {block.GetX() - x_, block.GetY() - y_};
+            float d = v.Length();
+
+            lightning_ = true;
+            lightningStart_ = game_.GetTime();
+            lightningPos_ = {x_ + v.x * 0.5F, y_ + v.y * 0.5F};
+            lightningH_ = 0.364583333F * (v.Length());
+            lightningRot_ = (v.y > 0) ? acosf(v.x / d) : 2 * ph::pi - acosf(v.x / d);
+            lightningRot_ = ph::angToRot(lightningRot_);
+
             destroyRecursively(nearestBlock,ph::lightningEnergy);
-            game_.AddObject(std::make_unique<Effect>(game_, AnimationID::lightning, game_.GetObject(nearestBlock).GetX(), game_.GetObject(nearestBlock).GetY(), 0.0F, 4.0F, 32.0F, 0.125F));
+            game_.GetAudioSystem().PlaySound(SoundID::thunder_strike);
         }
     }
+
 };
 /// @brief Class for TEFYTeekkari
 class TEFYTeekkari : public Teekkari {
 public:
     TEFYTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
     TEFYTeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
-protected:
-    virtual void Ability(float x, float y) {
-        game_.GetAudioSystem().PlaySound(SoundID::gravity_shiftup);
-
-        int id = game_.AddObject(std::make_unique<PhysParticle>(game_, x_, y_, 0.0F));
-        PhysParticle& p = (PhysParticle&)game_.GetObject(id);
-
-        p.SetSprite(SpriteID::gravity_symbols);
-        p.SetSize(1.5F);
-        p.GetBody()->SetGravityScale(0);
-        p.GetBody()->ApplyLinearImpulseToCenter({0, 10.0F}, true);
-
-        abilityStartTime_ = game_.GetTime();
-
-        mainBody_->SetGravityScale(0);
-        headBody_->SetGravityScale(0);
-        armRBody_->SetGravityScale(0);
-        armLBody_->SetGravityScale(0);
-        legRBody_->SetGravityScale(0);
-        legLBody_->SetGravityScale(0);
-
-        mainBody_->SetLinearDamping(3);
-        headBody_->SetLinearDamping(3);
-        armRBody_->SetLinearDamping(3);
-        armLBody_->SetLinearDamping(3);
-        legRBody_->SetLinearDamping(3);
-        legLBody_->SetLinearDamping(3);
-
-        mainBody_->GetFixtureList()[0].SetSensor(true);
-        headBody_->GetFixtureList()[0].SetSensor(true);
-        armRBody_->GetFixtureList()[0].SetSensor(true);
-        armLBody_->GetFixtureList()[0].SetSensor(true);
-        legRBody_->GetFixtureList()[0].SetSensor(true);
-        legLBody_->GetFixtureList()[0].SetSensor(true);
-
-
-
-        hp_ = std::numeric_limits<float>::infinity();
-    }
-
+    
+    
     virtual void Update() {
         float t = 3.0F + abilityStartTime_ - game_.GetTime();
         if(abilityUsed_ && t > 0) {
@@ -359,6 +448,47 @@ protected:
         else Teekkari::Render(r);
     }
 
+protected:
+    virtual void Ability(float x, float y) {
+        game_.GetAudioSystem().PlaySound(SoundID::gravity_shiftup);
+
+        int id = game_.AddObject(std::make_unique<PhysParticle>(game_, x_, y_, 0.0F));
+        PhysParticle& p = (PhysParticle&)game_.GetObject(id);
+
+        p.SetSprite(SpriteID::gravity_symbols);
+        p.SetSize(1.5F);
+        p.GetBody()->SetGravityScale(0);
+        p.GetBody()->ApplyLinearImpulseToCenter({0, 10.0F}, true);
+
+        abilityStartTime_ = game_.GetTime();
+
+        mainBody_->SetGravityScale(0);
+        headBody_->SetGravityScale(0);
+        armRBody_->SetGravityScale(0);
+        armLBody_->SetGravityScale(0);
+        legRBody_->SetGravityScale(0);
+        legLBody_->SetGravityScale(0);
+
+        mainBody_->SetLinearDamping(3);
+        headBody_->SetLinearDamping(3);
+        armRBody_->SetLinearDamping(3);
+        armLBody_->SetLinearDamping(3);
+        legRBody_->SetLinearDamping(3);
+        legLBody_->SetLinearDamping(3);
+
+        mainBody_->GetFixtureList()[0].SetSensor(true);
+        headBody_->GetFixtureList()[0].SetSensor(true);
+        armRBody_->GetFixtureList()[0].SetSensor(true);
+        armLBody_->GetFixtureList()[0].SetSensor(true);
+        legRBody_->GetFixtureList()[0].SetSensor(true);
+        legLBody_->GetFixtureList()[0].SetSensor(true);
+
+
+
+        hp_ = std::numeric_limits<float>::infinity();
+    }
+
+
 
     int gCounter = 0;
     float abilityStartTime_ = 0;
@@ -368,11 +498,7 @@ class TUTATeekkari : public Teekkari {
 public:
     TUTATeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
     TUTATeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
-protected:
-    virtual void Ability(float x, float y) {
-        abilityStartTime_ = game_.GetTime();
-    }
-
+    
     virtual void Update() {
         if(abilityUsed_ && game_.GetTime() < abilityStartTime_ + 2.0F) {
             Force({0, 2000.0F});
@@ -420,9 +546,16 @@ protected:
         }
     }
 
+protected:
+    virtual void Ability(float x, float y) {
+        abilityStartTime_ = game_.GetTime();
+    }
+
     int whooshCounter = 0;
     float abilityStartTime_ = 0;
 };
+
+
 /// @brief Class for TIKteekkari
 class TIKTeekkari : public Teekkari {
 public:
@@ -435,6 +568,7 @@ protected:
         game_.AddObject(std::make_unique<Effect>(game_, AnimationID::matrix_bug,
         x_, y_, 0.0F, 1.0F, 60.0F, 0.1F));
         SetX(x_ + 8.0F);
+        Record();
         game_.AddObject(std::make_unique<Effect>(game_, AnimationID::matrix_bug,
         x_, y_, 0.0F, 1.0F, 60.0F, 0.1F));
 
@@ -452,21 +586,13 @@ protected:
         game_.AddObject(std::move(cow));
     }
 };
+
+
 /// @brief Class for KIKteekkari
 class KIKTeekkari : public Teekkari {
 public:
     KIKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
     KIKTeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
-protected:
-    virtual void Ability(float x, float y) {
-        auto relativeCoords = game_.GetScreen().GetApplication().GetRenderSystem().GetRelativeCoords({x_, y_}, game_.GetCamera());
-        targetDir = {x - relativeCoords.x, relativeCoords.y - y};
-        targetDir.Normalize();
-        mainBody_->SetLinearVelocity({0, 0});
-        headBody_->SetLinearVelocity({0, 0});
-        mainBody_->ApplyAngularImpulse(1800.0F, true);
-        armRBody_->ApplyLinearImpulseToCenter({targetDir.x * -1000.0F, targetDir.y * -1000.0F}, true);
-    }
 
     virtual void Update() {
         if(abilityUsed_ && wrenchesShot_ < 3 && game_.GetTime() - lastShotTime_ > shootingInterval_) {
@@ -479,21 +605,120 @@ protected:
         Teekkari::Update();
     }
 
-private:
+protected:
+    virtual void Ability(float x, float y) {
+        auto relativeCoords = game_.GetScreen().GetApplication().GetRenderSystem().GetRelativeCoords({x_, y_}, game_.GetCamera());
+        targetDir = {x - relativeCoords.x, relativeCoords.y - y};
+        targetDir.Normalize();
+        mainBody_->SetLinearVelocity({0, 0});
+        headBody_->SetLinearVelocity({0, 0});
+        mainBody_->ApplyAngularImpulse(1800.0F, true);
+        armRBody_->ApplyLinearImpulseToCenter({targetDir.x * -1000.0F, targetDir.y * -1000.0F}, true);
+    }
+
     float shootingInterval_ = 0.2F;
     float lastShotTime_ = 0;
     int wrenchesShot_ = 0;
     b2Vec2 targetDir = {0, -1};
 };
+
+
+
 /// @brief Class for the professor
 class Professor : public Teekkari {
 public:
     Professor(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
     Professor(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) {}
+
+    virtual void Update() {
+        updCount_++;
+        if(abilityUsed_ && GetRealTime() > abilityStartTime_ + 3.2F) {
+            if(!resumed_) { 
+                resumed_ = true;
+                game_.ProfessorResume();
+            }
+        }
+
+        else if(abilityUsed_) {
+
+            float t = GetRealTime() - abilityStartTime_;
+            t /= 3.2F;
+
+            auto v = tVelocity_;
+            v = {v.x * 0.9F, v.y * 0.9F};
+            SetX(x_ + ph::timestep * v.x);
+            //tY_ = tY_ + ph::timestep * v.y;
+            tVelocity_ = v;
+            SetY(tY_ + sinf(t * 2 * ph::pi));
+
+            int rDeg = abs((int)rot_) % 360;
+            int rDeg2 = rDeg % 180;
+
+            if(rDeg> 5) SetRotation(rot_ + ((rDeg > 180) ? ph::timestep * rDeg2 : -ph::timestep * rDeg2));
+
+            for(int i = 0; i < 8; i++) {
+                sf::Vector2f v = ph::rotateVector(1.0F + sinf(ph::pi * t) * 3.0F, 0.0F, t * 360 + i * 45.0F);
+                particles_.at(i)->SetPosition(x_ + v.x, y_ + v.y);
+            }
+
+        }
+
+        Teekkari::Update();
+    }
+
 protected:
     virtual void Ability(float x, float y) {
+        abilityStartTime_ = game_.GetTime();
+        updCount_ = 0;
+        tVelocity_ = mainBody_->GetLinearVelocity();
+        tY_ = y_;
+        game_.ProfessorPause();
+
+        SoundID sounds[] = { 
+            SoundID::professor_oneliner1,
+            SoundID::professor_oneliner2,
+            SoundID::professor_oneliner3,                                        
+            SoundID::professor_oneliner4,
+            SoundID::professor_oneliner5,
+            SoundID::professor_oneliner6,
+            SoundID::professor_oneliner7,
+            SoundID::professor_oneliner8
+        };
+
+        game_.GetAudioSystem().PlaySound(sounds[rng::RandomInt(0, 7)]);
+        game_.GetAudioSystem().PlaySound(SoundID::integral_destruction, 0.6F);
+        game_.AddObject(std::make_unique<AbilityIntegral>(game_, x_, y_, 0.0F));
+
+        for(int i = 0; i < 8; i++) {
+
+            sf::Vector2f v = ph::rotateVector(1.0F, 0.0F, i * 45.0F);
+
+            int id = game_.AddObject(std::make_unique<ProfessorParticle>(game_, x_ + v.x, y_ + v.y, 0.0F));
+            ProfessorParticle& pp = (ProfessorParticle&)game_.GetObject(id);
+
+            pp.SetSize(1.0F);
+            pp.SetSprite((i % 2) ? SpriteID::gravity_symbols : SpriteID::math_cloud);
+            pp.SetLifeTime(3.3F);
+
+            particles_.push_back(&pp);
+        }
 
     }
+
+    float GetRealTime() {
+        return abilityStartTime_ + updCount_ * ph::timestep;
+    }
+
+    bool resumed_ = false;
+    int updCount_ = 0;
+    float abilityStartTime_ = 0;
+
+    b2Vec2 tVelocity_ = {0, 0};
+    float tY_ = 0;
+
+    std::vector<ProfessorParticle*> particles_;
+
+
 };
 
 

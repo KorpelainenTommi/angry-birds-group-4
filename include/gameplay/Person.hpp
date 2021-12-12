@@ -33,6 +33,9 @@ public:
     /// @brief Set y coordinate
     virtual void SetY(float y);
 
+    /// @brief Set pos
+    virtual void SetPosition(float x, float y);
+
     /// @brief Set rotation
     virtual void SetRotation(float rot);
 

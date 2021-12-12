@@ -288,7 +288,6 @@ enum SpriteID {
     hit_stars,
 
     //Screen filters (sprite applied after all)
-    filter_thunder,
     filter_timefreeze
 
 
@@ -401,7 +400,14 @@ enum SoundID {
     cow_death,
     thunder_static,
     thunder_strike,
-    professor_oneliner,
+    professor_oneliner1,
+    professor_oneliner2,
+    professor_oneliner3,
+    professor_oneliner4,
+    professor_oneliner5,                
+    professor_oneliner6,
+    professor_oneliner7,
+    professor_oneliner8,
     integral_destruction
 
 };

@@ -155,8 +155,7 @@ void Game::Update() {
 
     if(isPaused_) return;
     //Increment tick count
-    time_++;
-
+    if(!professorPause_) time_++;
     if(!professorPause_) world_.Step(ph::timestep, ph::velocityIters, ph::positionIters);
 
     //Call update on objects. They will handle their own business
@@ -170,7 +169,7 @@ void Game::Update() {
             if(type == gm::GameObjectType::ability_integral
             || type == gm::GameObjectType::teekkari_professor
             || type == gm::GameObjectType::professor_particle) {
-                
+                iter->second->Update();
             }
         }
         else iter->second->Update();
@@ -283,6 +282,10 @@ void Game::Render(const RenderSystem& r) {
         obj.second->Render(r);
     }
 
+    if(professorPause_) {
+        r.RenderSprite(SpriteID::filter_timefreeze, 0, 0.3F * ph::fullscreenPlayArea, 0.66458333F * ph::fullscreenPlayArea * 1.5F, 0, camera_);
+    }
+
 }
 
 bool Game::OnMouseMove(float xw, float yh) {
@@ -377,6 +380,11 @@ void Game::AddTeekkari(gm::GameObjectType teekkari) {
 
 
 void Game::ProfessorPause() {
+    
+    for(const auto& o : objects_) {
+        o.second->Record();
+    }
+
     professorPause_ = true;
 }
 

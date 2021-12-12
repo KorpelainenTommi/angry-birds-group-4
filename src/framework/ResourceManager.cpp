@@ -47,6 +47,20 @@ const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
     {SoundID::gravity_shiftdown, "data/audio/gravity_shiftdown.wav"},
 
     {SoundID::hand_whoosh, "data/audio/hand_whoosh.wav"},
+    
+    {SoundID::thunder_strike, "data/audio/thunder_strike.wav"},
+    {SoundID::thunder_static, "data/audio/thunder_static.wav"},
+
+    {SoundID::integral_destruction, "data/audio/integral_destruction.wav"},
+
+    {SoundID::professor_oneliner1, "data/audio/professor_oneliner1.wav"},
+    {SoundID::professor_oneliner2, "data/audio/professor_oneliner2.wav"},
+    {SoundID::professor_oneliner3, "data/audio/professor_oneliner3.wav"},
+    {SoundID::professor_oneliner4, "data/audio/professor_oneliner4.wav"},
+    {SoundID::professor_oneliner5, "data/audio/professor_oneliner5.wav"},
+    {SoundID::professor_oneliner6, "data/audio/professor_oneliner6.wav"},
+    {SoundID::professor_oneliner7, "data/audio/professor_oneliner7.wav"},
+    {SoundID::professor_oneliner8, "data/audio/professor_oneliner8.wav"},
 
     {SoundID::poof, "data/audio/poof.wav"},
     {SoundID::teekkari_recruit, "data/audio/teekkari_recruit.wav"},
@@ -66,7 +80,8 @@ const std::pair<int, std::string> ResourceManager::texturePaths_[] = {
     {8, "data/textures/background.jpg"},
     {9, "data/textures/guilds.png"},
     {10, "data/textures/explosion.png"},
-    {11, "data/textures/poof.png"}
+    {11, "data/textures/poof.png"},
+    {12, "data/textures/timestop.png"}
 };
 
 const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
@@ -273,7 +288,9 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
 
     {SpriteID::gravity_symbols, 3, {300, 0, 138, 64}},
     {SpriteID::math_cloud, 3, {300, 64, 138, 64}},
+    {SpriteID::lightning_strike, 3, {0, 352, 384, 140}},
     {SpriteID::integral_sign, 3, {438, 0, 330, 128}},
+    {SpriteID::filter_timefreeze, 12, {0, 0, 1440, 957}},
     
     {SpriteID::guild_ik, 9, {0, 0, 130, 130}},
     {SpriteID::guild_tefy, 9, {0, 130, 130, 130}},
@@ -294,6 +311,7 @@ const ResourceManager::AnimationMapping ResourceManager::animationMaps_[] = {
     {AnimationID::matrix_bug, 3, {128, 128}, {384, 640, 384, 128}},
     {AnimationID::hand_whirl, 3, {96, 96}, {384, 544, 384, 96}},
     {AnimationID::gravity_spiral, 3, {96, 96}, {384, 448, 384, 96}},
+    {AnimationID::thunder_sparks, 3, {96, 96}, {0, 256, 768, 96}},
     {AnimationID::lightning, 3, {96, 96}, {384, 352, 384, 96}}
 };
 

@@ -73,7 +73,11 @@ namespace ph {
     /// Width of the area seen by a camera at zoom = 1.0F
     const float fullscreenPlayArea = 50.0F;
 
-    const float lightningEnergy = 30000.0F;
+    /// Energy of a lightning, determines how many blocks it can destroy
+    const float lightningEnergy = 800000.0F;
+
+    /// The maximum gap that electricity can jump between metal blocks
+    const float electricityJumpGap = 1.0F;
 
     /// Thickness of the ground. More ground than this will not be visible at the lowest camera position
     const float groundThickness = 20.0F;
