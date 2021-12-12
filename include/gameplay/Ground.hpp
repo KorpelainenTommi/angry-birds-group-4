@@ -43,6 +43,7 @@ public:
     /// @brief Update ground. Empty implementation overrides default behaviour for PhysObjects and therefore ground is not updated.
     virtual void Update() {
     }
+    virtual bool ContainsCoordinates(sf::Vector2f mouseCoords, const RenderSystem& r) { return false; }
 
     
 };
