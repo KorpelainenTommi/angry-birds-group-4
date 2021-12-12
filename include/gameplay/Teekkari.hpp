@@ -20,7 +20,6 @@
 #include <set>
 #include <limits>
 
-
 /// @brief Class for the projectiles of the game
 class Teekkari : public Person {
 public:
@@ -194,77 +193,6 @@ protected:
 
 };
 
-/// @brief Class for integral ability of a professor
-class AbilityIntegral : public PhysObject {
-public:
-    AbilityIntegral(Game& game, float x, float y, float rot, const b2Vec2 velocity) : PhysObject(game, gm::GameObjectType::ability_integral, x, y, rot) {
-        // Normalized velocity
-        b2Vec2 nVelocity = velocity;
-        nVelocity *= 1/std::sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
-        x_ += 3.0F*nVelocity.x;
-        y_ += 3.0F*nVelocity.y;
-        
-        rot_ = std::atanf(nVelocity.x/nVelocity.y)*180/ph::pi;
-        if(nVelocity.y < 0) rot_ = rot_ + 180;
-
-        creationTime_ = game.GetTime();
-        //Create the main body
-        b2BodyDef definition;
-        definition.type = b2BodyType::b2_kinematicBody;
-        definition.fixedRotation = false;
-        definition.position = {x_, y_};
-        definition.angle = ph::rotToAng(rot_);
-        
-        mainBody_ = game.GetB2World().CreateBody(&definition);
-
-
-        b2PolygonShape shape;
-        shape.SetAsBox(3.0F, 1.0F);
-        b2FixtureDef fixture;
-        b2FixtureUserData userData;
-        userData.data = this;
-
-        fixture.filter.groupIndex = -5;
-        fixture.shape = &shape;
-        fixture.userData = userData;
-        mainBody_->CreateFixture(&fixture);
-        mainBody_->SetLinearVelocity(velocity);
-        hp_ = ph::inf;
-        Record();
-
-    }
-
-    virtual void Render(const RenderSystem& r) {
-        r.RenderSprite(SpriteID::integral_sign, x_, y_, 2.0F, rot_, game_.GetCamera());
-    }
-
-    virtual void Update() {
-        if(game_.GetTime() - creationTime_ > ph::integralLength) hp_ = 0;
-        PhysObject::Update();
-    }
-    virtual void OnCollision(const b2Vec2& relativeVelocity, PhysObject& other, const b2Contact& contact) {
-        other.DealDamage(other.GetHP());
-        SpriteID hitSp = SpriteID::hit_stars;
-        b2WorldManifold manifold;
-        contact.GetWorldManifold(&manifold);
-        auto point = manifold.points[0];
-        hitSp_ = hitSp;
-        hitPoint_ = point;
-        spawnHit_ = true;
-        
-    }
-
-protected:
-    float creationTime_;
-    virtual void OnDeath() {
-
-        game_.CheckLevelEnd();
-
-    }
-
-};
-
-
 
 /// @brief Class for the integral ability of a professor
 class AbilityIntegral : public GameObject {
@@ -422,7 +350,7 @@ protected:
             while(it != metalBlocks.end()) {
                 Block& nextBlock = static_cast<Block&>(game_.GetObject(*it));
                 if(currentBlock.ElectricityCheck(nextBlock) && remainingEnergy > 200) {
-                    float exponentialDecay = 2.5F;
+                    float exponentialDecay = 2.0F;
                     destroyRecursively(*it,remainingEnergy/exponentialDecay);
                     it = metalBlocks.begin();
                 }
