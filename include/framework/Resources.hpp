@@ -4,8 +4,6 @@
 /// @brief All sprites usable with RenderSystem
 enum SpriteID { 
 
-    nice_face,
-
     //UI sprites
     ui_button,
     ui_button_pause,
@@ -320,7 +318,6 @@ enum SoundID {
 
     //UI sounds
     ui_click,
-    nice,
 
 
     //Block sounds
