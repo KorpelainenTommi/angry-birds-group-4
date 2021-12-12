@@ -20,9 +20,6 @@ enum SpriteID {
 
 
     //Level backgrounds
-    background_testroom,
-    background_otakaari,
-    background_dipoli,
     background_field,
 
 

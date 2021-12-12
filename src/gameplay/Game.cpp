@@ -276,7 +276,7 @@ bool Game::NoActivity() {
 void Game::Render(const RenderSystem& r) {
     //Render all objects in render order
     float parallax = 0.5F;
-    r.RenderSprite(level_.backgroundImage, parallax * camera_.x, 0.3F * ph::fullscreenPlayArea + parallax * camera_.y, 0.66458333F * ph::fullscreenPlayArea * 1.5F, 0, camera_);
+    r.RenderSprite(SpriteID::background_field, parallax * camera_.x, 0.3F * ph::fullscreenPlayArea + parallax * camera_.y, 0.66458333F * ph::fullscreenPlayArea * 1.5F, 0, camera_);
 
     for(auto& obj : objects_) {
         obj.second->Render(r);

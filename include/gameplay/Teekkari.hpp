@@ -268,25 +268,18 @@ protected:
 /// @brief  Class for IKteekkari
 class IKTeekkari : public Teekkari {
 public:
-    IKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) { hp_ = ph::teekkariHP; }
-    IKTeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) { hp_ = ph::teekkariHP; }
+    IKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) { }
+    IKTeekkari(Game& game, float x, float y, float rot) : Teekkari(game, gm::GameObjectType::teekkari_ik, x, y, rot) { }
 
     virtual void OnCollision(const b2Vec2& velocity, PhysObject& other, const b2Contact& contact) {
 
         float h = hp_;
         Teekkari::OnCollision(velocity, other, contact);
-        if(hp_ < h) {
-
-            float armor = velocity.Length() / 33.0F;
-            if(armor > 0.75F) armor = 0.75F;
-            hp_ += armor * (h - hp_);
-
-        }
 
         //Deal extra damage to all materials
         if(gm::GetObjectGroup(other.GetObjectType()) == gm::GameObjectGroup::block) {
             other.Impulse({-velocity.x * other.GetMass(), -velocity.y * other.GetMass()});
-            other.DealDamage(1500);
+            other.DealDamage(1200);
 
         }
     }
