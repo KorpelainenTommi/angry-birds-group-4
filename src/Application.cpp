@@ -58,7 +58,7 @@ Application::Application() : resourceManager_(fileManager_), renderSystem_(windo
     //Fullscreen();
 
     //Switch to resizable for now
-    Resize(800, 800);
+    Resize(800, 600);
     
     //This is needed to capture some startup events that happen on certain desktops
     sf::Event ev;

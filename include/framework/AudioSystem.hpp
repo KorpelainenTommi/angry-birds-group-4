@@ -22,7 +22,7 @@ private:
     
     ResourceManager& resourceManager_;
     static const int queueSize = 18;
-    float globalVolume_ = 0.08F;
+    float globalVolume_ = 1.0F;
 
     std::queue<sf::Sound> soundQueue_;
 
