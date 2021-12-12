@@ -12,7 +12,15 @@
  * will see an area that is 50 meters wide.
  */
 
-/// @brief A camera can be moved and zoomed, and can be used to translate object positions
+/// @brief Struct for camera
+/** @details A camera can be moved and zoomed, and can be used to translate object positions
+ * A Camera has a position in world space, and a zoom.
+ * zoom < 1 means zooming in, zoom > 1 means zooming out.
+ * zoom = 1 is fullscreen.
+ *
+ * As per the definition in gameplay/Physics.hpp, a camera at fullscreen zoom
+ * will see an area that is 50 meters wide.
+ */
 struct Camera {
     
     /// @brief Camera x coordinate

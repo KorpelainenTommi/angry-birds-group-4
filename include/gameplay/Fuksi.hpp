@@ -9,7 +9,7 @@
 #include <box2d/b2_body.h>
 #include <memory>
 
-/// @brief Enemyclass
+/// @brief Class for enemies
 class Fuksi : public Person {
 public:
     /// @brief Constructor

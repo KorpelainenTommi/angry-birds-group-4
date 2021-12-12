@@ -17,27 +17,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include <iostream>
-/// @brief Game class that manages all gameobjects and implements majority of the gamelogic
-/**
- * @details
- * Game owns and manages all GameObjects. It also manages the box2d world, 
- * and counts ticks (Update calls) for keeping track of time.
- *
- * GameObjects are kept in a map as std::unique_ptr, and ordered based on their rendering order.
- * 
- * When creating new objects, their id should be assigned from one of the following groups:
- * 
- * IDs:
- *  Backgrounds          0      - 100 000 000
- *  Blocks          100 000 000 - 200 000 000
- *  Teekkari        200 000 000 - 300 000 000
- *  Effects         300 000 000 - 400 000 000
- *  ..              
- * 
- *  the namespace gm defines a constant called objectGroupSize, and a method 
- *  int GetObjectGroup(GameObjectType) that returns an integer 0, 1, 2, 3 etc.
- *
- */
+
 /// @brief ID-counter for gameobjects
 /// @details Each object will get a own unique id based on this counter
 struct IDCounter {
@@ -51,7 +31,27 @@ struct IDCounter {
 class GameScreen;
 
 
-/// @brief A Game encapsulates a single game session that starts when entering a GameScreen, and ends when exiting it
+/// @brief Game class that manages all gameobjects and implements majority of the gamelogic
+/**
+ * @details
+ * Game owns and manages all GameObjects. It also manages the box2d world,
+ * and counts ticks (Update calls) for keeping track of time.
+ *
+ * GameObjects are kept in a map as std::unique_ptr, and ordered based on their rendering order.
+ *
+ * When creating new objects, their id should be assigned from one of the following groups:
+ *
+ * IDs:
+ *  Backgrounds          0      - 100 000 000
+ *  Blocks          100 000 000 - 200 000 000
+ *  Teekkari        200 000 000 - 300 000 000
+ *  Effects         300 000 000 - 400 000 000
+ *  ..
+ *
+ *  the namespace gm defines a constant called objectGroupSize, and a method
+ *  int GetObjectGroup(GameObjectType) that returns an integer 0, 1, 2, 3 etc.
+ *
+ */
 class Game : public UpdateListener, public b2ContactListener {
 public:
 

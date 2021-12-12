@@ -17,8 +17,9 @@ public:
 
     /// @see Physics For the definition of screen independent coordinates
 
-    /// @brief Render a sprite in screen independent coordinates (meters).
-    /// @details This is useful for game objects. The shape is defined by the sprite itself.
+    /** @brief Render a sprite in screen independent coordinates (meters).
+     *  @details This is useful for game objects. The shape is defined by the sprite itself.
+     */
     void RenderSprite(SpriteID id, ph::tfloat x, ph::tfloat y, ph::tfloat h, ph::tfloat rot,
     const Camera& camera, const sf::Color& color = sf::Color(255, 255, 255)) const;
 

@@ -7,7 +7,7 @@
 #include <gameplay/GameObjectTypes.hpp>
 #include <box2d/b2_body.h>
 #include <vector>
-/// @brief Base class for gameobjects
+/// @brief Base class for GameObjects
 class GameObject : public UpdateListener {
 public:
     

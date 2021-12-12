@@ -10,7 +10,8 @@
 #include <SFML/System/Vector2.hpp>
 
 
-/// @brief A Cannon always aims at the mouse cursor. The launch force is based on cursor distance to the cannon
+/// @brief Projectile (teekkari) launcher
+/// @details A Cannon always aims at the mouse cursor. The launch force is based on cursor distance to the cannon
 class Cannon : public GameObject {
 public:
 

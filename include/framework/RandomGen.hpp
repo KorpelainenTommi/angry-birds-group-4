@@ -4,6 +4,7 @@
 #include <random>
 #include <limits>
 
+/// @brief Namespace for random generator
 namespace rng {
 
 inline std::mt19937 engine;

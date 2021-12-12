@@ -16,7 +16,7 @@
 class Game;
 class GameObject;
 
-
+/// @brief All types and properties of GameObjects are stored in this namespace
 namespace gm {
 
 //List of all game object types
