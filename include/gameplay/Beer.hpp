@@ -14,7 +14,7 @@
 #include <box2d/b2_api.h>
 #include <unordered_map>
 
-///@brief A block that gives a teekkari to the player when broken
+///@brief A block that deals minus points when destroyed
 class Beer : public Block {
 public:
 /// @brief Constructor

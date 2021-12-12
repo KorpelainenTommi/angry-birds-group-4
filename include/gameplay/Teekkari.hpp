@@ -265,7 +265,7 @@ protected:
 
 
 //Teekkaris
-/// @brief  Class for IKteekkari
+/// @brief  Class for civil engineering student (IKteekkari)
 class IKTeekkari : public Teekkari {
 public:
     IKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) { }
@@ -287,7 +287,7 @@ public:
 protected:
     virtual void Ability(float x, float y) { }
 };
-/// @brief Class for SIKteekkari
+/// @brief Class for electrical engineering student (SIKteekkari)
 class SIKTeekkari : public Teekkari {
 public:
     SIKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -392,7 +392,7 @@ protected:
     }
 
 };
-/// @brief Class for TEFYTeekkari
+/// @brief Class for physics student (TEFYTeekkari)
 class TEFYTeekkari : public Teekkari {
 public:
     TEFYTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -506,7 +506,7 @@ protected:
     int gCounter = 0;
     float abilityStartTime_ = 0;
 };
-/// @brief Class for TUTAteekkari
+/// @brief Class for industrial engineering student (TUTAteekkari)
 class TUTATeekkari : public Teekkari {
 public:
     TUTATeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -569,7 +569,7 @@ protected:
 };
 
 
-/// @brief Class for TIKteekkari
+/// @brief Class for computer science student (TIKteekkari)
 class TIKTeekkari : public Teekkari {
 public:
     TIKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -588,7 +588,7 @@ protected:
 
     }
 };
-/// @brief Class for INKUBIOteekkari
+/// @brief Class for bioinformation technology student (INKUBIOteekkari)
 class INKUBIOTeekkari : public Teekkari {
 public:
     INKUBIOTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}
@@ -601,7 +601,7 @@ protected:
 };
 
 
-/// @brief Class for KIKteekkari
+/// @brief Class for mechanical engineering student (KIKteekkari)
 class KIKTeekkari : public Teekkari {
 public:
     KIKTeekkari(Game& game, float x, float y, float rot, gm::PersonData data) : Teekkari(game, x, y, rot, data) {}

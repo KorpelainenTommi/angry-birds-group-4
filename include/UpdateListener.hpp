@@ -4,7 +4,8 @@
 #include <framework/RenderSystem.hpp>
 #include <SFML/Window/Event.hpp>
 
-/// A class inheriting UpdateListener can receive updates
+/// @brief A base class of an update handler.
+/// @details A class inheriting UpdateListener can receive updates
 class UpdateListener {
 public:
 

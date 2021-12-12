@@ -3,6 +3,7 @@
 
 #include <ui/TextElement.hpp>
 
+/// @brief Element that can contain multiple lains of text
 class MultilineText: public TextElement{
 public:
     MultilineText(

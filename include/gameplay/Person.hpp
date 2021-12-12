@@ -6,7 +6,7 @@
 #include <gameplay/Physics.hpp>
 #include <box2d/b2_body.h>
 
-/// @brief Constructs a physics ragdoll that can be used for people
+/// @brief Physics ragdoll that can be used for humanlike objects
 class Person : public PhysObject {
 public:
 

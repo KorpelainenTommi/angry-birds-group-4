@@ -6,7 +6,7 @@
 #include <UpdateListener.hpp>
 
 
-/// Base class for elements
+/// @brief Base class for elements
 class Element : public UpdateListener {
 public:
     Element(

@@ -15,10 +15,11 @@
 /// @brief A TNT block that explodes
 class Tnt : public Block {
 public:
-
+    /// @brief Constructor
     Tnt(Game& game, float x, float y, float rot) : Block(game, gm::GameObjectType::prop_tnt, x, y, rot) {}
 
 protected:
+    /// @brief Creates explosion and damege on death
     virtual void OnDeath() {
         
         Block::OnDeath();

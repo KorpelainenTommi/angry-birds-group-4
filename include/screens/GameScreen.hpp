@@ -13,10 +13,11 @@
 #include <ui/DivElement.hpp>
 class Editor;
 
+/// @brief Screen class for the game and editor
 class GameScreen : public Screen {
 public:
 
-    /// Create a screen and start the Game with the selected level
+    /// @brief Constructor that creates a screen and starts the Game with the selected level
     GameScreen(Application& app, const Level& initialLevel, bool editorMode = false);
     
     virtual void Update();

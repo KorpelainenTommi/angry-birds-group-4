@@ -7,6 +7,7 @@
 #include <ui/MultilineText.hpp>
 #include <gameplay/Level.hpp>
 
+/// @brief Game's main menu
 class MainMenu : public Screen {
 public:
     MainMenu(Application& app);

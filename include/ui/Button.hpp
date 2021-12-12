@@ -3,6 +3,7 @@
 
 #include <ui/TextElement.hpp>
 
+/// @brief Class for different buttons
 class Button: public TextElement{
 public:
     Button(

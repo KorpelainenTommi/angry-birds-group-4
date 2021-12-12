@@ -17,11 +17,11 @@
 /// @brief A block that gives a teekkari to the player when broken
 class Pickup : public Block {
 public:
-
+    /// @brief Constructor
     Pickup(Game& game, gm::GameObjectType type, float x, float y, float rot) : Block(game, type, x, y, rot) {}
 
 protected:
-
+    /// @brief Creates explosion and points and other related stuff on death.
     virtual void OnDeath() {
 
         game_.GetAudioSystem().PlaySound(materialData_.breakSound);

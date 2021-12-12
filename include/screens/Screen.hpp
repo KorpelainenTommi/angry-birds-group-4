@@ -16,7 +16,7 @@
 
 class Application;
 
-/// Base class for screens
+/// @brief Base class for screens
 class Screen : public UpdateListener {
 public:
     Screen(Application& app) : app_(app) {}
