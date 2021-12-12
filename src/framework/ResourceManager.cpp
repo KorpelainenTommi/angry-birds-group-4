@@ -140,6 +140,7 @@ const ResourceManager::SpriteMapping ResourceManager::spriteMaps_[] = {
     {SpriteID::crack_plank_b, 0, {448, 460, 192, 12}},
     {SpriteID::crack_thickplank, 0, {384, 336, 384, 24}},
     {SpriteID::crack_thickplank_b, 0, {384, 360, 384, 24}},
+    {SpriteID::terrain, 0, {448, 512, 64, 64}},
 
 
 

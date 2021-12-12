@@ -4,6 +4,7 @@
 #include <gameplay/Cannon.hpp>
 #include <gameplay/Ground.hpp>
 #include <gameplay/Teekkari.hpp>
+#include <gameplay/Terrain.hpp>
 #include <gameplay/Pickup.hpp>
 #include <gameplay/Fuksi.hpp>
 #include <gameplay/Beer.hpp>
@@ -189,7 +190,8 @@ const std::map<gm::GameObjectType, gm::BlockData> gm::blockTypes = {
     { gm::GameObjectType::pickup_professor, { "Professor Pickup", SpriteID::guild_professor, gm::BlockMaterial::glass, gm::BlockShape::block_ball }},
 
     { gm::GameObjectType::prop_beer, { "Beer bottle", SpriteID::beer, gm::BlockMaterial::glass, gm::BlockShape::block_bottle }},
-    { gm::GameObjectType::prop_beer_can, { "Beer bottle", SpriteID::beer_can, gm::BlockMaterial::metal, gm::BlockShape::block_can}}
+    { gm::GameObjectType::prop_beer_can, { "Beer bottle", SpriteID::beer_can, gm::BlockMaterial::metal, gm::BlockShape::block_can}},
+    { gm::GameObjectType::terrain1x1, { "Terrain", SpriteID::terrain, gm::BlockMaterial::concrete, gm::BlockShape::block_1x1 }}
 
 };
 
@@ -258,6 +260,11 @@ int gm::GetObjectScore(gm::GameObjectType type) {
 }
 
 std::unique_ptr<GameObject> gm::IDToObject(Game& game, gm::GameObjectType type, float x, float y, float rot) {
+
+
+    //Terrain
+    if(type == gm::GameObjectType::terrain1x1) return std::make_unique<Terrain>(game, x, y, rot);
+
 
     // Block
     if(type >= gm::GameObjectType::block_wood1x1 && type < gm::GameObjectType::cannon) {
