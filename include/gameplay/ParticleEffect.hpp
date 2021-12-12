@@ -113,7 +113,7 @@ public:
             opacity = t / ph::particleFadeTime;
             opacity *= opacity;
         }
-        r.RenderText(text_, x_, y_, size_, rot_, game_.GetCamera(), sf::Color(color_.r, color_.g, color_.b, (int)std::roundf(opacity * 255)), FontID::magneto);
+        r.RenderText(text_, x_, y_, size_, rot_, game_.GetCamera(), sf::Color(color_.r, color_.g, color_.b, (int)std::roundf(opacity * 255)), FontID::consolas);
     }
 
     virtual void Update() {

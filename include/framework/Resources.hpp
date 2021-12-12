@@ -407,6 +407,6 @@ enum SoundID {
 };
 
 /// @brief All fonts usable with RenderSystem
-enum FontID { source_serif, consolas, magneto };
+enum FontID { source_serif, consolas };
 
 #endif
