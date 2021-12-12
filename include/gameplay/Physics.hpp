@@ -124,6 +124,9 @@ namespace ph {
     /// Force of a cannon shot at maximum force
     const float cannonMaxForce = 5000;
 
+    /// Integral ability length
+    const float integralLength = 3.0F;
+
     /// The position of the cannon in the level
     const float cannonX = -20;
 
