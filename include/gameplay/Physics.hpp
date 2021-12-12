@@ -7,7 +7,7 @@
 #include <cmath>
 #include <limits>
 
-/// @brief All gamerelated constants are stored here
+/// @brief All game related constants are stored here
 /** @details
  * Definition of world coordinates:
  * The UI is defined in percentage coordinates relative to screen size using custom floats called pfloats.
