@@ -182,7 +182,7 @@ void Game::Update() {
         checkForFinish_ = false;
         if(timeLimitReached) screen_.OnGameLost("Out of time!");
         else {
-            if(NoFuksis()) {
+            if(NoFuksis() && NoActivity()) {
                 if(level_.levelMode == LevelMode::endless && !IsEditor()) {
                     auto levels = screen_.GetApplication().GetFileManager().ListEndless();
                     if(levels.empty()) screen_.OnGameCompleted(points_, level_.perfectScore);

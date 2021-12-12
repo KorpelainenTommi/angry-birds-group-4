@@ -78,7 +78,7 @@ bool Editor::OnMouseDown(const sf::Mouse::Button& button, float xw, float yh) {
 
     }
     else if(button == sf::Mouse::Button::Right && isPaused_) {
-        if(id != -1) {
+        if(id != -1 && dragObjectID_ == -1) {
             levelMaxScore_ -= gm::GetObjectScore(GetObject(id).GetObjectType());
             screen_.UpdateTheoreticalMaxScore(levelMaxScore_);
             DestroyObject(id);

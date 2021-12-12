@@ -63,8 +63,7 @@ const std::pair<SoundID, std::string> ResourceManager::audioPaths_[] = {
     {SoundID::professor_oneliner8, "data/audio/professor_oneliner8.wav"},
 
     {SoundID::poof, "data/audio/poof.wav"},
-    {SoundID::teekkari_recruit, "data/audio/teekkari_recruit.wav"},
-    {SoundID::nice, "data/audio/nice.wav"}
+    {SoundID::teekkari_recruit, "data/audio/teekkari_recruit.wav"}
 
 };
 

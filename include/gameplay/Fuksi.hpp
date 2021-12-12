@@ -31,6 +31,7 @@ protected:
         textP.SetText(ss.str());
 
         game_.AddPoints(gm::GetObjectScore(gm::GameObjectType::fuksi));
+        game_.CheckLevelEnd();
     }
 
 private:

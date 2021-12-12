@@ -28,6 +28,13 @@ std::vector<std::string> FileManager::ListLevelPaths(std::string folder) const {
     for(const auto& entry : std::filesystem::directory_iterator(folder)) {
         if(entry.is_regular_file() && entry.path().extension() == ".lvl") paths.push_back(entry.path().string());
     }
+
+    std::cout << "\nFound level paths from (" << folder << "): " << std::endl;
+
+    for(auto& p : paths) {
+        std::cout << p << std::endl;
+    }
+
     return paths;
 }
 
@@ -129,9 +136,13 @@ bool FileManager::SaveLevel(const Level& level, const std::string& path) const{
 }
 
 bool FileManager::LoadLevel(Level& level, const std::string& path) const {
+
+    std::cout << "\nReading file: " << path << std::endl;
+
     std::ifstream file;
     file.open(path, std::ios::in);
     if (!file.is_open()){
+        std::cout << "Couldn't open file: " << path << std::endl;
         return false;
     }
     std::string line;
@@ -179,16 +190,23 @@ bool FileManager::LoadLevel(Level& level, const std::string& path) const {
             }   else if (lineData[0] == "BACKGROUND"){
                 level.backgroundImage = static_cast<SpriteID>(stoi(lineData[1]));
                 
-            }   else if (lineData[0] == "END"){
+            }  else if (lineData[0] == "START"){
+                level.startingTeekkaris.push_back(static_cast<gm::GameObjectType>(std::stoi(lineData[1])));
+
+            } else if (lineData[0] == "END"){
+                std::cout << "Level read successfully\n" << std::endl;
                 level.levelPath = path;
                 file.close();
                 return true;
 
-            }   else if (lineData[0] == "START"){
-                level.startingTeekkaris.push_back(static_cast<gm::GameObjectType>(std::stoi(lineData[1])));
             }
         }
-    } catch (...) {return false;}
+    } catch (...) {
+        std::cout << "Failed to load level (Invalid structure): " << path << std::endl;
+        file.close();
+        return false;
+    }
+    std::cout << "Failed to load level (missing end indicates corrupt file): " << path << std::endl;
     file.close();
     return false; //Didn't end in END line, so propably some problems in file
 }

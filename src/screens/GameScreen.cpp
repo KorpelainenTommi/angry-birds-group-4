@@ -394,13 +394,17 @@ void GameScreen::saveScore(const std::string& name, int score){
     if(len == 0){
         level_.highscores.push_back({name, score});
     }else{
+        bool b = true;
+
         //This naive algorithm could be replaced with binary search if I have time and will power.
         for(std::size_t i = 0; i < len; i++){
             if(level_.highscores[i].second < score){
                 level_.highscores.insert(level_.highscores.begin() + i, {name, score});
+                b = false;
                 break;
             }
         }
+        if(b) level_.highscores.push_back({name, score});
     }
     app_.GetFileManager().SaveLevel(level_);
 }
