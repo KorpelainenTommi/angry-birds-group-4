@@ -11,9 +11,13 @@ The game is an Aalto themed spin-off on the original Angry Birds game, where ins
 1. Make sure CMake is installed, and added to PATH. You can verify this with `cmake --version`.
 (refer to [Installing CMake](https://cmake.org/install/))
 
-2. Navigate to the root directory of the project, or specify it in the next step with `-S <path-to-dir>`
+2. Navigate to the root directory of the project, or specify it in the next step with `-S <path-to-dir>`. Alternatively on a Linux system you can skip all of the following steps by running build_and_run.sh from the project root directory ($ sh ./build_and_run.sh).
 
 3. Generate a build system with CMake, for example `cmake -S . -B build`. Additionally, you may need to provide the preferred generator, for example `cmake -S . -B build -G "MinGW Makefiles"` (listed in the CMake documentation in [cmake-generators(7)](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html))
+
+(Note that the performance of the application is significantly slower if run in debug
+mode. If this is an issue, explicitly specify -D CMAKE_BUILD_TYPE=Release,
+however this should be the default if no parameter is given)
 
 4. Build the project with `cmake --build build`
 
