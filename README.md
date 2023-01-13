@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/105944267/212244797-93d399f4-c0b1-474e-85fa-ff7beed9da51.png)
+
 # Mildly Annoyed Nth Year Students!
 The game is an Aalto themed spin-off on the original Angry Birds game, where instead of birds, the player hurls Aalto students from different guilds. The goal of the game is to destroy the fuksis (first-year-students) hiding in the fort, but without destroying any beer bottles that might be in the level.
 
